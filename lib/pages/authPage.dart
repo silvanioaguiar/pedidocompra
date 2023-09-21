@@ -23,7 +23,7 @@ class _AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(                       
+      appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           "Login",

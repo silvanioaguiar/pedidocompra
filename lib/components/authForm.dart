@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/components/userImagePicker.dart';
+import 'package:pedidocompra/pages/pedidosPendentes.dart';
 import '../models/authFormData.dart';
 import 'package:http/http.dart ' as http;
 
@@ -86,7 +87,14 @@ class _AuthFormState extends State<AuthForm> {
               ),
               const SizedBox(height: 15),
               ElevatedButton(
-                onPressed: _submit,
+                //onPressed: _submit,
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (ctx) {
+                      return const PedidosPendentes();
+                    }),
+                  );
+                },
                 style: _formData.isLogin
                     ? ElevatedButton.styleFrom(
                         backgroundColor: Colors.red.shade700)

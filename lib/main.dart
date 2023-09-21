@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:pedidocompra/pages/authPage.dart';
 
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(const MyApp());
