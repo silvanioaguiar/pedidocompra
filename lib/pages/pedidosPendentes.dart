@@ -41,9 +41,43 @@ class PedidosPendentes extends StatelessWidget {
             //     ],
             //   ),
             // ),
-            title: Text("N° Pedido:"),
-            subtitle: Text('Fornecedor:'),
-            trailing: Text('Valor'),
+            title: const Text(
+              "N° Pedido:",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            // subtitle: Text('Fornecedor:'),
+            subtitle: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Fornecedor:',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(),
+                Text(
+                  'Valor:',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            //isThreeLine: true,
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(onPressed: () {}, icon: const Icon(Icons.beenhere_sharp,color: Color.fromARGB(255, 5, 90, 8),),tooltip: "Aprovar",),
+                IconButton(onPressed: () {}, icon: const Icon(Icons.cancel,color: Colors.red),tooltip: "Cancelar",),
+                IconButton(onPressed: () {}, icon: const Icon(Icons.list_alt),tooltip: 'Vizualizar Pedido',),
+              ],
+            ),
           ),
           const Divider(height: 5),
           ListTile(
