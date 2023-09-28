@@ -21,10 +21,16 @@ class PedidosPendentesAprovacao extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(2.0),
             child: Container(
-              margin: EdgeInsets.all(2),
-              //color: Color.fromARGB(255, 171, 209, 224),
+              margin: const EdgeInsets.all(2),
               decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 184, 224, 240),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: <Color>[
+                    Color.fromARGB(255, 5, 34, 58),
+                    Color.fromARGB(255, 150, 35, 27),
+                  ],
+                ),
                 borderRadius: BorderRadius.all(Radius.circular(15)),
                 image: DecorationImage(
                   image: AssetImage('assets/images/logo_biosat2.png'),
@@ -44,9 +50,9 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                           "Empresa: Biosat",
                           textAlign: TextAlign.justify,
                           style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 0, 102, 245)),
                         ),
                         const SizedBox(),
                         const Text(
@@ -55,6 +61,7 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                         const SizedBox(),
@@ -64,6 +71,7 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                         const SizedBox(),
@@ -73,6 +81,7 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                         const Text(
@@ -81,6 +90,7 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                         const SizedBox(height: 10, width: 100),
@@ -90,18 +100,23 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                             IconButton(
                               onPressed: () {},
                               icon: const Icon(Icons.beenhere_sharp,
-                                  color: Color.fromARGB(255, 5, 90, 8)),
+                                  color: Color.fromARGB(255, 34, 185, 39)),
+                              iconSize: 30,
                             ),
                             const SizedBox(width: 60),
                             IconButton(
                               onPressed: () {},
-                              icon: const Icon(Icons.cancel, color: Colors.red),
+                              icon: const Icon(Icons.cancel,
+                                  color: Color.fromARGB(255, 247, 43, 43)),
+                              iconSize: 30,
                               tooltip: "Cancelar",
                             ),
                             const SizedBox(width: 60),
                             IconButton(
                               onPressed: () {},
                               icon: const Icon(Icons.list_alt),
+                              color: Colors.white,
+                              iconSize: 30,
                               tooltip: 'Vizualizar Pedido',
                             ),
                           ],
@@ -112,21 +127,21 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                             Text(
                               'Aprovar',
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 19, 85, 21),
+                                  color: Color.fromARGB(255, 34, 185, 39),
                                   fontWeight: FontWeight.bold),
                             ),
                             SizedBox(width: 50),
                             Text(
                               'Cancelar',
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 170, 24, 13),
+                                  color: Color.fromARGB(255, 247, 43, 43),
                                   fontWeight: FontWeight.bold),
                             ),
                             SizedBox(width: 50),
                             Text(
                               'Visualizar',
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 8, 58, 99),
+                                  color: Colors.white,
                                   fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -138,14 +153,19 @@ class PedidosPendentesAprovacao extends StatelessWidget {
               ),
             ),
           ),
-          
           Padding(
             padding: const EdgeInsets.all(2.0),
             child: Container(
-              margin: EdgeInsets.all(2),
-              //color: Color.fromARGB(255, 171, 209, 224),
+              margin: const EdgeInsets.all(2),
               decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 184, 224, 240),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: <Color>[
+                    Color.fromARGB(255, 5, 34, 58),
+                    Color.fromARGB(255, 150, 35, 27),
+                  ],
+                ),
                 borderRadius: BorderRadius.all(Radius.circular(15)),
                 image: DecorationImage(
                   image: AssetImage('assets/images/Logo_Brumed.png'),
@@ -165,9 +185,9 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                           "Empresa: Brumed",
                           textAlign: TextAlign.justify,
                           style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 0, 102, 245)),
                         ),
                         const SizedBox(),
                         const Text(
@@ -176,6 +196,7 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                         const SizedBox(),
@@ -185,6 +206,7 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                         const SizedBox(),
@@ -194,6 +216,7 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                         const Text(
@@ -202,6 +225,7 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                         const SizedBox(height: 10, width: 100),
@@ -211,18 +235,23 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                             IconButton(
                               onPressed: () {},
                               icon: const Icon(Icons.beenhere_sharp,
-                                  color: Color.fromARGB(255, 5, 90, 8)),
+                                  color: Color.fromARGB(255, 34, 185, 39)),
+                              iconSize: 30,
                             ),
                             const SizedBox(width: 60),
                             IconButton(
                               onPressed: () {},
-                              icon: const Icon(Icons.cancel, color: Colors.red),
+                              icon: const Icon(Icons.cancel,
+                                  color: Color.fromARGB(255, 247, 43, 43)),
+                              iconSize: 30,
                               tooltip: "Cancelar",
                             ),
                             const SizedBox(width: 60),
                             IconButton(
                               onPressed: () {},
                               icon: const Icon(Icons.list_alt),
+                              color: Colors.white,
+                              iconSize: 30,
                               tooltip: 'Vizualizar Pedido',
                             ),
                           ],
@@ -233,21 +262,21 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                             Text(
                               'Aprovar',
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 19, 85, 21),
+                                  color: Color.fromARGB(255, 34, 185, 39),
                                   fontWeight: FontWeight.bold),
                             ),
                             SizedBox(width: 50),
                             Text(
                               'Cancelar',
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 170, 24, 13),
+                                  color: Color.fromARGB(255, 247, 43, 43),
                                   fontWeight: FontWeight.bold),
                             ),
                             SizedBox(width: 50),
                             Text(
                               'Visualizar',
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 8, 58, 99),
+                                  color: Colors.white,
                                   fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -262,10 +291,16 @@ class PedidosPendentesAprovacao extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(2.0),
             child: Container(
-              margin: EdgeInsets.all(2),
-              //color: Color.fromARGB(255, 171, 209, 224),
+              margin: const EdgeInsets.all(2),
               decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 184, 224, 240),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: <Color>[
+                    Color.fromARGB(255, 5, 34, 58),
+                    Color.fromARGB(255, 150, 35, 27),
+                  ],
+                ),
                 borderRadius: BorderRadius.all(Radius.circular(15)),
                 image: DecorationImage(
                   image: AssetImage('assets/images/logo_biosat2.png'),
@@ -285,9 +320,9 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                           "Empresa: Biosat",
                           textAlign: TextAlign.justify,
                           style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 0, 102, 245)),
                         ),
                         const SizedBox(),
                         const Text(
@@ -296,6 +331,7 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                         const SizedBox(),
@@ -305,6 +341,7 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                         const SizedBox(),
@@ -314,6 +351,7 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                         const Text(
@@ -322,6 +360,7 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                         const SizedBox(height: 10, width: 100),
@@ -331,18 +370,23 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                             IconButton(
                               onPressed: () {},
                               icon: const Icon(Icons.beenhere_sharp,
-                                  color: Color.fromARGB(255, 5, 90, 8)),
+                                  color: Color.fromARGB(255, 34, 185, 39)),
+                              iconSize: 30,
                             ),
                             const SizedBox(width: 60),
                             IconButton(
                               onPressed: () {},
-                              icon: const Icon(Icons.cancel, color: Colors.red),
+                              icon: const Icon(Icons.cancel,
+                                  color: Color.fromARGB(255, 247, 43, 43)),
+                              iconSize: 30,
                               tooltip: "Cancelar",
                             ),
                             const SizedBox(width: 60),
                             IconButton(
                               onPressed: () {},
                               icon: const Icon(Icons.list_alt),
+                              color: Colors.white,
+                              iconSize: 30,
                               tooltip: 'Vizualizar Pedido',
                             ),
                           ],
@@ -353,21 +397,21 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                             Text(
                               'Aprovar',
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 19, 85, 21),
+                                  color: Color.fromARGB(255, 34, 185, 39),
                                   fontWeight: FontWeight.bold),
                             ),
                             SizedBox(width: 50),
                             Text(
                               'Cancelar',
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 170, 24, 13),
+                                  color: Color.fromARGB(255, 247, 43, 43),
                                   fontWeight: FontWeight.bold),
                             ),
                             SizedBox(width: 50),
                             Text(
                               'Visualizar',
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 8, 58, 99),
+                                  color: Colors.white,
                                   fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -379,14 +423,19 @@ class PedidosPendentesAprovacao extends StatelessWidget {
               ),
             ),
           ),
-          
           Padding(
             padding: const EdgeInsets.all(2.0),
             child: Container(
-              margin: EdgeInsets.all(2),
-              //color: Color.fromARGB(255, 171, 209, 224),
+              margin: const EdgeInsets.all(2),
               decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 184, 224, 240),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: <Color>[
+                    Color.fromARGB(255, 5, 34, 58),
+                    Color.fromARGB(255, 150, 35, 27),
+                  ],
+                ),
                 borderRadius: BorderRadius.all(Radius.circular(15)),
                 image: DecorationImage(
                   image: AssetImage('assets/images/logo_biosat2.png'),
@@ -406,9 +455,9 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                           "Empresa: Biosat",
                           textAlign: TextAlign.justify,
                           style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 0, 102, 245)),
                         ),
                         const SizedBox(),
                         const Text(
@@ -417,6 +466,7 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                         const SizedBox(),
@@ -426,6 +476,7 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                         const SizedBox(),
@@ -435,6 +486,7 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                         const Text(
@@ -443,6 +495,7 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                         const SizedBox(height: 10, width: 100),
@@ -452,18 +505,23 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                             IconButton(
                               onPressed: () {},
                               icon: const Icon(Icons.beenhere_sharp,
-                                  color: Color.fromARGB(255, 5, 90, 8)),
+                                  color: Color.fromARGB(255, 34, 185, 39)),
+                              iconSize: 30,
                             ),
                             const SizedBox(width: 60),
                             IconButton(
                               onPressed: () {},
-                              icon: const Icon(Icons.cancel, color: Colors.red),
+                              icon: const Icon(Icons.cancel,
+                                  color: Color.fromARGB(255, 247, 43, 43)),
+                              iconSize: 30,
                               tooltip: "Cancelar",
                             ),
                             const SizedBox(width: 60),
                             IconButton(
                               onPressed: () {},
                               icon: const Icon(Icons.list_alt),
+                              color: Colors.white,
+                              iconSize: 30,
                               tooltip: 'Vizualizar Pedido',
                             ),
                           ],
@@ -474,21 +532,21 @@ class PedidosPendentesAprovacao extends StatelessWidget {
                             Text(
                               'Aprovar',
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 19, 85, 21),
+                                  color: Color.fromARGB(255, 34, 185, 39),
                                   fontWeight: FontWeight.bold),
                             ),
                             SizedBox(width: 50),
                             Text(
                               'Cancelar',
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 170, 24, 13),
+                                  color: Color.fromARGB(255, 247, 43, 43),
                                   fontWeight: FontWeight.bold),
                             ),
                             SizedBox(width: 50),
                             Text(
                               'Visualizar',
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 8, 58, 99),
+                                  color: Colors.white,
                                   fontWeight: FontWeight.bold),
                             ),
                           ],
