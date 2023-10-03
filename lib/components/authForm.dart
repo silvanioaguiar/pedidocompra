@@ -1,15 +1,15 @@
+import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/components/userImagePicker.dart';
 import 'package:pedidocompra/pages/pedidosPendentes.dart';
-import 'package:pedidocompra/pages/pedidosPendentes_old.dart';
+import 'package:provider/provider.dart';
 import '../models/authFormData.dart';
-import 'package:http/http.dart ' as http;
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class AuthForm extends StatefulWidget {
   final void Function(AuthFormData) onSubmit;
-
   const AuthForm({
     super.key,
     required this.onSubmit,
@@ -27,23 +27,77 @@ class _AuthFormState extends State<AuthForm> {
     _formData.image = image;
   }
 
-  void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(msg),
-      backgroundColor: Theme.of(context).colorScheme.error,
-    ));
+  void _showDialog400() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Erro 400"),
+          content: const Text("Usuário não cadastrado"),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("Fechar"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
-  void _submit() {
-    final isValid = _formKey.currentState?.validate() ?? false;
-    if (!isValid) return;
+  void _showDialogX() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Erro"),
+          content: const Text("Servidor fora de serviço"),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("Fechar"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-    if (_formData.image == null && _formData.isSignup) {
-      return _showError('Imagem não selecionada!');
+  Future<void> _tokenRest() async {
+    String nome = _controladorNome.text;
+    String senha = _controladorSenha.text;
+
+    var response = await http.post(
+        Uri.parse(
+            'http://192.168.1.5:8084/REST/api/oauth2/v1/token?grant_type=password&username=$nome&password=$senha'),
+        headers: {
+          'Authorizathion': 'Bearer <access_token>',
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
+
+    if (response.statusCode >= 200 && response.statusCode <= 299) {
+      var jsonResponse = json.decode(response.body);
+      var _token = jsonResponse['access_token'];
+
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (ctx) {
+          return const PedidosPendentesAprovacao();
+        }),
+      );
+      
+    } else if (response.statusCode >= 400 && response.statusCode <= 499) {
+      _showDialog400();
+    } else {
+      _showDialogX();
     }
-
-    widget.onSubmit(_formData);
   }
+
+  final TextEditingController _controladorNome = TextEditingController();
+  final TextEditingController _controladorSenha = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +112,7 @@ class _AuthFormState extends State<AuthForm> {
               if (_formData.isSignup)
                 UserImagePicker(onImagePick: _handleImagePick),
               TextFormField(
+                controller: _controladorNome,
                 // key: const ValueKey('email'),
                 // decoration: const InputDecoration(labelText: 'E-mail'),
                 // validator: (_email) {
@@ -76,6 +131,7 @@ class _AuthFormState extends State<AuthForm> {
                 // },
               ),
               TextFormField(
+                controller: _controladorSenha,
                 key: const ValueKey('password'),
                 obscureText: true,
                 decoration: const InputDecoration(labelText: 'Senha'),
@@ -88,14 +144,14 @@ class _AuthFormState extends State<AuthForm> {
               ),
               const SizedBox(height: 15),
               ElevatedButton(
-                //onPressed: _submit,
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (ctx) {
-                      return const PedidosPendentesAprovacao();
-                    }),
-                  );
-                },
+                onPressed: _tokenRest,
+                // onPressed: () {
+                //   Navigator.of(context).push(
+                //     MaterialPageRoute(builder: (ctx) {
+                //       return const PedidosPendentesAprovacao();
+                //     }),
+                //   );
+                // },
                 style: _formData.isLogin
                     ? ElevatedButton.styleFrom(
                         backgroundColor: Colors.red.shade700)

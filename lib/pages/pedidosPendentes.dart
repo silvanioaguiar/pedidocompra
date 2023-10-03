@@ -1,10 +1,74 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart ' as http;
+import 'dart:async';
+import 'dart:convert';
+import 'package:pedidocompra/components/authForm.dart';
+import 'package:provider/provider.dart';
+
+
+
+bool isLoading = true;
 
 class PedidosPendentesAprovacao extends StatelessWidget {
   const PedidosPendentesAprovacao({super.key});
 
+
+   
+  //  Future<void> _tokenRest() async {
+    
+  //   //String token = await xxxx
+
+  //   var response = await http.post(
+  //       Uri.parse(
+  //           'http://192.168.1.5:8084/REST/api/oauth2/v1/token?grant_type=password&username=SILVANIO.JUNIOR&password=striker20'),
+  //       headers: {
+  //         'Authorizathion': 'Bearer $token',
+  //         'Content-Type': 'application/json; charset=UTF-8',
+  //       });
+
+  //   if (response.statusCode >= 200 && response.statusCode <= 299) {
+  //     var jsonResponse = json.decode(response.body);
+  //     var _token = jsonResponse['access_token'];
+      
+  //   } 
+  // }
+
+  // Future<void> _loadPedidos() async {    
+ 
+  //   var response = await http.get(
+  //     Uri.parse(
+  //         'http://192.168.1.5:8084/REST/api/biosat/v1/PedidosPendentes'),
+  //     headers: {
+  //       'Authorizathion': 'Bearer $token',
+  //       'Content-Type': 'application/json; charset=UTF-8',
+  //     });
+
+  //   var jsonResponse = json.decode(response.body);
+  //   var _empresa = jsonResponse['Empresa'];
+
+  //   if (response.statusCode >= 200 && response.statusCode <= 299) {
+      
+  //   }
+  //   else if (response.statusCode >= 400 && response.statusCode <= 499) { 
+     
+  //   }
+  //   else  { 
+    
+  //   }
+
+  //   isLoading = false;
+  // }
+  
+
   @override
   Widget build(BuildContext context) {
+    
+
+    // if (isLoading == true) {
+    //   _loadPedidos();
+    // }
+    
+ 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
