@@ -1,8 +1,8 @@
 class AppRoutes {
-  // static const AUTH_OR_HOME = '/';
-  // //static const HOME = '/home';
-  // static const RECEITAS = '/receitasMod2';
-  // static const MENU = '/menuInical';
+  static const authOrHome = '/';
+  static const home = '/homepage';
+  static const authPage = '/authPage';
+  static const pedidosPendentes = '/pedidosPendentes';
   // static const FORM_RECEITAS = '/user-form-receitas';
   // static const AGENDA = '/agenda';
   // static const CUSTOS = '/custos';
