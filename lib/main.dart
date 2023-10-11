@@ -4,6 +4,7 @@ import 'package:pedidocompra/pages/authOrHomePage.dart';
 import 'package:pedidocompra/pages/authPage.dart';
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/pages/homepage.dart';
+import 'package:pedidocompra/pages/menuEmpresas.dart';
 import 'package:pedidocompra/pages/pedidosPendentes.dart';
 import 'package:pedidocompra/routes/appRoutes.dart';
 import 'package:provider/provider.dart';
@@ -103,11 +104,13 @@ class MyApp extends StatelessWidget {
           create: (_) => Auth(),
         ),
         ChangeNotifierProxyProvider<Auth, PedidosLista>(
-          create: (_) => PedidosLista('',[]),
+          create: (_) => PedidosLista('', [], '', ''),
           update: (ctx, auth, previous) {
             return PedidosLista(
               auth.token ?? '',
               previous?.pedidos ?? [],
+              auth.senha ?? '',
+              auth.empresa ?? '',
             );
           },
         ),
@@ -125,7 +128,8 @@ class MyApp extends StatelessWidget {
           AppRoutes.home: (ctx) => const HomePage(),
           AppRoutes.authPage: (ctx) => const AuthPage(),
           AppRoutes.pedidosPendentes: (ctx) =>
-              const PedidosPendentesAprovacao(),
+              PedidosPendentesAprovacao(),
+          AppRoutes.menuEmpresas: (ctx) => const MenuEmpresas(),
         },
         debugShowCheckedModeBanner: false,
       ),

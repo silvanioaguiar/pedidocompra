@@ -107,10 +107,11 @@ class PedidoGridItem extends StatelessWidget {
                       const SizedBox(width: 60),
                       IconButton(
                         onPressed: () {
+                                              
                           Provider.of<PedidosLista>(
                             context,
                             listen: false,
-                          ).aprovarPedido();
+                          ).aprovarPedido(context,pedido);
                         },
                         icon: const Icon(Icons.beenhere_sharp,
                             color: Color.fromARGB(255, 34, 185, 39)),

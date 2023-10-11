@@ -6,7 +6,8 @@ import 'package:provider/provider.dart';
 bool isLoading = true;
 
 class PedidosPendentesAprovacao extends StatefulWidget {
-  const PedidosPendentesAprovacao({super.key});
+  String? empresa;
+   PedidosPendentesAprovacao({super.key,this.empresa});
 
   @override
   State<PedidosPendentesAprovacao> createState() =>
@@ -15,6 +16,11 @@ class PedidosPendentesAprovacao extends StatefulWidget {
 
 class _PedidosPendentesAprovacaoState extends State<PedidosPendentesAprovacao> {
   bool _isLoading = true;
+  
+  get _empresa => null;
+  
+  
+  
 
   @override
   void initState() {
@@ -22,19 +28,19 @@ class _PedidosPendentesAprovacaoState extends State<PedidosPendentesAprovacao> {
     Provider.of<PedidosLista>(
       context,
       listen: false,
-    ).loadPedidos().then((value) {
+    ).loadPedidos(_empresa).then((value) {
       setState(() {
         _isLoading = false;
       });
     });
   }
 
-  Future<void> _refreshProducts(BuildContext context) {
-    return Provider.of<PedidosLista>(
-      context,
-      listen: false,
-    ).loadPedidos();
-  }
+  // Future<void> _refreshProducts(BuildContext context) {
+  //   return Provider.of<PedidosLista>(
+  //     context,
+  //     listen: false,
+  //   ).loadPedidos();
+  // }
 
   @override
   Widget build(BuildContext context) {

@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
         routes: {
           AppRoutes.home: (ctx) => const HomePage(),
           AppRoutes.authPage: (ctx) => const AuthPage(),
-          AppRoutes.pedidosPendentes: (ctx) => const PedidosPendentesAprovacao(),
+          AppRoutes.pedidosPendentes: (ctx) =>  PedidosPendentesAprovacao(),
           
         },
         debugShowCheckedModeBanner: false,

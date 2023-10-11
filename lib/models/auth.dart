@@ -5,6 +5,11 @@ import 'package:http/http.dart' as http;
 class Auth with ChangeNotifier {
   String? _token;
   DateTime? _expiryDate;
+  String? _senha;
+  String? _empresa;
+
+  
+ 
 
   bool get isAuth {
     final isValid = _expiryDate?.isAfter(DateTime.now()) ?? false;
@@ -14,6 +19,14 @@ class Auth with ChangeNotifier {
   String? get token {
     return isAuth ? _token : null;
   }
+    String? get senha {
+    return  _senha ;
+  }
+
+    String? get empresa {
+    return  _empresa ;
+  }
+
 
   //  void _showDialog400() {
   //   showDialog(
@@ -74,6 +87,7 @@ class Auth with ChangeNotifier {
 
     if (response.statusCode >= 200 && response.statusCode <= 299) {
       _token = body['access_token'];
+      _senha = senha;
       _expiryDate = DateTime.now().add(
         Duration(
           //seconds: int.parse(body['expires_in']),
