@@ -42,9 +42,9 @@ class MyApp extends StatelessWidget {
         ),
         // home: const ProductsOverviewPage(),
         routes: {
-          AppRoutes.home: (ctx) => const HomePage(),
+          //AppRoutes.home: (ctx) => const HomePage(),
           AppRoutes.authPage: (ctx) => const AuthPage(),
-          AppRoutes.pedidosPendentes: (ctx) =>  PedidosPendentesAprovacao(),
+          AppRoutes.pedidosPendentes: (ctx) =>  PedidosPendentesAprovacao(empresa: ''),
           
         },
         debugShowCheckedModeBanner: false,

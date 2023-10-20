@@ -3,6 +3,8 @@ class AppRoutes {
   static const home = '/homepage';
   static const authPage = '/authPage';
   static const pedidosPendentes = '/pedidosPendentes';
-   static const menuEmpresas = '/menuPendentes';
+  static const menuEmpresas = '/menuPendentes';
+  static const detalhesPedido = '/detalhesPedido';
+  static const itensPedido = '/itensPedido';
   
 }

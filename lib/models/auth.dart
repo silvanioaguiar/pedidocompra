@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -5,11 +6,10 @@ import 'package:http/http.dart' as http;
 class Auth with ChangeNotifier {
   String? _token;
   DateTime? _expiryDate;
+  String? _usuario;
   String? _senha;
   String? _empresa;
-
-  
- 
+  Timer? _logoutTimer;
 
   bool get isAuth {
     final isValid = _expiryDate?.isAfter(DateTime.now()) ?? false;
@@ -19,14 +19,18 @@ class Auth with ChangeNotifier {
   String? get token {
     return isAuth ? _token : null;
   }
-    String? get senha {
-    return  _senha ;
+
+  String? get senha {
+    return _senha;
   }
 
-    String? get empresa {
-    return  _empresa ;
+  String? get usuario {
+    return _usuario;
   }
 
+  String? get empresa {
+    return _empresa;
+  }
 
   //  void _showDialog400() {
   //   showDialog(
@@ -68,9 +72,7 @@ class Auth with ChangeNotifier {
   //   );
   // }
 
-
   Future<void> _authenticate(String usuario, String senha) async {
-
     final url =
         'http://192.168.1.5:8084/REST/api/oauth2/v1/token?grant_type=password&username=$usuario&password=$senha';
     final response = await http.post(
@@ -88,23 +90,48 @@ class Auth with ChangeNotifier {
     if (response.statusCode >= 200 && response.statusCode <= 299) {
       _token = body['access_token'];
       _senha = senha;
+      _usuario = usuario;
       _expiryDate = DateTime.now().add(
         Duration(
           //seconds: int.parse(body['expires_in']),
           seconds: body['expires_in'],
         ),
       );
-
+      _autoLogout();
       notifyListeners();
-      
-    } else if (response.statusCode >= 400 && response.statusCode <= 499) {     
+    } else if (response.statusCode >= 400 && response.statusCode <= 499) {
       //_showDialog400();
     } else {
-     // _showDialogX();
+      // _showDialogX();
     }
   }
 
   Future<void> login(String usuario, String senha) async {
     return _authenticate(usuario, senha);
+  }
+
+  void logout() {
+    _token = null;
+    _expiryDate = null;
+    _usuario = null;
+    _senha = null;
+    _empresa = null;
+
+    _clearAutoLogoutTimer();
+    notifyListeners();
+  }
+
+  void _clearAutoLogoutTimer() {
+    _logoutTimer?.cancel();
+    _logoutTimer = null;
+  }
+
+  void _autoLogout() {
+    _clearAutoLogoutTimer();
+    final timeToLogout = _expiryDate?.difference(DateTime.now()).inSeconds;
+    _logoutTimer = Timer(
+      Duration(seconds: timeToLogout ?? 0),
+      logout,
+    );
   }
 }

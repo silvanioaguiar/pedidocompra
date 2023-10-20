@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pedidocompra/components/appDrawer.dart';
 import '../components/authForm.dart';
 import '../models/authFormData.dart';
 
@@ -23,8 +24,9 @@ class _AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(        
         backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Colors.white,
         title: Text(
           "Login",
           textAlign: TextAlign.left,
@@ -33,6 +35,7 @@ class _AuthPageState extends State<AuthPage> {
           ),
         ),
       ),
+      //drawer: AppDrawer(),
       body: Stack(
         children: [
           Center(

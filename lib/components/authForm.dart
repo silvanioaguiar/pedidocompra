@@ -29,7 +29,7 @@ class _AuthFormState extends State<AuthForm> {
   //bool _isSignup() => _authMode == AuthMode.signup;
   final _formKey = GlobalKey<FormState>();
   final _formData = AuthFormData();
-  bool _isLoading = false ;
+  bool _isLoading = false;
   final Map<String, String> _authData = {
     'usuario': '',
     'senha': '',
@@ -38,8 +38,6 @@ class _AuthFormState extends State<AuthForm> {
   void _handleImagePick(File image) {
     _formData.image = image;
   }
-
-
 
   void _showErrorDialog(String msg) {
     showDialog(
@@ -57,26 +55,26 @@ class _AuthFormState extends State<AuthForm> {
     );
   }
 
-   Future<void> _submit() async {
+  Future<void> _submit() async {
     final isValid = _formKey.currentState?.validate() ?? false;
 
     if (!isValid) {
       return;
     }
 
-     setState(() => _isLoading = true);
+    setState(() => _isLoading = true);
 
     _formKey.currentState?.save();
     Auth auth = Provider.of(context, listen: false);
 
-     try {
+    try {
       if (_isLogin()) {
         // Login
         await auth.login(
           _authData['usuario']!,
           _authData['senha']!,
         );
-      } 
+      }
     } on AuthException catch (error) {
       _showErrorDialog(error.toString());
     } catch (error) {
@@ -84,8 +82,7 @@ class _AuthFormState extends State<AuthForm> {
     }
 
     setState(() => _isLoading = false);
-
-   }
+  }
   // Future<void> _tokenRest() async {
   //   String nome = _controladorNome.text;
   //   String senha = _controladorSenha.text;
@@ -107,7 +104,7 @@ class _AuthFormState extends State<AuthForm> {
   //         return const PedidosPendentesAprovacao();
   //       }),
   //     );
-      
+
   //   } else if (response.statusCode >= 400 && response.statusCode <= 499) {
   //     _showDialog400();
   //   } else {
@@ -130,6 +127,16 @@ class _AuthFormState extends State<AuthForm> {
             children: [
               if (_formData.isSignup)
                 UserImagePicker(onImagePick: _handleImagePick),
+              const SizedBox(
+                height: 50,
+                child: Text(
+                  'Entre com seu login de usuário e senha do sistema Protheus',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
               TextFormField(
                 controller: _controladorNome,
                 // key: const ValueKey('email'),
@@ -185,16 +192,16 @@ class _AuthFormState extends State<AuthForm> {
                   ),
                 ),
               ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    _formData.toogleAuthMode();
-                  });
-                },
-                child: Text(_formData.isLogin
-                    ? 'Cadastrar usuário ?'
-                    : 'Já possui cadastro ?'),
-              ),
+              // TextButton(
+              //   onPressed: () {
+              //     setState(() {
+              //       _formData.toogleAuthMode();
+              //     });
+              //   },
+              //   child: Text(_formData.isLogin
+              //       ? 'Cadastrar usuário ?'
+              //       : 'Já possui cadastro ?'),
+              // ),
             ],
           ),
         ),

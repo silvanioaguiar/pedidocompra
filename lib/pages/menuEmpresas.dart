@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pedidocompra/components/appDrawer.dart';
 import 'package:pedidocompra/pages/pedidosPendentes.dart';
 
 class MenuEmpresas extends StatefulWidget {
@@ -11,12 +12,20 @@ class MenuEmpresas extends StatefulWidget {
 
 class _MenuEmpresasState extends State<MenuEmpresas> {
 
-  String _bigAt = "Big At";
+  final String _bigAt = "Big Assistencia Tecnica";
+  final String _bigLoc = "Big Locacao";
+  final String _biosatMatriz = 'Biosat Matriz Fabrica';
+  final String _biosatFilial = 'Biosat Filial';
+  final String _libertad = 'Libertad';
+  final String _emed = 'E-med';
+  final String _brumed = 'Brumed';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
           title: Text(
             "Selecione uma Empresa",
             textAlign: TextAlign.left,
@@ -25,6 +34,7 @@ class _MenuEmpresasState extends State<MenuEmpresas> {
             ),
           ),
         ),
+        drawer: AppDrawer(),
         body: GridView.count(
           crossAxisCount: 2,
           shrinkWrap: true,
@@ -57,7 +67,13 @@ class _MenuEmpresasState extends State<MenuEmpresas> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (ctx) {
+                      return  PedidosPendentesAprovacao(empresa:  _biosatMatriz);
+                    }),
+                  );
+                },
               ),
             ),
             Container(
@@ -84,7 +100,13 @@ class _MenuEmpresasState extends State<MenuEmpresas> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (ctx) {
+                      return  PedidosPendentesAprovacao(empresa:  _biosatFilial);
+                    }),
+                  );
+                },
               ),
             ),
             Container(
@@ -114,7 +136,7 @@ class _MenuEmpresasState extends State<MenuEmpresas> {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (ctx) {
-                      return  PedidosPendentesAprovacao(empresa: _bigAt,);
+                      return  PedidosPendentesAprovacao(empresa:  _bigLoc);
                     }),
                   );
                 
@@ -145,7 +167,13 @@ class _MenuEmpresasState extends State<MenuEmpresas> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (ctx) {
+                      return  PedidosPendentesAprovacao(empresa:  _bigAt);
+                    }),
+                  );
+                },
               ),
             ),
             Container(
@@ -172,7 +200,13 @@ class _MenuEmpresasState extends State<MenuEmpresas> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (ctx) {
+                      return  PedidosPendentesAprovacao(empresa:  _emed);
+                    }),
+                  );
+                },
               ),
             ),
             Container(
@@ -199,7 +233,46 @@ class _MenuEmpresasState extends State<MenuEmpresas> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (ctx) {
+                      return  PedidosPendentesAprovacao(empresa:  _libertad);
+                    }),
+                  );
+                },
+              ),
+            ),
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: <Color>[
+                    //Color.fromARGB(255, 5, 34, 58),
+                    //Color.fromARGB(255, 150, 35, 27),
+                    Color.fromARGB(255, 71, 1, 1),
+                    Color.fromARGB(255, 42, 42, 77),
+                  ],
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+              ),
+              child: TextButton(
+                child: const Text(
+                  'Brumed',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (ctx) {
+                      return  PedidosPendentesAprovacao(empresa:  _brumed);
+                    }),
+                  );
+                },
               ),
             ),
           ],

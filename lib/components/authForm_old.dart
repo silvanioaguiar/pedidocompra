@@ -85,7 +85,7 @@ class _AuthFormState extends State<AuthForm> {
 
       Navigator.of(context).push(
         MaterialPageRoute(builder: (ctx) {
-          return  PedidosPendentesAprovacao();
+          return  PedidosPendentesAprovacao(empresa: '',);
         }),
       );
       

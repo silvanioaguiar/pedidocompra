@@ -23,7 +23,7 @@ class PedidoGrid extends StatelessWidget {
       ),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(        
         crossAxisCount: 1,
-        childAspectRatio: 3.5 / 2,
+        childAspectRatio: 3.3 / 2,
         crossAxisSpacing: 1,
         mainAxisSpacing: 1,
       ),
