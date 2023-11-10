@@ -3,26 +3,28 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart ' as http;
-import 'package:pedidocompra/components/itensPedidoGrid.dart';
 import 'package:pedidocompra/models/itens_pedidos.dart';
 import 'package:pedidocompra/models/pedidos.dart';
 import 'package:pedidocompra/pages/itensPedido.dart';
+import 'package:pedidocompra/pages/menuEmpresas.dart';
+import 'package:pedidocompra/services/navigator_service.dart';
 import 'package:provider/provider.dart';
 
 class PedidosLista with ChangeNotifier {
   final String _token;
-  final String _senha;
+  //final String _senha;
   //final String _empresa;
   List<Pedidos> _pedidos = [];
   List<dynamic> data = [];
   List<dynamic> data2 = [];
+  Map<String, dynamic> data0 = {};
   List<ItensPedidos> _itensDoPedido = [];
   int n = 0;
 
   List<Pedidos> get pedidos => [..._pedidos];
   List<ItensPedidos> get itensDoPedido => [..._itensDoPedido];
 
-  PedidosLista(this._token, this._pedidos, this._senha, this._itensDoPedido);
+  PedidosLista(this._token, this._pedidos, this._itensDoPedido);
 
   int get pedidosCount {
     return _pedidos.length;
@@ -31,64 +33,183 @@ class PedidosLista with ChangeNotifier {
   int get itensPedidosCount {
     return _itensDoPedido.length;
   }
-  
 
   //PedidosPendentesAprovacao get empresa => PedidosPendentesAprovacao(empresa: _empresa);
 
-  Future<void> loadPedidos(empresa) async {
+  Future<void> loadPedidos(context, empresa) async {
     List<Pedidos> pedidos = [];
     _pedidos.clear();
     pedidos.clear();
+    String empresaFilial = '';
+    Map<String, dynamic> data0 = {};
+    data = [];
+
+    if (empresa == 'Libertad') {
+      empresaFilial = '01,01';
+    } else if (empresa == 'Biosat Matriz Fabrica') {
+      empresaFilial = '02,01';
+    } else if (empresa == 'Biosat Filial') {
+      empresaFilial = '02,02';
+    } else if (empresa == 'Big Assistencia Tecnica') {
+      empresaFilial = '05,01';
+    } else if (empresa == 'Big Locacao') {
+      empresaFilial = '05,02';
+    } else if (empresa == 'E-med') {
+      empresaFilial = '06,01';
+    } else if (empresa == 'Brumed') {
+      empresaFilial = '08,01';
+    }
 
     final response = await http.get(
-        Uri.parse(
-            'http://192.168.1.5:8084/REST/api/biosat/v1/PedidosPendentes/$empresa'),
+        Uri.parse(            
+            'http://biosat.dyndns.org:8084/REST/api/biosat/v1/PedidosPendentes/$empresa'),
         headers: {
           'Content-Type': 'application/json',
           "accept": "application/json",
           "Accept-Charset": "utf-8",
+          'tenantId': empresaFilial,
           'Authorization': 'Bearer $_token',
         });
 
-    //if (response.body == 'null') return;
+    if (response.statusCode == 500) {
+      data0 = jsonDecode(response.body);
 
-    //data = jsonDecode(response.body);
-    data = jsonDecode(response.body);
-    utf8.decode(response.bodyBytes);
-    data.asMap();
-    data.forEach((data) {
-      pedidos.add(
-        Pedidos(
-          empresa: data['principal']['dadospedidos']['empresa'],
-          pedido: data['principal']['pedido'],
-          fornecedor: data['principal']['dadospedidos']['fornecedor'],
-          valor: data['principal']['dadospedidos']['valor'] == null
-              ? 0.0
-              : data['principal']['dadospedidos']['valor'].toDouble(),
-          condicaoPagamento: data['principal']['dadospedidos']
-              ['condicaoPagamento'],
-        ),
-      );
-    });
+      if (data0['errorMessage'] ==
+          'Não existem dados para serem apresentados') {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text(
+              'ATENÇÃO!',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            content: const Text(
+              //'Ocorreu um arro ao tentar aprovar o pedido.Por favor entrar em contato com o suporte do sistema',
+              'Não tem pedidos pendentes de aprovação para o seu usuário nessa empresa no momento.',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  NavigatorService
+                  .instance
+                  .pop();
+                  //Navigator.of(context).pop();
+                  //Navigator.of(context, rootNavigator: true).pop();
+                  // Navigator.of(context).push(
+                  //   MaterialPageRoute(builder: (ctx) {
+                  //     return const MenuEmpresas();
+                  //   }),
+                  // );
+                },
+                child: const Text("Fechar",
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 5, 0, 0))),
+              ),
+            ],
+          ),
+        );
+      }
+    } else if (response.statusCode == 200 &&
+        response.body ==
+            '{"Mensagem Principal":"Usuário não cadastrado como aprovador para essa empresa.","RETURN":true,"MESSAGE":"Usuário não cadastrado."}') {
+      data0 = jsonDecode(response.body);
+
+      if (data0['MESSAGE'] == 'Usuário não cadastrado.') {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text(
+              'ATENÇÃO!',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            content: const Text(
+              //'Ocorreu um arro ao tentar aprovar o pedido.Por favor entrar em contato com o suporte do sistema',
+              'Usuário não cadastrado como aprovador para essa empresa.',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            actions: [
+              TextButton(
+                //onPressed: () => Navigator.of(context).pop(),
+                onPressed: () {
+                  NavigatorService
+                  .instance
+                  .pop();
+                  //Navigator.of(context, rootNavigator: true).pop();
+                  // Navigator.of(context).push(
+                  //   MaterialPageRoute(builder: (ctx) {
+                  //     return const MenuEmpresas();
+                  //   }),
+                  // );
+                },
+                child: const Text("Fechar",
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 5, 0, 0))),
+              ),
+            ],
+          ),
+        );
+      }
+    } else {
+      data = jsonDecode(response.body);
+      utf8.decode(response.bodyBytes);
+      data.asMap();
+      data.forEach((data) {
+        pedidos.add(
+          Pedidos(
+            empresa: data['principal']['dadospedidos']['empresa'],
+            pedido: data['principal']['pedido'],
+            fornecedor: data['principal']['dadospedidos']['fornecedor'],
+            valor: data['principal']['dadospedidos']['valor'] == null
+                ? 0.0
+                : data['principal']['dadospedidos']['valor'].toDouble(),
+            condicaoPagamento: data['principal']['dadospedidos']
+                ['condicaoPagamento'],
+          ),
+        );
+      });
+    }
+    // } else {
+    //   data = jsonDecode(response.body);
+    //   utf8.decode(response.bodyBytes);
+    //   data.asMap();
+    //   data.forEach((data) {
+    //     pedidos.add(
+    //       Pedidos(
+    //         empresa: data['principal']['dadospedidos']['empresa'],
+    //         pedido: data['principal']['pedido'],
+    //         fornecedor: data['principal']['dadospedidos']['fornecedor'],
+    //         valor: data['principal']['dadospedidos']['valor'] == null
+    //             ? 0.0
+    //             : data['principal']['dadospedidos']['valor'].toDouble(),
+    //         condicaoPagamento: data['principal']['dadospedidos']
+    //             ['condicaoPagamento'],
+    //       ),
+    //     );
+    //   });
+    // }
     _pedidos = pedidos.reversed.toList();
     //_pedidos.reversed.toList();
+
     notifyListeners();
   }
 
   //Future<void> loadItensPedidos(context, Pedidos) async {
-  Future<void> loadItensPedidos(context,Pedidos) async {
+  Future<void> loadItensPedidos(context, Pedidos) async {
     String pedido = Pedidos.pedido;
     String empresa = Pedidos.empresa;
-    
+
     List<ItensPedidos> itensDoPedido = [];
     _itensDoPedido.clear();
     itensDoPedido.clear();
-   
-    
 
     final response = await http.get(
-        Uri.parse(
-            'http://192.168.1.5:8084/REST/api/biosat/v1/PedidosPendentes/$empresa/$pedido'),
+        Uri.parse(            
+            'http://biosat.dyndns.org:8084/REST/api/biosat/v1/PedidosPendentes/$empresa/$pedido'),
         headers: {
           'Content-Type': 'application/json',
           "accept": "application/json",
@@ -99,6 +220,7 @@ class PedidosLista with ChangeNotifier {
     //if (response.body == 'null') return;
 
     //data = jsonDecode(response.body);
+
     data2 = jsonDecode(response.body);
     utf8.decode(response.bodyBytes);
     data2.asMap();
@@ -133,11 +255,32 @@ class PedidosLista with ChangeNotifier {
     //_pedidos.reversed.toList();
     notifyListeners();
     //itensDoPedido.asMap();
-    Navigator.push(context, MaterialPageRoute(builder: (context) => ItensPedido(itensPedido: itensDoPedido,)));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ItensPedido(
+                  itensPedido: itensDoPedido,
+                )));
+  }
 
-    
-    
-    
+  showLoaderDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: Row(
+        children: [
+          const CircularProgressIndicator(),
+          Container(
+              margin: const EdgeInsets.only(left: 7),
+              child: const Text("Atualizando...")),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   Future<void> aprovarPedido(context, Pedidos) async {
@@ -177,9 +320,11 @@ class PedidosLista with ChangeNotifier {
         actions: [
           TextButton(
             onPressed: () async {
+              Navigator.pop(context);
+              showLoaderDialog(context);
               final response = await http.put(
                   Uri.parse(
-                      'http://192.168.1.5:8084/REST/api/biosat/v1/PedidosPendentes/$pedido/$empresa/$_senha'),
+                      'http://biosat.dyndns.org:8084/REST/api/biosat/v1/PedidosPendentes/Aprovar/$pedido/$empresa/'),
                   headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
@@ -189,8 +334,6 @@ class PedidosLista with ChangeNotifier {
                   });
 
               if (response.body == 'null') return;
-
-              
 
               if (response.statusCode == 500) {
                 showDialog(
@@ -221,7 +364,7 @@ class PedidosLista with ChangeNotifier {
               }
 
               notifyListeners();
-              Navigator.of(context).pop();
+              Navigator.of(context, rootNavigator: true).pop();
 
               if (response.statusCode >= 200 && response.statusCode <= 299) {
                 data = jsonDecode(response.body);
@@ -240,10 +383,26 @@ class PedidosLista with ChangeNotifier {
                     ),
                     actions: [
                       TextButton(
-                        onPressed: () { 
-                          Navigator.of(context).pop();
-                          loadPedidos(empresa);
-                        }, 
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true).pop();
+                          
+
+                          Provider.of<PedidosLista>(
+                            context,
+                            listen: false,
+                          ).loadPedidos(context, empresa);
+
+                          //Navigator.of(context, rootNavigator: true).pop();
+                          //Navigator.of(context).pop();
+
+                          // Navigator.of(context).push(
+                          //   MaterialPageRoute(builder: (ctx) {
+                          //     return PedidosPendentesAprovacao(
+                          //         empresa: empresa);
+                          //   }),
+                          // );
+                          // loadPedidos(context, empresa);
+                        },
                         child: const Text("Fechar",
                             style: TextStyle(
                                 fontSize: 24,
@@ -276,8 +435,7 @@ class PedidosLista with ChangeNotifier {
     );
   }
 
-  Future<void> aprovarPedidoemVisualizar(context,pedido,empresa) async {
-    
+  Future<void> aprovarPedidoemVisualizar(context, pedido, empresa) async {
     String empresaFilial = '';
 
     var data = Map();
@@ -312,9 +470,11 @@ class PedidosLista with ChangeNotifier {
         actions: [
           TextButton(
             onPressed: () async {
+              Navigator.pop(context);
+              showLoaderDialog(context);
               final response = await http.put(
                   Uri.parse(
-                      'http://192.168.1.5:8084/REST/api/biosat/v1/PedidosPendentes/$pedido/$empresa/$_senha'),
+                      'http://biosat.dyndns.org:8084/REST/api/biosat/v1/PedidosPendentes/Aprovar/$pedido/$empresa'),
                   headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
@@ -324,8 +484,6 @@ class PedidosLista with ChangeNotifier {
                   });
 
               if (response.body == 'null') return;
-
-              
 
               if (response.statusCode == 500) {
                 showDialog(
@@ -343,7 +501,9 @@ class PedidosLista with ChangeNotifier {
                     ),
                     actions: [
                       TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
                         child: const Text("Fechar",
                             style: TextStyle(
                                 fontSize: 24,
@@ -356,7 +516,7 @@ class PedidosLista with ChangeNotifier {
               }
 
               notifyListeners();
-              Navigator.of(context).pop();
+              Navigator.of(context, rootNavigator: true).pop();
 
               if (response.statusCode >= 200 && response.statusCode <= 299) {
                 data = jsonDecode(response.body);
@@ -375,10 +535,23 @@ class PedidosLista with ChangeNotifier {
                     ),
                     actions: [
                       TextButton(
-                        onPressed: () { 
-                          Navigator.of(context).pop();
-                          loadPedidos(empresa);
-                        }, 
+                        onPressed: () {                         
+                          Navigator.of(context, rootNavigator: true).pop();
+
+                          Provider.of<PedidosLista>(
+                            context,
+                            listen: false,
+                          ).loadPedidos(context, empresa);
+
+                          Navigator.of(context, rootNavigator: true).pop();
+
+                          // Navigator.of(context).push(
+                          //   MaterialPageRoute(builder: (ctx) {
+                          //     return PedidosPendentesAprovacao(
+                          //         empresa: empresa);
+                          //   }),
+                          // );
+                        },
                         child: const Text("Fechar",
                             style: TextStyle(
                                 fontSize: 24,
@@ -448,9 +621,11 @@ class PedidosLista with ChangeNotifier {
         actions: [
           TextButton(
             onPressed: () async {
+              Navigator.pop(context);
+              showLoaderDialog(context);
               final response = await http.put(
                   Uri.parse(
-                      'http://192.168.1.5:8084/REST/api/biosat/v1/PedidosPendentes/$pedido/$empresa/$_senha'),
+                      'http://biosat.dyndns.org:8084/REST/api/biosat/v1/PedidosPendentes/Reprovar/$pedido/$empresa'),
                   headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
@@ -460,8 +635,6 @@ class PedidosLista with ChangeNotifier {
                   });
 
               if (response.body == 'null') return;
-
-              
 
               if (response.statusCode == 500) {
                 showDialog(
@@ -479,7 +652,9 @@ class PedidosLista with ChangeNotifier {
                     ),
                     actions: [
                       TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
                         child: const Text("Fechar",
                             style: TextStyle(
                                 fontSize: 24,
@@ -492,7 +667,7 @@ class PedidosLista with ChangeNotifier {
               }
 
               notifyListeners();
-              Navigator.of(context).pop();
+              Navigator.of(context, rootNavigator: true).pop();
 
               if (response.statusCode >= 200 && response.statusCode <= 299) {
                 data = jsonDecode(response.body);
@@ -511,10 +686,19 @@ class PedidosLista with ChangeNotifier {
                     ),
                     actions: [
                       TextButton(
-                        onPressed: () { 
-                          Navigator.of(context).pop();
-                          loadPedidos(empresa);
-                        }, 
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true).pop();
+                          // Navigator.of(context).push(
+                          //   MaterialPageRoute(builder: (ctx) {
+                          //     return PedidosPendentesAprovacao(
+                          //         empresa: empresa);
+                          //   }),
+                          // );
+                          Provider.of<PedidosLista>(
+                            context,
+                            listen: false,
+                          ).loadPedidos(context, empresa);
+                        },
                         child: const Text("Fechar",
                             style: TextStyle(
                                 fontSize: 24,
@@ -547,8 +731,7 @@ class PedidosLista with ChangeNotifier {
     );
   }
 
-  Future<void> reprovarPedidoemVisualizar(context,pedido,empresa) async {
-   
+  Future<void> reprovarPedidoemVisualizar(context, pedido, empresa) async {
     String empresaFilial = '';
 
     var data = Map();
@@ -583,9 +766,11 @@ class PedidosLista with ChangeNotifier {
         actions: [
           TextButton(
             onPressed: () async {
+              Navigator.pop(context);
+              showLoaderDialog(context);
               final response = await http.put(
                   Uri.parse(
-                      'http://192.168.1.5:8084/REST/api/biosat/v1/PedidosPendentes/$pedido/$empresa/$_senha'),
+                      'http://biosat.dyndns.org:8084/REST/api/biosat/v1/PedidosPendentes/Reprovar/$pedido/$empresa'),
                   headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
@@ -595,8 +780,6 @@ class PedidosLista with ChangeNotifier {
                   });
 
               if (response.body == 'null') return;
-
-              
 
               if (response.statusCode == 500) {
                 showDialog(
@@ -614,7 +797,9 @@ class PedidosLista with ChangeNotifier {
                     ),
                     actions: [
                       TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
                         child: const Text("Fechar",
                             style: TextStyle(
                                 fontSize: 24,
@@ -627,7 +812,7 @@ class PedidosLista with ChangeNotifier {
               }
 
               notifyListeners();
-              Navigator.of(context).pop();
+              Navigator.of(context, rootNavigator: true).pop();
 
               if (response.statusCode >= 200 && response.statusCode <= 299) {
                 data = jsonDecode(response.body);
@@ -646,10 +831,14 @@ class PedidosLista with ChangeNotifier {
                     ),
                     actions: [
                       TextButton(
-                        onPressed: () { 
-                          Navigator.of(context).pop();
-                          loadPedidos(empresa);
-                        }, 
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true).pop();                       
+                          Provider.of<PedidosLista>(
+                            context,
+                            listen: false,
+                          ).loadPedidos(context, empresa);
+                          Navigator.of(context, rootNavigator: true).pop();
+                        },
                         child: const Text("Fechar",
                             style: TextStyle(
                                 fontSize: 24,
@@ -681,7 +870,4 @@ class PedidosLista with ChangeNotifier {
       ),
     );
   }
-
-
-
 }

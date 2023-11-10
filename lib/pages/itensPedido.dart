@@ -1,15 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:pedidocompra/components/appDrawer.dart';
-import 'package:pedidocompra/models/auth.dart';
-import 'package:pedidocompra/models/itens_pedidos.dart';
-import 'package:pedidocompra/models/itens_pedidos.dart';
-import 'package:pedidocompra/models/pedidos.dart';
+import 'package:flutter/services.dart';
 import 'package:pedidocompra/models/pedidosLista.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:http/http.dart ' as http;
 
 class ItensPedido extends StatefulWidget {
   //Map? itensDoPedido;
@@ -21,15 +16,38 @@ class ItensPedido extends StatefulWidget {
 }
 
 class _ItensPedidoState extends State<ItensPedido> {
+  
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]);
+  }
+
+  @override
+  dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    
-  List<dynamic> itensDoPedido = widget.itensPedido;
-  String valorTotal = NumberFormat.currency(locale: 'br_Br', symbol: "R\$")
-      .format(itensDoPedido[0].valor);   
+    //final Orientation orientation = MediaQuery.of(context).orientation;
+    //final bool isLandscape = orientation == Orientation.landscape;
 
-  var logo;
-  String empresa = itensDoPedido[0].empresa;
+    List<dynamic> itensDoPedido = widget.itensPedido;
+    String valorTotal = NumberFormat.currency(locale: 'br_Br', symbol: "R\$")
+        .format(itensDoPedido[0].valor);
+
+    var logo;
+    String empresa = itensDoPedido[0].empresa;
 
     if (empresa == 'Big Assistencia Tecnica' || empresa == 'Big Locacao') {
       logo = 'assets/images/logo_big.png';
@@ -42,9 +60,11 @@ class _ItensPedidoState extends State<ItensPedido> {
       logo = 'assets/images/logo_emed.png';
     } else if (empresa == 'Brumed') {
       logo = 'assets/images/logo_Brumed.png';
-    } 
+    }
 
     return Scaffold(
+      //primary: !isLandscape,
+
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Colors.white,
@@ -63,7 +83,7 @@ class _ItensPedidoState extends State<ItensPedido> {
           child: Container(
             margin: const EdgeInsets.all(4),
             decoration: BoxDecoration(
-              gradient:  const LinearGradient(
+              gradient: const LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: <Color>[
@@ -93,7 +113,6 @@ class _ItensPedidoState extends State<ItensPedido> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            //'Biosat Matriz Fábrica', //pedido.empresa,
                             itensDoPedido[0].empresa,
                             textAlign: TextAlign.justify,
                             style: const TextStyle(
@@ -103,10 +122,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                           ),
                           const SizedBox(),
                           Text(
-                            //'Fornecedor: Teste',
-                            //itensDoPedido[0].fornecedor,
                             itensDoPedido[0].fornecedor.length > 25
-                                // pedido.fornecedor.length > 25
                                 ? 'Fornecedor: ${itensDoPedido[0].fornecedor.substring(0, 25)}'
                                 : 'Fornecedor: ${itensDoPedido[0].fornecedor}',
                             textAlign: TextAlign.start,
@@ -150,7 +166,6 @@ class _ItensPedidoState extends State<ItensPedido> {
                             ),
                           ),
                           const SizedBox(height: 10, width: 100),
-                          
                           Row(
                             children: [
                               Container(
@@ -210,7 +225,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                                 width: 10,
                               ),
                               Container(
-                                width: 80,
+                                width: 90,
                                 child: const Text(
                                   'Prc.Unit',
                                   style: TextStyle(
@@ -224,7 +239,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                                 width: 10,
                               ),
                               Container(
-                                width: 80,
+                                width: 90,
                                 child: const Text(
                                   'Prc.Total',
                                   style: TextStyle(
@@ -237,8 +252,6 @@ class _ItensPedidoState extends State<ItensPedido> {
                             ],
                           ),
                           const SizedBox(),
-
-                          
                           for (int item = 0;
                               item < itensDoPedido.length;
                               item++)
@@ -294,7 +307,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                                 const SizedBox(
                                   width: 10,
                                 ),
-                                 Container(
+                                Container(
                                   width: 40,
                                   child: Text(
                                     itensDoPedido[item].unidadeMedida,
@@ -309,7 +322,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                                   width: 10,
                                 ),
                                 Container(
-                                  width: 80,
+                                  width: 90,
                                   child: Text(
                                     NumberFormat.currency(
                                             locale: 'br_Br', symbol: "R\$")
@@ -327,7 +340,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                                   width: 10,
                                 ),
                                 Container(
-                                  width: 80,
+                                  width: 90,
                                   child: Text(
                                     //precoTotal,
                                     NumberFormat.currency(
@@ -343,7 +356,6 @@ class _ItensPedidoState extends State<ItensPedido> {
                                 ),
                               ],
                             ),
-
                           const SizedBox(height: 20),
                           Row(
                             children: [
@@ -353,7 +365,12 @@ class _ItensPedidoState extends State<ItensPedido> {
                                   Provider.of<PedidosLista>(
                                     context,
                                     listen: false,
-                                  ).aprovarPedidoemVisualizar(context, itensDoPedido[0].pedido, itensDoPedido[0].empresa);
+                                  ).aprovarPedidoemVisualizar(
+                                      context,
+                                      itensDoPedido[0].pedido,
+                                      itensDoPedido[0].empresa);
+
+                                  
                                 },
                                 icon: const Icon(Icons.beenhere_sharp,
                                     color: Color.fromARGB(255, 34, 185, 39)),
@@ -366,7 +383,10 @@ class _ItensPedidoState extends State<ItensPedido> {
                                   Provider.of<PedidosLista>(
                                     context,
                                     listen: false,
-                                  ).reprovarPedidoemVisualizar(context, itensDoPedido[0].pedido, itensDoPedido[0].empresa);
+                                  ).reprovarPedidoemVisualizar(
+                                      context,
+                                      itensDoPedido[0].pedido,
+                                      itensDoPedido[0].empresa);
                                 },
                                 icon: const Icon(Icons.cancel,
                                     color: Color.fromARGB(255, 155, 27, 27)),

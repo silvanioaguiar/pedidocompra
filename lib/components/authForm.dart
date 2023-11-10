@@ -1,14 +1,9 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:pedidocompra/components/userImagePicker.dart';
 import 'package:pedidocompra/exceptions/auth_exception.dart';
 import 'package:pedidocompra/models/auth.dart';
-import 'package:pedidocompra/pages/pedidosPendentes.dart';
 import 'package:provider/provider.dart';
 import '../models/authFormData.dart';
-import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
 enum AuthMode { signup, login }
 
@@ -30,14 +25,15 @@ class _AuthFormState extends State<AuthForm> {
   final _formKey = GlobalKey<FormState>();
   final _formData = AuthFormData();
   bool _isLoading = false;
+  
+  
+
   final Map<String, String> _authData = {
     'usuario': '',
     'senha': '',
   };
 
-  void _handleImagePick(File image) {
-    _formData.image = image;
-  }
+  
 
   void _showErrorDialog(String msg) {
     showDialog(
@@ -73,47 +69,21 @@ class _AuthFormState extends State<AuthForm> {
         await auth.login(
           _authData['usuario']!,
           _authData['senha']!,
+          context,
         );
       }
     } on AuthException catch (error) {
       _showErrorDialog(error.toString());
     } catch (error) {
-      _showErrorDialog('Ocorreu um erro inesperado!');
+      _showErrorDialog('Ocorreu um erro inesperado.Verificar com o departamento de TI se o servidor está online.');
     }
 
     setState(() => _isLoading = false);
   }
-  // Future<void> _tokenRest() async {
-  //   String nome = _controladorNome.text;
-  //   String senha = _controladorSenha.text;
-
-  //   var response = await http.post(
-  //       Uri.parse(
-  //           'http://192.168.1.5:8084/REST/api/oauth2/v1/token?grant_type=password&username=$nome&password=$senha'),
-  //       headers: {
-  //         'Authorizathion': 'Bearer <access_token>',
-  //         'Content-Type': 'application/json; charset=UTF-8',
-  //       });
-
-  //   if (response.statusCode >= 200 && response.statusCode <= 299) {
-  //     var jsonResponse = json.decode(response.body);
-  //     var _token = jsonResponse['access_token'];
-
-  //     Navigator.of(context).push(
-  //       MaterialPageRoute(builder: (ctx) {
-  //         return const PedidosPendentesAprovacao();
-  //       }),
-  //     );
-
-  //   } else if (response.statusCode >= 400 && response.statusCode <= 499) {
-  //     _showDialog400();
-  //   } else {
-  //     _showDialogX();
-  //   }
-  // }
 
   final TextEditingController _controladorNome = TextEditingController();
   final TextEditingController _controladorSenha = TextEditingController();
+  bool _passwordInVisible = true;
 
   @override
   Widget build(BuildContext context) {
@@ -125,8 +95,6 @@ class _AuthFormState extends State<AuthForm> {
           key: _formKey,
           child: Column(
             children: [
-              if (_formData.isSignup)
-                UserImagePicker(onImagePick: _handleImagePick),
               const SizedBox(
                 height: 50,
                 child: Text(
@@ -139,47 +107,35 @@ class _AuthFormState extends State<AuthForm> {
               ),
               TextFormField(
                 controller: _controladorNome,
-                // key: const ValueKey('email'),
-                // decoration: const InputDecoration(labelText: 'E-mail'),
-                // validator: (_email) {
-                //   final email = _email ?? '';
-                //   if (!email.contains('@')) {
-                //     return 'E-mail informado não é válido.';
-                //   }
-                // },
                 key: const ValueKey('usuario'),
                 decoration: const InputDecoration(labelText: 'Usuário'),
                 onSaved: (usuario) => _authData['usuario'] = usuario ?? '',
-                // validator: (_usuarioProtheus) {
-                //   final email = _ ?? '';
-                //   if (!email.contains('@')) {
-                //     return 'E-mail informado não é válido.';
-                //   }
-                // },
               ),
               TextFormField(
                 controller: _controladorSenha,
                 key: const ValueKey('senha'),
-                obscureText: true,
-                decoration: const InputDecoration(labelText: 'Senha'),
+                obscureText: _passwordInVisible,
+                decoration:  InputDecoration(
+                  labelText: 'Senha',
+                  suffixIcon: IconButton(
+                    icon: Icon(                      
+                      _passwordInVisible
+                          ? Icons.visibility_off
+                          : Icons.visibility,                      
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _passwordInVisible =
+                            !_passwordInVisible; 
+                      });
+                    },
+                  ),
+                ),
                 onSaved: (senha) => _authData['senha'] = senha ?? '',
-                // validator: (_password) {
-                //   final password = _password ?? '';
-                //   if (password.length < 6) {
-                //     return 'A senha deve ter pelo menos 6 caracteres.';
-                //   }
-                // },
               ),
               const SizedBox(height: 15),
               ElevatedButton(
                 onPressed: _submit,
-                // onPressed: () {
-                //   Navigator.of(context).push(
-                //     MaterialPageRoute(builder: (ctx) {
-                //       return const PedidosPendentesAprovacao();
-                //     }),
-                //   );
-                // },
                 style: _formData.isLogin
                     ? ElevatedButton.styleFrom(
                         backgroundColor: Colors.red.shade700)
@@ -192,16 +148,6 @@ class _AuthFormState extends State<AuthForm> {
                   ),
                 ),
               ),
-              // TextButton(
-              //   onPressed: () {
-              //     setState(() {
-              //       _formData.toogleAuthMode();
-              //     });
-              //   },
-              //   child: Text(_formData.isLogin
-              //       ? 'Cadastrar usuário ?'
-              //       : 'Já possui cadastro ?'),
-              // ),
             ],
           ),
         ),

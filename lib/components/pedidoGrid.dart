@@ -8,18 +8,24 @@ import 'package:provider/provider.dart';
 class PedidoGrid extends StatelessWidget {
   
 
-  const PedidoGrid({Key? key}) : super(key: key);
+  const PedidoGrid({Key? key}) : super(key: key);  
 
   @override
   Widget build(BuildContext context) {
+  
+  
     final provider = Provider.of<PedidosLista>(context);
     final List<Pedidos> loadedPedidos = provider.pedidos;
 
-    return GridView.builder(         
+    
+
+    return GridView.builder(   
+      
+      shrinkWrap: true,      
       itemCount: loadedPedidos.length,
       itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
         value: loadedPedidos[i],
-        child: const PedidoGridItem(),
+        child:  const PedidoGridItem(),
       ),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(        
         crossAxisCount: 1,

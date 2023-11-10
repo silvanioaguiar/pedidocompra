@@ -3,6 +3,7 @@ import 'package:pedidocompra/models/pedidos.dart';
 import 'package:pedidocompra/models/pedidosLista.dart';
 import 'package:pedidocompra/pages/detalhesPedido.dart';
 import 'package:pedidocompra/pages/itensPedido.dart';
+import 'package:pedidocompra/pages/pedidosPendentes.dart';
 import 'package:pedidocompra/routes/appRoutes.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -10,14 +11,18 @@ import 'package:intl/intl.dart';
 class PedidoGridItem extends StatelessWidget {
   const PedidoGridItem({Key? key}) : super(key: key);
 
+
+
   @override
   Widget build(BuildContext context) {
-    final pedido = Provider.of<Pedidos>(context, listen: false);
+    //final pedido = Provider.of<Pedidos>(context, listen: false);
+    final pedido = Provider.of<Pedidos>(context);
     String valor1 = NumberFormat.currency(locale: 'br_Br', symbol: "R\$")
         .format(pedido.valor);
 
     var empresa = pedido.empresa;
     var logo;
+    
 
     if (empresa == 'Big Assistencia Tecnica' || empresa == 'Big Locacao') {
       logo = 'assets/images/logo_big.png';
@@ -32,6 +37,7 @@ class PedidoGridItem extends StatelessWidget {
       logo = 'assets/images/logo_Brumed.png';
     }
 
+    
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Container(
@@ -72,7 +78,8 @@ class PedidoGridItem extends StatelessWidget {
                           color: Color.fromARGB(255, 0, 102, 245)),
                     ),
                     const SizedBox(),
-                    Text(
+                    Text(   
+
                       pedido.fornecedor.length > 25
                           ? 'Fornecedor: ${pedido.fornecedor.substring(0, 25)}'
                           : 'Fornecedor: ${pedido.fornecedor}',
@@ -118,11 +125,14 @@ class PedidoGridItem extends StatelessWidget {
                       children: [
                         const SizedBox(width: 60),
                         IconButton(
-                          onPressed: () {
+                          onPressed: () {                     
+                           
                             Provider.of<PedidosLista>(
                               context,
                               listen: false,
-                            ).aprovarPedido(context, pedido);
+                            ).aprovarPedido(context, pedido);                            
+
+                          
                           },
                           icon: const Icon(Icons.beenhere_sharp,
                               color: Color.fromARGB(255, 34, 185, 39)),
@@ -145,23 +155,13 @@ class PedidoGridItem extends StatelessWidget {
                         const SizedBox(width: 60),
                         IconButton(
                           onPressed: () {
+                            
                               Provider.of<PedidosLista>(
                               context,
                               listen: false,
                             ).loadItensPedidos(context, pedido);
-
-                            // Navigator.of(context).pushNamed(
-                            //   AppRoutes.itensPedido
-                            // );
-                            //ItensPedido(empresa: pedido.pedido,pedido: pedido.empresa,);
-                            //Navigator.push(context, MaterialPageRoute(builder: (context) => ItensPedido(empresa: pedido.empresa, pedido: pedido.pedido,)));
-
-                            // Navigator.of(context).push(
-                            //   MaterialPageRoute(builder: (ctx) {
-                            //     return DetalhesPedido(
-                            //         empresa: pedido.empresa, pedido: pedido.pedido,);
-                            //   }),
-                            // );
+                            
+                           
                           },
                           icon: const Icon(Icons.list_alt),
                           color: Colors.white,

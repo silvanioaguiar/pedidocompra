@@ -1,7 +1,5 @@
 import 'package:pedidocompra/models/auth.dart';
 import 'package:pedidocompra/models/itens_pedidos.dart';
-import 'package:pedidocompra/models/itensPedidosLista.dart';
-import 'package:pedidocompra/models/pedidos.dart';
 import 'package:pedidocompra/models/pedidosLista.dart';
 import 'package:pedidocompra/pages/authOrHomePage.dart';
 import 'package:pedidocompra/pages/authPage.dart';
@@ -11,6 +9,7 @@ import 'package:pedidocompra/pages/itensPedido.dart';
 import 'package:pedidocompra/pages/menuEmpresas.dart';
 import 'package:pedidocompra/pages/pedidosPendentes.dart';
 import 'package:pedidocompra/routes/appRoutes.dart';
+import 'package:pedidocompra/services/navigator_service.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -43,22 +42,17 @@ class MyApp extends StatelessWidget {
           ),
         ),
         ChangeNotifierProxyProvider<Auth, PedidosLista>(
-          create: (_) => PedidosLista('', [], '', []),
+          create: (_) => PedidosLista('', [], []),
           update: (ctx, auth, previous) {
             return PedidosLista(
               auth.token ?? '',
               previous?.pedidos ?? [],
-              auth.senha ?? '',
+              //auth.senha ?? '',
               previous?.itensDoPedido ?? [],
             );
           },
         ),
-        // ChangeNotifierProvider(
-        //   create: (_) => Pedidos(empresa: '', pedido: '', fornecedor: '', valor: 0, condicaoPagamento: ''),
-        // ),
-        //  ChangeNotifierProvider(
-        //   create: (_) => ItensPedidos(codProduto: '',condicaoPagamento: '',empresa: '',fornecedor: '',nomeProduto:'',pedido:'',precoTotal: 0,precoUnitario: 0,quantidade: 0,valor: 0  ),
-        // ),
+       
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -66,11 +60,10 @@ class MyApp extends StatelessWidget {
           primaryColor: const Color.fromARGB(255, 0, 30, 52),
           useMaterial3: true,
         ),
-
+        navigatorKey: NavigatorService.instance.key,
         // home: const ProductsOverviewPage(),
         routes: {
-          AppRoutes.authOrHome: (ctx) => const AuthOrHomePage(),
-          //AppRoutes.home: (ctx) => const HomePage(),
+          AppRoutes.authOrHome: (ctx) => const AuthOrHomePage(),          
           AppRoutes.authPage: (ctx) => const AuthPage(),
           AppRoutes.pedidosPendentes: (ctx) =>
               PedidosPendentesAprovacao(empresa: ''),

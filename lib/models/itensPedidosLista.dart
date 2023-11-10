@@ -33,7 +33,7 @@ class ItensPedidosLista with ChangeNotifier {
 
     final response = await http.get(
         Uri.parse(
-            'http://192.168.1.5:8084/REST/api/biosat/v1/PedidosPendentes/$empresa/$pedidos'),
+            'http://biosat.dyndns.org:8084/REST/api/biosat/v1/PedidosPendentes/$empresa/$pedidos'),
         headers: {
           'Content-Type': 'application/json',
           "accept": "application/json",
@@ -116,7 +116,7 @@ class ItensPedidosLista with ChangeNotifier {
             onPressed: () async {
               final response = await http.put(
                   Uri.parse(
-                      'http://192.168.1.5:8084/REST/api/biosat/v1/PedidosPendentes/$pedido/$empresa/$_senha'),
+                      'http://biosat.dyndns.org:8084/REST/api/biosat/v1/PedidosPendentes/$pedido/$empresa/$_senha'),
                   headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
@@ -250,7 +250,7 @@ class ItensPedidosLista with ChangeNotifier {
             onPressed: () async {
               final response = await http.put(
                   Uri.parse(
-                      'http://192.168.1.5:8084/REST/api/biosat/v1/PedidosPendentes/$pedido/$empresa/$_senha'),
+                      'http://biosat.dyndns.org:8084/REST/api/biosat/v1/PedidosPendentes/$pedido/$empresa/$_senha'),
                   headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
