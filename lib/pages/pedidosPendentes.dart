@@ -46,14 +46,27 @@ class _PedidosPendentesAprovacaoState extends State<PedidosPendentesAprovacao> {
     ).loadPedidos(context, xempresa);
   }
 
+  Future<void> _refreshPendentesEntrega(BuildContext context) {
+    return Provider.of<PedidosLista>(
+      context,
+      listen: false,
+    ).loadPendentesEntrega(context, xempresa);
+  }
+
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+
+    /*24 is for notification bar on Android*/
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 7;
+    final double itemWidth = size.width / 2;
+    final ScrollController _mycontroller = new ScrollController();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Colors.white,
         title: Text(
-          "Pedidos Aguardando Aprovação",
+          "Pedidos e Status",
           textAlign: TextAlign.left,
           style: TextStyle(
             color: Theme.of(context).secondaryHeaderColor,
@@ -61,11 +74,66 @@ class _PedidosPendentesAprovacaoState extends State<PedidosPendentesAprovacao> {
         ),
       ),
       drawer: AppDrawer(),
-      body: RefreshIndicator(
-        onRefresh: () => _refreshProducts(context),
-        child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : const PedidoGrid(),
+      body: ListView(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(5.0),
+            child: Row(
+              children: [
+                TextButton.icon(
+                  onPressed: () {
+                    _refreshProducts(context);
+                  },
+                  icon: const Icon(
+                    //Icons.toggle_on,
+                    Icons.check,
+                    size: 25,
+                    color: Color.fromARGB(255, 251, 251, 251),
+                  ),
+                  label: const Text('Aguard. Aprovação',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 249, 249, 250),
+                      )),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.all(5),
+                    backgroundColor: const Color.fromARGB(255, 14, 69, 114),
+                    foregroundColor: const Color.fromARGB(255, 245, 245, 245),
+                    //disabledBackgroundColor:  const Color.fromARGB(255, 100, 45, 45),
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                TextButton.icon(
+                  onPressed: () {
+                    _refreshPendentesEntrega(context);
+                  },
+                  icon: const Icon(
+                    //Icons.toggle_on,
+                    Icons.timelapse_rounded,
+                    size: 25,
+                    color: Color.fromARGB(255, 254, 254, 254),
+                  ),
+                  label:  const Text('Pendentes Entrega',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 249, 250, 250),
+                      )),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.all(5),
+                    backgroundColor: const Color.fromARGB(255, 108, 20, 14),
+                    foregroundColor: const Color.fromARGB(255, 245, 245, 245),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          RefreshIndicator(
+            onRefresh: () => _refreshProducts(context),
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : const PedidoGrid(),
+          ),
+        ],
       ),
       //drawer: const AppDrawer(),
     );

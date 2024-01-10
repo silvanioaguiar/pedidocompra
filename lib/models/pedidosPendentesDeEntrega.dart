@@ -93,7 +93,14 @@ class PedidosLista with ChangeNotifier {
                 onPressed: () {
                   NavigatorService
                   .instance
-                  .pop();                 
+                  .pop();
+                  //Navigator.of(context).pop();
+                  //Navigator.of(context, rootNavigator: true).pop();
+                  // Navigator.of(context).push(
+                  //   MaterialPageRoute(builder: (ctx) {
+                  //     return const MenuEmpresas();
+                  //   }),
+                  // );
                 },
                 child: const Text("Fechar",
                     style: TextStyle(
@@ -124,11 +131,18 @@ class PedidosLista with ChangeNotifier {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             actions: [
-              TextButton(                
+              TextButton(
+                //onPressed: () => Navigator.of(context).pop(),
                 onPressed: () {
                   NavigatorService
                   .instance
-                  .pop();                 
+                  .pop();
+                  //Navigator.of(context, rootNavigator: true).pop();
+                  // Navigator.of(context).push(
+                  //   MaterialPageRoute(builder: (ctx) {
+                  //     return const MenuEmpresas();
+                  //   }),
+                  // );
                 },
                 child: const Text("Fechar",
                     style: TextStyle(
@@ -156,15 +170,39 @@ class PedidosLista with ChangeNotifier {
             condicaoPagamento: data['principal']['dadospedidos']
                 ['condicaoPagamento'],
             status: data['principal']['status'], 
-            comprador: data['principal']['dadospedidos']['comprador'],  
-            aprovadorPedido: data['principal']['dadospedidos']['aprovador'],           
+
+            // sc: data['principal']['dadospedidos']['sc'],
+            // solicitante: data['principal']['dadospedidos']['solicitante'],
+            // dataSC: data['principal']['dadospedidos']['dataSC'],
+            // aprovadorDaSC: data['principal']['dadospedidos']['aprovadorDaSC'],
+            // dataAprovacaoSC: data['principal']['dadospedidos']['dataAprovacaoSC'],
+             comprador: data['principal']['dadospedidos']['comprador'],
+             aprovadorPedido: data['principal']['dadospedidos']['aprovador'],
           ),
         );
       });
     }
-   
+    // } else {
+    //   data = jsonDecode(response.body);
+    //   utf8.decode(response.bodyBytes);
+    //   data.asMap();
+    //   data.forEach((data) {
+    //     pedidos.add(
+    //       Pedidos(
+    //         empresa: data['principal']['dadospedidos']['empresa'],
+    //         pedido: data['principal']['pedido'],
+    //         fornecedor: data['principal']['dadospedidos']['fornecedor'],
+    //         valor: data['principal']['dadospedidos']['valor'] == null
+    //             ? 0.0
+    //             : data['principal']['dadospedidos']['valor'].toDouble(),
+    //         condicaoPagamento: data['principal']['dadospedidos']
+    //             ['condicaoPagamento'],
+    //       ),
+    //     );
+    //   });
+    // }
     _pedidos = pedidos.reversed.toList();
-   
+    //_pedidos.reversed.toList();
 
     notifyListeners();
   }
@@ -848,209 +886,4 @@ class PedidosLista with ChangeNotifier {
       ),
     );
   }
-
-  Future<void> loadPendentesEntrega(context, empresa) async {
-    List<Pedidos> pedidos = [];
-    _pedidos.clear();
-    pedidos.clear();
-    String empresaFilial = '';
-    Map<String, dynamic> data0 = {};
-    data = [];
-
-    if (empresa == 'Libertad') {
-      empresaFilial = '01,01';
-    } else if (empresa == 'Biosat Matriz Fabrica') {
-      empresaFilial = '02,01';
-    } else if (empresa == 'Biosat Filial') {
-      empresaFilial = '02,02';
-    } else if (empresa == 'Big Assistencia Tecnica') {
-      empresaFilial = '05,01';
-    } else if (empresa == 'Big Locacao') {
-      empresaFilial = '05,02';
-    } else if (empresa == 'E-med') {
-      empresaFilial = '06,01';
-    } else if (empresa == 'Brumed') {
-      empresaFilial = '08,01';
-    }
-
-    final response = await http.get(
-        Uri.parse(            
-            'http://biosat.dyndns.org:8084/REST/api/biosat/v1/PedidosPendentes/PendentesEntrega/$empresa'),
-        headers: {
-          'Content-Type': 'application/json',
-          "accept": "application/json",
-          "Accept-Charset": "utf-8",
-          'tenantId': empresaFilial,
-          'Authorization': 'Bearer $_token',
-        });
-
-    if (response.statusCode == 500) {
-      data0 = jsonDecode(response.body);
-
-      if (data0['errorMessage'] ==
-          'Não existem dados para serem apresentados') {
-        showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            title: const Text(
-              'ATENÇÃO!',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            content: const Text(
-              //'Ocorreu um arro ao tentar aprovar o pedido.Por favor entrar em contato com o suporte do sistema',
-              'Não tem pedidos pendentes de aprovação para o seu usuário nessa empresa no momento.',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  NavigatorService
-                  .instance
-                  .pop();                 
-                },
-                child: const Text("Fechar",
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 5, 0, 0))),
-              ),
-            ],
-          ),
-        );
-      }
-    } else if (response.statusCode == 200 &&
-        response.body ==
-            '{"Mensagem Principal":"Usuário não cadastrado como aprovador para essa empresa.","RETURN":true,"MESSAGE":"Usuário não cadastrado."}') {
-      data0 = jsonDecode(response.body);
-
-      if (data0['MESSAGE'] == 'Usuário não cadastrado.') {
-        showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            title: const Text(
-              'ATENÇÃO!',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            content: const Text(
-              //'Ocorreu um arro ao tentar aprovar o pedido.Por favor entrar em contato com o suporte do sistema',
-              'Usuário não cadastrado como aprovador para essa empresa.',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            actions: [
-              TextButton(                
-                onPressed: () {
-                  NavigatorService
-                  .instance
-                  .pop();                 
-                },
-                child: const Text("Fechar",
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 5, 0, 0))),
-              ),
-            ],
-          ),
-        );
-      }
-    } else {
-      data = jsonDecode(response.body);
-      utf8.decode(response.bodyBytes);
-      data.asMap();
-      data.forEach((data) {
-        pedidos.add(
-          Pedidos(
-            empresa: data['principal']['dadospedidos']['empresa'],
-            pedido: data['principal']['pedido'],
-            fornecedor: data['principal']['dadospedidos']['fornecedor'],
-            valor: data['principal']['dadospedidos']['valor'] == null
-                ? 0.0
-                : data['principal']['dadospedidos']['valor'].toDouble(),
-            condicaoPagamento: data['principal']['dadospedidos']
-                ['condicaoPagamento'], 
-            status: data['principal']['status'], 
-            comprador: data['principal']['dadospedidos']['comprador'],  
-            aprovadorPedido: data['principal']['dadospedidos']['aprovador'],        
-          ),
-        );
-      });
-    }
-   
-    _pedidos = pedidos.reversed.toList();
-   
-
-    notifyListeners();
-  }
-
-  Future<void> loadItensPendentesEntrega(context, Pedidos) async {
-    String pedido = Pedidos.pedido;
-    String empresa = Pedidos.empresa;
-
-    List<ItensPedidos> itensDoPedido = [];
-    _itensDoPedido.clear();
-    itensDoPedido.clear();
-
-    final response = await http.get(
-        Uri.parse(            
-            'http://biosat.dyndns.org:8084/REST/api/biosat/v1/PedidosPendentes/itensEntregaPedidosPendentes/$empresa/$pedido'),
-        headers: {
-          'Content-Type': 'application/json',
-          "accept": "application/json",
-          "Accept-Charset": "utf-8",
-          'Authorization': 'Bearer $_token',
-        });
-
-    //if (response.body == 'null') return;
-
-    //data = jsonDecode(response.body);
-
-    data2 = jsonDecode(response.body);
-    utf8.decode(response.bodyBytes);
-    data2.asMap();
-    data2.forEach((data2) {
-      itensDoPedido.add(
-        ItensPedidos(
-          empresa: data2['principal']['dadospedidos']['empresa'],
-          pedido: data2['principal']['pedido'],
-          fornecedor: data2['principal']['dadospedidos']['fornecedor'],
-          valor: data2['principal']['dadospedidos']['valor'] == null
-              ? 0.0
-              : data2['principal']['dadospedidos']['valor'].toDouble(),
-          condicaoPagamento: data2['principal']['dadospedidos']
-              ['condicaoPagamento'],
-          sc: data2['principal']['dadospedidos']['sc'],
-          solicitante: data2['principal']['dadospedidos']['solicitante'],
-          dataSC: data2['principal']['dadospedidos']['dataSC'],
-          aprovadorDaSC: data2['principal']['dadospedidos']['aprovadorDaSC'],
-          dataAprovacaoSC: data2['principal']['dadospedidos']['dataAprovacaoSC'],
-          comprador: data2['principal']['dadospedidos']['comprador'],
-          codProduto: data2['principal']['dadospedidos']['codigoProduto'],
-          nomeProduto: data2['principal']['dadospedidos']['nomeProduto'],
-          quantidade: data2['principal']['dadospedidos']['quantidade'] == null
-              ? 0.0
-              : data2['principal']['dadospedidos']['quantidade'].toDouble(),
-          unidadeMedida: data2['principal']['dadospedidos']['unidadeMedida'],
-          precoUnitario: data2['principal']['dadospedidos']['valorUnitario'] ==
-                  null
-              ? 0.0
-              : data2['principal']['dadospedidos']['valorUnitario'].toDouble(),
-          precoTotal: data2['principal']['dadospedidos']['valorTotal'] == null
-              ? 0.0
-              : data2['principal']['dadospedidos']['valorTotal'].toDouble(),
-          status: data2['principal']['status'],
-        ),
-      );
-    });
-
-    //_pedidos.reversed.toList();
-    notifyListeners();
-    //itensDoPedido.asMap();
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ItensPedido(
-                  itensPedido: itensDoPedido,
-                )));
-  }
-
 }

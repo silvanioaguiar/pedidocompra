@@ -13,6 +13,13 @@ class ItensPedidos with ChangeNotifier {
   final String unidadeMedida;
   final double precoUnitario;
   final double precoTotal;
+  final String sc;
+  final String solicitante;
+  final String dataSC;
+  final String aprovadorDaSC;
+  final String dataAprovacaoSC;
+  final String comprador;
+  final String status;
 
   
   ItensPedidos({
@@ -27,6 +34,13 @@ class ItensPedidos with ChangeNotifier {
     required this.unidadeMedida,
     required this.precoUnitario,
     required this.precoTotal,
+    required this.sc,
+    required this.solicitante,
+    required this.dataSC,
+    required this.aprovadorDaSC,
+    required this.dataAprovacaoSC,
+    required this.comprador,
+    required this.status
    
   });
 

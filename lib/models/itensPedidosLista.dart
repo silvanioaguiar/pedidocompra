@@ -55,6 +55,14 @@ class ItensPedidosLista with ChangeNotifier {
               : data['principal']['dadospedidos']['valor'].toDouble(),
           condicaoPagamento: data['principal']['dadospedidos']
               ['condicaoPagamento'],
+
+          sc: data['principal']['dadospedidos']['sc'],
+          solicitante: data['principal']['dadospedidos']['solicitante'],
+          dataSC: data['principal']['dadospedidos']['dataSC'],
+          aprovadorDaSC: data['principal']['dadospedidos']['aprovadorDaSC'],
+          dataAprovacaoSC: data['principal']['dadospedidos']['dataAprovacaoSC'],
+          comprador: data['principal']['dadospedidos']['comprador'],
+
           codProduto: data['principal']['dadospedidos']['codigoProduto'],
           nomeProduto: data['principal']['dadospedidos']['nomeProduto'],
           quantidade: data['principal']['dadospedidos']['quantidade'] == null
@@ -68,6 +76,7 @@ class ItensPedidosLista with ChangeNotifier {
           precoTotal: data['principal']['dadospedidos']['valorTotal'] == null
               ? 0.0
               : data['principal']['dadospedidos']['valorTotal'].toDouble(),
+          status: data['principal']['status'],
         ),
       );
     });

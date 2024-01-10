@@ -11,8 +11,6 @@ import 'package:intl/intl.dart';
 class PedidoGridItem extends StatelessWidget {
   const PedidoGridItem({Key? key}) : super(key: key);
 
-
-
   @override
   Widget build(BuildContext context) {
     //final pedido = Provider.of<Pedidos>(context, listen: false);
@@ -22,7 +20,9 @@ class PedidoGridItem extends StatelessWidget {
 
     var empresa = pedido.empresa;
     var logo;
-    
+    var status = pedido.status;
+    var color1Card;
+    var color2Card;
 
     if (empresa == 'Big Assistencia Tecnica' || empresa == 'Big Locacao') {
       logo = 'assets/images/logo_big.png';
@@ -37,20 +37,28 @@ class PedidoGridItem extends StatelessWidget {
       logo = 'assets/images/logo_Brumed.png';
     }
 
-    
+    if (status == "Aguardando Aprovação") {
+      color1Card = Color.fromARGB(255, 5, 34, 58);
+      color2Card = Color.fromARGB(255, 85, 170, 250);
+    } else if (status == "Pendente de Entrega") {
+      color1Card = Color.fromARGB(255, 58, 5, 5);
+      color2Card = Color.fromARGB(255, 162, 230, 255);
+    }
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Container(
         margin: const EdgeInsets.all(4),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
+          gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: <Color>[
               //Color.fromARGB(255, 5, 34, 58),
               //Color.fromARGB(255, 150, 35, 27),
-              Color.fromARGB(255, 5, 34, 58),
-              Color.fromARGB(255, 85, 170, 250),
+              //Color.fromARGB(255, 5, 34, 58),
+              //Color.fromARGB(255, 85, 170, 250),
+              color1Card,
+              color2Card,
             ],
           ),
           borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -78,8 +86,7 @@ class PedidoGridItem extends StatelessWidget {
                           color: Color.fromARGB(255, 0, 102, 245)),
                     ),
                     const SizedBox(),
-                    Text(   
-
+                    Text(
                       pedido.fornecedor.length > 25
                           ? 'Fornecedor: ${pedido.fornecedor.substring(0, 25)}'
                           : 'Fornecedor: ${pedido.fornecedor}',
@@ -120,80 +127,121 @@ class PedidoGridItem extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                    const SizedBox(height: 10, width: 100),
-                    Row(
-                      children: [
-                        const SizedBox(width: 60),
-                        IconButton(
-                          onPressed: () {                     
-                           
-                            Provider.of<PedidosLista>(
-                              context,
-                              listen: false,
-                            ).aprovarPedido(context, pedido);                            
-
-                          
-                          },
-                          icon: const Icon(Icons.beenhere_sharp,
-                              color: Color.fromARGB(255, 34, 185, 39)),
-                          iconSize: 30,
-                          tooltip: "Aprovar",
-                        ),
-                        const SizedBox(width: 60),
-                        IconButton(
-                          onPressed: () {
-                            Provider.of<PedidosLista>(
-                              context,
-                              listen: false,
-                            ).reprovarPedido(context, pedido);
-                          },
-                          icon: const Icon(Icons.cancel,
-                              color: Color.fromARGB(255, 155, 27, 27)),
-                          iconSize: 30,
-                          tooltip: "Reprovar",
-                        ),
-                        const SizedBox(width: 60),
-                        IconButton(
-                          onPressed: () {
-                            
-                              Provider.of<PedidosLista>(
-                              context,
-                              listen: false,
-                            ).loadItensPedidos(context, pedido);
-                            
-                           
-                          },
-                          icon: const Icon(Icons.list_alt),
+                    if (status == "Pendente de Entrega")
+                      Text(
+                        'Comprador: ${pedido.comprador}',
+                        textAlign: TextAlign.end,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                           color: Colors.white,
-                          iconSize: 30,
-                          tooltip: 'Vizualizar Pedido',
                         ),
-                      ],
-                    ),
-                    const Row(
-                      children: [
-                        SizedBox(width: 60),
-                        Text(
-                          'Aprovar',
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 34, 185, 39),
-                              fontWeight: FontWeight.bold),
+                      ),
+                    if (status == "Pendente de Entrega")
+                      Text(
+                        'Pedido Aprovado por: ${pedido.aprovadorPedido}',
+                        textAlign: TextAlign.end,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
-                        SizedBox(width: 50),
-                        Text(
-                          'Reprovar',
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 155, 21, 21),
-                              fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(width: 50),
-                        Text(
-                          'Visualizar',
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    )
+                      ),
+                    const SizedBox(height: 10, width: 100),
+                    if (status == "Aguardando Aprovação")
+                      Row(
+                        children: [
+                          const SizedBox(width: 60),
+                          IconButton(
+                            onPressed: () {
+                              Provider.of<PedidosLista>(
+                                context,
+                                listen: false,
+                              ).aprovarPedido(context, pedido);
+                            },
+                            icon: const Icon(Icons.beenhere_sharp,
+                                color: Color.fromARGB(255, 34, 185, 39)),
+                            iconSize: 30,
+                            tooltip: "Aprovar",
+                          ),
+                          const SizedBox(width: 60),
+                          IconButton(
+                            onPressed: () {
+                              Provider.of<PedidosLista>(
+                                context,
+                                listen: false,
+                              ).reprovarPedido(context, pedido);
+                            },
+                            icon: const Icon(Icons.cancel,
+                                color: Color.fromARGB(255, 155, 27, 27)),
+                            iconSize: 30,
+                            tooltip: "Reprovar",
+                          ),
+                          const SizedBox(width: 60),
+                          IconButton(
+                            onPressed: () {
+                              Provider.of<PedidosLista>(
+                                context,
+                                listen: false,
+                              ).loadItensPedidos(context, pedido);
+                            },
+                            icon: const Icon(Icons.list_alt),
+                            color: Colors.white,
+                            iconSize: 30,
+                            tooltip: 'Vizualizar Pedido',
+                          ),
+                        ],
+                      ),
+                    if (status == "Pendente de Entrega")
+                      Row(
+                        children: [
+                          const SizedBox(width: 115),
+                          IconButton(
+                            onPressed: () {
+                              Provider.of<PedidosLista>(
+                                context,
+                                listen: false,
+                              ).loadItensPendentesEntrega(context, pedido);
+                            },
+                            icon: const Icon(Icons.list_alt),
+                            color: Colors.white,
+                            iconSize: 30,
+                            tooltip: 'Vizualizar Pedido',
+                          ),
+                          const Text(
+                            'Visualizar',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    if (status == "Aguardando Aprovação")
+                      const Row(
+                        children: [
+                          SizedBox(width: 60),
+                          Text(
+                            'Aprovar',
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 34, 185, 39),
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(width: 50),
+                          Text(
+                            'Reprovar',
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 155, 21, 21),
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(width: 50),
+                          Text(
+                            'Visualizar',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                   ],
                 ),
               ),
