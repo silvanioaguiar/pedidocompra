@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/components/appDrawer.dart';
 import 'package:intl/intl.dart';
-import 'package:fl_chart/fl_chart.dart';
+
 
 const List<String> list = <String>[
   'Cliente',
