@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/models/auth.dart';
 import 'package:pedidocompra/pages/authPage.dart';
-import 'package:pedidocompra/pages/menuEmpresas.dart';
-import 'package:pedidocompra/pages/pedidosPendentes.dart';
+import 'package:pedidocompra/pages/menuModulos.dart';
 import 'package:provider/provider.dart';
 
 
@@ -24,7 +23,7 @@ class AuthOrHomePage extends StatelessWidget {
             child: Text('Ocorreu um erro!'),
           );
         } else {
-          return auth.isAuth ? const MenuEmpresas() : const AuthPage();
+          return auth.isAuth ? const MenuModulos() : const AuthPage();
         }
       },
     );

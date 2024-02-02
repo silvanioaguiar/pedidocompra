@@ -6,5 +6,6 @@ class AppRoutes {
   static const menuEmpresas = '/menuPendentes';
   static const detalhesPedido = '/detalhesPedido';
   static const itensPedido = '/itensPedido';
-  
+  static const menuModulos = '/menuModulos';
+  static const faturamento = '/faturamento';  
 }
