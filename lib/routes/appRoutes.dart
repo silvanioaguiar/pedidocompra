@@ -8,4 +8,5 @@ class AppRoutes {
   static const itensPedido = '/itensPedido';
   static const menuModulos = '/menuModulos';
   static const faturamento = '/faturamento';  
+  static const graficoRepresentante= '/graficoRepresentante';
 }

@@ -1,7 +1,9 @@
+import 'package:d_chart/commons/data_model.dart';
+import 'package:d_chart/ordinal/bar.dart';
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/components/appDrawer.dart';
 import 'package:intl/intl.dart';
-
+import 'package:pedidocompra/pages/graficoRepresentante.dart';
 
 const List<String> list = <String>[
   'Cliente',
@@ -56,12 +58,45 @@ class _FaturamentoPageState extends State<FaturamentoPage> {
     return selectedDateFim;
   }
 
+  // Future<Widget> _graficoRepresentante(BuildContext context) async {
+  //   return Builder(
+  //     builder: (context) {
+  //       return Row(
+  //         children: [
+  //           ListView(
+  //             padding: EdgeInsets.all(16),
+  //             children: [
+  //               AspectRatio(
+  //                 aspectRatio: 16 / 9,
+  //                 child: DChartBarO(
+  //                   vertical: false,
+  //                   groupList: [
+  //                     OrdinalGroup(
+  //                       id: '1',
+  //                       data: [
+  //                         OrdinalData(domain: 'Mon', measure: 2),
+  //                         OrdinalData(domain: 'Tue', measure: 6),
+  //                         OrdinalData(domain: 'Wed', measure: 3),
+  //                         OrdinalData(domain: 'Thu', measure: 7),
+  //                       ],
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ],
+  //       );
+  //     }
+  //   );
+  // }
+
   String getDateInicio() {
     // ignore: unnecessary_null_comparison
     if (selectedDateInicio == null) {
       return 'select date';
     } else {
-      return DateFormat('d MMM, yyyy','pt').format(selectedDateInicio);
+      return DateFormat('d MMM, yyyy', 'pt').format(selectedDateInicio);
     }
   }
 
@@ -70,7 +105,7 @@ class _FaturamentoPageState extends State<FaturamentoPage> {
     if (selectedDateFim == null) {
       return 'select date';
     } else {
-      return DateFormat('d MMM, yyyy','pt').format(selectedDateFim);
+      return DateFormat('d MMM, yyyy', 'pt').format(selectedDateFim);
     }
   }
 
@@ -125,6 +160,18 @@ class _FaturamentoPageState extends State<FaturamentoPage> {
                   // This is called when the user selects an item.
                   setState(() {
                     dropdownValue = value!;
+                    if (dropdownValue == "Representante") {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (ctx) {
+                        return GraficoRepresentantePage();
+                      }),
+                    );
+                    } else  {
+
+                    }
+                    // if (dropdownValue == "Representante") {
+                    //   _graficoRepresentante(context);
+                    // }
                   });
                 },
                 items: list.map<DropdownMenuItem<String>>((String value) {
@@ -193,6 +240,12 @@ class _FaturamentoPageState extends State<FaturamentoPage> {
               ),
             ],
           ),
+          // _graficoRepresentante
+          // Row(
+          //   children: [
+          //     _graficoRepresentante
+          //   ],
+          // ),
         ],
       ),
     );

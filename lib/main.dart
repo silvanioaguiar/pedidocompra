@@ -6,6 +6,7 @@ import 'package:pedidocompra/pages/authPage.dart';
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/pages/detalhesPedido.dart';
 import 'package:pedidocompra/pages/faturamento.dart';
+import 'package:pedidocompra/pages/graficoRepresentante.dart';
 import 'package:pedidocompra/pages/itensPedido.dart';
 import 'package:pedidocompra/pages/menuEmpresas.dart';
 import 'package:pedidocompra/pages/menuModulos.dart';
@@ -90,6 +91,7 @@ class MyApp extends StatelessWidget {
               ),
           AppRoutes.itensPedido: (ctx) => ItensPedido(itensPedido: []),
           AppRoutes.faturamento: (ctx) => const FaturamentoPage(),
+          AppRoutes.graficoRepresentante: (ctx) => GraficoRepresentantePage(),
         },
         debugShowCheckedModeBanner: false,
       ),
