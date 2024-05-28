@@ -5,7 +5,8 @@ class Pedidos with ChangeNotifier {
   final String empresa;
   final String pedido;
   final String fornecedor;
-  final double valor;
+  //final double valor;
+  final String valor;
   final String condicaoPagamento;
   final String status;
   // final String sc;

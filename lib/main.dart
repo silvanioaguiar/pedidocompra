@@ -1,20 +1,25 @@
 import 'package:pedidocompra/models/auth.dart';
-import 'package:pedidocompra/models/itens_pedidos.dart';
-import 'package:pedidocompra/models/pedidosLista.dart';
+import 'package:pedidocompra/models/moduloFaturamentoModels/fat_convenioLista.dart';
+import 'package:pedidocompra/models/moduloComprasModels/itens_pedidos.dart';
+import 'package:pedidocompra/models/moduloComprasModels/pedidosLista.dart';
+import 'package:pedidocompra/pages/moduloFaturamento/faturamentoEmpresas.dart';
+import 'package:pedidocompra/pages/moduloFaturamento/graficoConvenio.dart';
 import 'package:pedidocompra/pages/authOrHomePage.dart';
 import 'package:pedidocompra/pages/authPage.dart';
 import 'package:flutter/material.dart';
-import 'package:pedidocompra/pages/detalhesPedido.dart';
-import 'package:pedidocompra/pages/faturamento.dart';
-import 'package:pedidocompra/pages/graficoRepresentante.dart';
-import 'package:pedidocompra/pages/itensPedido.dart';
-import 'package:pedidocompra/pages/menuEmpresas.dart';
+import 'package:pedidocompra/pages/moduloCompras/detalhesPedido.dart';
+import 'package:pedidocompra/pages/moduloFaturamento/graficoRepresentante.dart';
+import 'package:pedidocompra/pages/moduloCompras/itensPedido.dart';
+import 'package:pedidocompra/pages/moduloCompras/menuEmpresas.dart';
+import 'package:pedidocompra/pages/moduloFaturamento/menuEmpresasFat.dart';
 import 'package:pedidocompra/pages/menuModulos.dart';
-import 'package:pedidocompra/pages/pedidosPendentes.dart';
+import 'package:pedidocompra/pages/moduloCompras/pedidosPendentes.dart';
 import 'package:pedidocompra/routes/appRoutes.dart';
 import 'package:pedidocompra/services/navigator_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'models/moduloFaturamentoModels/fat_empresaLista.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,7 +40,7 @@ class MyApp extends StatelessWidget {
             empresa: '',
             pedido: '',
             fornecedor: '',
-            valor: 0,
+            valor: '0',
             condicaoPagamento: '',
             sc: '',
             solicitante: '',
@@ -47,10 +52,35 @@ class MyApp extends StatelessWidget {
             nomeProduto: '',
             quantidade: 0,
             unidadeMedida: '',
-            precoUnitario: 0,
-            precoTotal: 0,
+            precoUnitario: '0',
+            precoTotal: '0',
             status: '',
           ),
+        ),
+        // ChangeNotifierProvider(
+        //   create: (_) => FaturamentoConvenio(
+        //     empresa: '',
+        //     convenio: '',
+        //     valor: 0,
+        //   ),
+        // ),
+        ChangeNotifierProxyProvider<Auth, FatConvenioLista>(
+          create: (_) => FatConvenioLista('',[]),
+          update: (ctx, auth, previous) {
+            return FatConvenioLista(
+              auth.token ?? '',
+              previous?.convenios ?? [],
+            );
+          },
+        ),
+        ChangeNotifierProxyProvider<Auth, FatEmpresaLista>(
+          create: (_) => FatEmpresaLista('',[]),
+          update: (ctx, auth, previous) {
+            return FatEmpresaLista(
+              auth.token ?? '',
+              previous?.empresas ?? [],
+            );
+          },
         ),
         ChangeNotifierProxyProvider<Auth, PedidosLista>(
           create: (_) => PedidosLista('', [], []),
@@ -65,7 +95,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        localizationsDelegates: const  [
+        localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
@@ -85,13 +115,16 @@ class MyApp extends StatelessWidget {
               PedidosPendentesAprovacao(empresa: ''),
           AppRoutes.menuModulos: (ctx) => const MenuModulos(),
           AppRoutes.menuEmpresas: (ctx) => const MenuEmpresas(),
+          AppRoutes.menuEmpresasFat: (ctx) => const MenuEmpresasFat(),
           AppRoutes.detalhesPedido: (ctx) => DetalhesPedido(
                 empresa: '',
                 pedido: '',
               ),
           AppRoutes.itensPedido: (ctx) => ItensPedido(itensPedido: []),
-          AppRoutes.faturamento: (ctx) => const FaturamentoPage(),
+          AppRoutes.faturamentoEmpresas: (ctx) => const FaturamentoEmpresasPage(),
           AppRoutes.graficoRepresentante: (ctx) => GraficoRepresentantePage(),
+          AppRoutes.graficoConvenio: (ctx) =>  GraficoConvenio(
+                empresa: ''),
         },
         debugShowCheckedModeBanner: false,
       ),

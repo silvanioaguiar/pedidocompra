@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:pedidocompra/data/store.dart';
 import 'package:pedidocompra/exceptions/auth_exception.dart';
 import 'package:pedidocompra/models/auth.dart';
 import 'package:provider/provider.dart';
@@ -24,16 +25,14 @@ class _AuthFormState extends State<AuthForm> {
   //bool _isSignup() => _authMode == AuthMode.signup;
   final _formKey = GlobalKey<FormState>();
   final _formData = AuthFormData();
+  String? _userLog;
+  String? _passwordLog;
   bool _isLoading = false;
-  
-  
 
   final Map<String, String> _authData = {
     'usuario': '',
     'senha': '',
   };
-
-  
 
   void _showErrorDialog(String msg) {
     showDialog(
@@ -52,6 +51,11 @@ class _AuthFormState extends State<AuthForm> {
   }
 
   Future<void> _submit() async {
+    Store.saveMap('userLogin', {
+      'senha': _controladorSenha.text,
+      'usuario': _controladorNome.text,
+    });
+
     final isValid = _formKey.currentState?.validate() ?? false;
 
     if (!isValid) {
@@ -66,6 +70,7 @@ class _AuthFormState extends State<AuthForm> {
     try {
       if (_isLogin()) {
         // Login
+
         await auth.login(
           _authData['usuario']!,
           _authData['senha']!,
@@ -75,7 +80,8 @@ class _AuthFormState extends State<AuthForm> {
     } on AuthException catch (error) {
       _showErrorDialog(error.toString());
     } catch (error) {
-      _showErrorDialog('Ocorreu um erro inesperado.Verificar com o departamento de TI se o servidor está online.');
+      _showErrorDialog(
+          'Ocorreu um erro inesperado.Verificar com o departamento de TI se o servidor está online.');
     }
 
     setState(() => _isLoading = false);
@@ -83,6 +89,28 @@ class _AuthFormState extends State<AuthForm> {
 
   final TextEditingController _controladorNome = TextEditingController();
   final TextEditingController _controladorSenha = TextEditingController();
+
+  @override
+  void initState() {    
+
+      _loginData();
+
+    super.initState();
+
+    
+  }
+
+  Future<void> _loginData() async {
+    final userLogin = await Store.getMap('userLogin');
+    if (userLogin.isEmpty) return;
+
+    _passwordLog = userLogin['senha'];
+    _userLog = userLogin['usuario'];    
+
+    _controladorNome.text = _userLog as String;
+    _controladorSenha.text = _passwordLog as String;
+  }
+
   bool _passwordInVisible = true;
 
   @override
@@ -107,6 +135,7 @@ class _AuthFormState extends State<AuthForm> {
               ),
               TextFormField(
                 controller: _controladorNome,
+                //initialValue: 'silvanio.junior',
                 key: const ValueKey('usuario'),
                 decoration: const InputDecoration(labelText: 'Usuário'),
                 onSaved: (usuario) => _authData['usuario'] = usuario ?? '',
@@ -114,19 +143,19 @@ class _AuthFormState extends State<AuthForm> {
               TextFormField(
                 controller: _controladorSenha,
                 key: const ValueKey('senha'),
+                //initialValue: _passwordLog,
                 obscureText: _passwordInVisible,
-                decoration:  InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Senha',
                   suffixIcon: IconButton(
-                    icon: Icon(                      
+                    icon: Icon(
                       _passwordInVisible
                           ? Icons.visibility_off
-                          : Icons.visibility,                      
+                          : Icons.visibility,
                     ),
                     onPressed: () {
                       setState(() {
-                        _passwordInVisible =
-                            !_passwordInVisible; 
+                        _passwordInVisible = !_passwordInVisible;
                       });
                     },
                   ),

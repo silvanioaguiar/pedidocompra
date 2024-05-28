@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pedidocompra/components/appDrawer.dart';
-import 'package:pedidocompra/pages/pedidosPendentes.dart';
+import 'package:pedidocompra/pages/moduloCompras/pedidosPendentes.dart';
 
 class MenuEmpresas extends StatefulWidget {
   const MenuEmpresas({super.key});

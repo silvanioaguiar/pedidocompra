@@ -3,8 +3,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart ' as http;
-import 'package:pedidocompra/models/itens_pedidos.dart';
-import 'package:pedidocompra/models/pedidos.dart';
+import 'package:pedidocompra/models/moduloComprasModels/itens_pedidos.dart';
+import 'package:pedidocompra/models/moduloComprasModels/pedidos.dart';
 import 'package:pedidocompra/routes/appRoutes.dart';
 
 class ItensPedidosLista with ChangeNotifier {
@@ -51,8 +51,8 @@ class ItensPedidosLista with ChangeNotifier {
           pedido: data['principal']['pedido'],
           fornecedor: data['principal']['dadospedidos']['fornecedor'],
           valor: data['principal']['dadospedidos']['valor'] == null
-              ? 0.0
-              : data['principal']['dadospedidos']['valor'].toDouble(),
+              ? "0.0"
+              : data['principal']['dadospedidos']['valor'],
           condicaoPagamento: data['principal']['dadospedidos']
               ['condicaoPagamento'],
 
@@ -71,11 +71,11 @@ class ItensPedidosLista with ChangeNotifier {
           unidadeMedida: data['principal']['dadospedidos']['unidadeMedida'],
           precoUnitario: data['principal']['dadospedidos']['valorUnitario'] ==
                   null
-              ? 0.0
-              : data['principal']['dadospedidos']['valorUnitario'].toDouble(),
+              ? "0.0"
+              : data['principal']['dadospedidos']['valorUnitario'],
           precoTotal: data['principal']['dadospedidos']['valorTotal'] == null
-              ? 0.0
-              : data['principal']['dadospedidos']['valorTotal'].toDouble(),
+              ? "0.0"
+              : data['principal']['dadospedidos']['valorTotal'],
           status: data['principal']['status'],
         ),
       );

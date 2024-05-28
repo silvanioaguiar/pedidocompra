@@ -117,6 +117,9 @@ class Auth with ChangeNotifier {
         'usuario': _usuario,
         'expiryDate': _expiryDate!.toIso8601String(),
       });
+      
+
+      
 
       _autoLogout();
       notifyListeners();
@@ -155,14 +158,15 @@ class Auth with ChangeNotifier {
     _token = null;
     //_refreshToken = null;
     _expiryDate = null;
-    _usuario = null;
+    //_usuario = null; // Teste para deixar o ultimo usuário na tela de login
     _senha = null;
     _empresa = null;
 
     _clearAutoLogoutTimer();
     Store.remove('userData').then((_) {
-      notifyListeners();
+     notifyListeners();
     });
+    
   }
 
   void _clearAutoLogoutTimer() {

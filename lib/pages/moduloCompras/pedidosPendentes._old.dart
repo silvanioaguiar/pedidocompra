@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pedidocompra/components/appDrawer.dart';
-import 'package:pedidocompra/components/pedidoGrid.dart';
-import 'package:pedidocompra/components/pedidoGridItem.dart';
-import 'package:pedidocompra/models/empresas.dart';
-import 'package:pedidocompra/models/pedidosLista.dart';
-import 'package:pedidocompra/pages/menuEmpresas.dart';
+import 'package:pedidocompra/components/comprasComponents/pedidoGrid.dart';
+import 'package:pedidocompra/components/comprasComponents/pedidoGridItem.dart';
+import 'package:pedidocompra/models/moduloComprasModels/empresas.dart';
+import 'package:pedidocompra/models/moduloComprasModels/pedidosLista.dart';
+import 'package:pedidocompra/pages/moduloCompras/menuEmpresas.dart';
 import 'package:provider/provider.dart';
 
 bool isLoading = true;

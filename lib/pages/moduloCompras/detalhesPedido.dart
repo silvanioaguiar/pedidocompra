@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/components/appDrawer.dart';
-import 'package:pedidocompra/components/itensPedidoGrid.dart';
-import 'package:pedidocompra/models/itensPedidosLista.dart';
-import 'package:pedidocompra/models/pedidosLista.dart';
+import 'package:pedidocompra/components/comprasComponents/itensPedidoGrid.dart';
+import 'package:pedidocompra/models/moduloComprasModels/itensPedidosLista.dart';
+import 'package:pedidocompra/models/moduloComprasModels/pedidosLista.dart';
 import 'package:provider/provider.dart';
 
 class DetalhesPedido extends StatefulWidget {

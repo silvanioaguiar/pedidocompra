@@ -3,7 +3,8 @@ import 'package:d_chart/ordinal/bar.dart';
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/components/appDrawer.dart';
 import 'package:intl/intl.dart';
-import 'package:pedidocompra/pages/graficoRepresentante.dart';
+import 'package:pedidocompra/pages/moduloFaturamento/graficoConvenio.dart';
+import 'package:pedidocompra/pages/moduloFaturamento/graficoRepresentante.dart';
 
 const List<String> list = <String>[
   'Cliente',
@@ -161,14 +162,19 @@ class _FaturamentoPageState extends State<FaturamentoPage> {
                   setState(() {
                     dropdownValue = value!;
                     if (dropdownValue == "Representante") {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (ctx) {
-                        return GraficoRepresentantePage();
-                      }),
-                    );
-                    } else  {
-
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (ctx) {
+                          return GraficoRepresentantePage();
+                        }),
+                      );
+                    } else if (dropdownValue == "Convênio") {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (ctx) {
+                          return GraficoConvenio(empresa: '',);
+                        }),
+                      );
                     }
+
                     // if (dropdownValue == "Representante") {
                     //   _graficoRepresentante(context);
                     // }

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pedidocompra/components/appDrawer.dart';
-import 'package:pedidocompra/pages/faturamento.dart';
-import 'package:pedidocompra/pages/menuEmpresas.dart';
+import 'package:pedidocompra/pages/moduloCompras/menuEmpresas.dart';
+import 'package:pedidocompra/pages/moduloFaturamento/faturamentoEmpresas.dart';
+
 
 class MenuModulos extends StatefulWidget {
   const MenuModulos({super.key});
@@ -80,13 +81,38 @@ class _MenuEmpresasState extends State<MenuModulos> {
                         )
                       ],
                     ),
+                    // Column(
+                    //   children: [
+                    //     IconButton(
+                    //       onPressed: () {
+                    //         Navigator.of(context).push(
+                    //           MaterialPageRoute(builder: (ctx) {
+                    //             return const FaturamentoPage();
+                    //           }),
+                    //         );
+                    //       },
+                    //       icon: const Icon(Icons.attach_money_sharp),
+                    //       iconSize: 100,
+                    //       color: Color.fromARGB(255, 5, 58, 36),
+                    //     ),
+                    //     const Text(
+                    //       "Faturamento",
+                    //       style: TextStyle(
+                    //         color: Color.fromARGB(255, 5, 58, 36),
+                    //         fontSize: 20,
+                    //         fontWeight: FontWeight.bold,
+                    //       ),
+                    //     )
+                    //   ],
+                    // ),
                     Column(
                       children: [
                         IconButton(
                           onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(builder: (ctx) {
-                                return const FaturamentoPage();
+                                //return const MenuEmpresasFat();
+                                return  const FaturamentoEmpresasPage();
                               }),
                             );
                           },
@@ -95,7 +121,7 @@ class _MenuEmpresasState extends State<MenuModulos> {
                           color: Color.fromARGB(255, 5, 58, 36),
                         ),
                         const Text(
-                          "Faturamento",
+                          "Faturamento (Em Teste)",
                           style: TextStyle(
                             color: Color.fromARGB(255, 5, 58, 36),
                             fontSize: 20,

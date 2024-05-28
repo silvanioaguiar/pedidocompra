@@ -1,7 +1,7 @@
 import 'package:pedidocompra/models/auth.dart';
 import 'package:pedidocompra/pages/authPage.dart';
 import 'package:flutter/material.dart';
-import 'package:pedidocompra/pages/pedidosPendentes.dart';
+import 'package:pedidocompra/pages/moduloCompras/pedidosPendentes.dart';
 import 'package:pedidocompra/routes/appRoutes.dart';
 import 'package:provider/provider.dart';
 

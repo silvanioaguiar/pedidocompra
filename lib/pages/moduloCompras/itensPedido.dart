@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pedidocompra/models/pedidosLista.dart';
+import 'package:pedidocompra/models/moduloComprasModels/pedidosLista.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -42,8 +42,8 @@ class _ItensPedidoState extends State<ItensPedido> {
     //final bool isLandscape = orientation == Orientation.landscape;
 
     List<dynamic> itensDoPedido = widget.itensPedido;
-    String valorTotal = NumberFormat.currency(locale: 'br_Br', symbol: "R\$")
-        .format(itensDoPedido[0].valor);
+    //String valorTotal = NumberFormat.currency(locale: 'br_Br', symbol: "R\$")
+    //  .format(itensDoPedido[0].valor);
 
     var logo;
     var color1;
@@ -135,7 +135,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                           Text(
                             itensDoPedido[0].empresa,
                             textAlign: TextAlign.justify,
-                            style:  TextStyle(
+                            style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                                 color: colorText2),
@@ -148,7 +148,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                                     ? 'Fornecedor: ${itensDoPedido[0].fornecedor.substring(0, 25)}'
                                     : 'Fornecedor: ${itensDoPedido[0].fornecedor}',
                                 textAlign: TextAlign.start,
-                                style:  TextStyle(
+                                style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   color: colorText1,
@@ -163,7 +163,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                               Text(
                                 'Pedido: ${itensDoPedido[0].pedido}',
                                 textAlign: TextAlign.start,
-                                style:  TextStyle(
+                                style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   color: colorText1,
@@ -172,7 +172,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                               const SizedBox(width: 20),
                               Text(
                                 'N° da SC: ${itensDoPedido[0].sc}',
-                                style:  TextStyle(
+                                style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                   color: colorText2,
@@ -181,7 +181,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                               const SizedBox(width: 20),
                               Text(
                                 'Solicitante: ${itensDoPedido[0].solicitante}',
-                                style:  TextStyle(
+                                style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                   color: colorText2,
@@ -190,7 +190,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                               const SizedBox(width: 10),
                               Text(
                                 'Data: ${itensDoPedido[0].dataSC}',
-                                style:  TextStyle(
+                                style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                   color: colorText2,
@@ -203,10 +203,10 @@ class _ItensPedidoState extends State<ItensPedido> {
                             children: [
                               Text(
                                 //'Valor Total do Pedido: 1250,00',
-                                'Valor Total do Pedido: ${valorTotal.toString()}',
+                                'Valor Total do Pedido: ${itensDoPedido[0].valor.toString()}',
                                 //pedido.valor.toStringAsFixed(2),
                                 textAlign: TextAlign.start,
-                                style:  TextStyle(
+                                style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   color: colorText1,
@@ -215,7 +215,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                               const SizedBox(width: 30),
                               Text(
                                 'SC Aprovada por: ${itensDoPedido[0].aprovadorDaSC}',
-                                style:  TextStyle(
+                                style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                   color: colorText2,
@@ -224,7 +224,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                               const SizedBox(width: 10),
                               Text(
                                 'Em: ${itensDoPedido[0].dataAprovacaoSC}',
-                                style:  TextStyle(
+                                style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                   color: colorText2,
@@ -238,7 +238,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                                 //'Cond.Pgeto: 30 dias',
                                 'Cond. Pgto: ${itensDoPedido[0].condicaoPagamento}',
                                 textAlign: TextAlign.end,
-                                style:  TextStyle(
+                                style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   color: colorText1,
@@ -247,7 +247,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                               const SizedBox(width: 180),
                               Text(
                                 'Comprador: ${itensDoPedido[0].comprador}',
-                                style:  TextStyle(
+                                style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                   color: colorText2,
@@ -268,7 +268,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                             children: [
                               Container(
                                 width: 120,
-                                child:  Text(
+                                child: Text(
                                   'Cod.Produto',
                                   style: TextStyle(
                                     color: colorTextTitle,
@@ -282,7 +282,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                               ),
                               Container(
                                 width: 150,
-                                child:  Text(
+                                child: Text(
                                   'Nome Produto',
                                   style: TextStyle(
                                     color: colorTextTitle,
@@ -296,7 +296,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                               ),
                               Container(
                                 width: 55,
-                                child:  Text(
+                                child: Text(
                                   'Quant.',
                                   style: TextStyle(
                                     color: colorTextTitle,
@@ -310,7 +310,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                               ),
                               Container(
                                 width: 40,
-                                child:  Text(
+                                child: Text(
                                   'U.M.',
                                   style: TextStyle(
                                     color: colorTextTitle,
@@ -324,7 +324,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                               ),
                               Container(
                                 width: 90,
-                                child:  Text(
+                                child: Text(
                                   'Prc.Unit',
                                   style: TextStyle(
                                     color: colorTextTitle,
@@ -338,7 +338,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                               ),
                               Container(
                                 width: 90,
-                                child:  Text(
+                                child: Text(
                                   'Prc.Total',
                                   style: TextStyle(
                                     color: colorTextTitle,
@@ -363,7 +363,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                                             .codProduto
                                             .substring(0, 15)
                                         : itensDoPedido[item].codProduto,
-                                    style:  TextStyle(
+                                    style: TextStyle(
                                       color: colorTextProduct,
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -381,7 +381,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                                             .nomeProduto
                                             .substring(0, 30)
                                         : itensDoPedido[item].nomeProduto,
-                                    style:  TextStyle(
+                                    style: TextStyle(
                                       color: colorTextProduct,
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -395,7 +395,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                                   width: 55,
                                   child: Text(
                                     itensDoPedido[item].quantidade.toString(),
-                                    style:  TextStyle(
+                                    style: TextStyle(
                                       color: colorTextProduct,
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -409,7 +409,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                                   width: 40,
                                   child: Text(
                                     itensDoPedido[item].unidadeMedida,
-                                    style:  TextStyle(
+                                    style: TextStyle(
                                       color: colorTextProduct,
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -421,13 +421,17 @@ class _ItensPedidoState extends State<ItensPedido> {
                                 ),
                                 Container(
                                   width: 90,
+                                  // child: Text(
+                                  //   NumberFormat.currency(
+                                  //           locale: 'br_Br', symbol: "R\$")
+                                  //       .format(
+                                  //           itensDoPedido[item].precoUnitario)
+                                  //       .toString(),
                                   child: Text(
-                                    NumberFormat.currency(
-                                            locale: 'br_Br', symbol: "R\$")
-                                        .format(
-                                            itensDoPedido[item].precoUnitario)
+                                    itensDoPedido[item]
+                                        .precoUnitario
                                         .toString(),
-                                    style:  TextStyle(
+                                    style: TextStyle(
                                       color: colorTextProduct,
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -439,13 +443,15 @@ class _ItensPedidoState extends State<ItensPedido> {
                                 ),
                                 Container(
                                   width: 90,
+                                  // child: Text(
+                                  //   //precoTotal,
+                                  //   NumberFormat.currency(
+                                  //           locale: 'br_Br', symbol: "R\$")
+                                  //       .format(itensDoPedido[item].precoTotal)
+                                  //       .toString(),
                                   child: Text(
-                                    //precoTotal,
-                                    NumberFormat.currency(
-                                            locale: 'br_Br', symbol: "R\$")
-                                        .format(itensDoPedido[item].precoTotal)
-                                        .toString(),
-                                    style:  TextStyle(
+                                    itensDoPedido[item].precoTotal.toString(),
+                                    style: TextStyle(
                                       color: colorTextProduct,
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,

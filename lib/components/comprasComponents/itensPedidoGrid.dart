@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pedidocompra/components/itensPedidoGridItem.dart';
-import 'package:pedidocompra/models/itens_pedidos.dart';
-import 'package:pedidocompra/models/itensPedidosLista.dart';
-import 'package:pedidocompra/models/pedidosLista.dart';
+import 'package:pedidocompra/components/comprasComponents/itensPedidoGridItem.dart';
+import 'package:pedidocompra/models/moduloComprasModels/itens_pedidos.dart';
+import 'package:pedidocompra/models/moduloComprasModels/itensPedidosLista.dart';
+import 'package:pedidocompra/models/moduloComprasModels/pedidosLista.dart';
 import 'package:provider/provider.dart';
 
 
