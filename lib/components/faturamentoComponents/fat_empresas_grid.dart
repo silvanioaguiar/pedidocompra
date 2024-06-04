@@ -13,11 +13,11 @@ class FatEmpresasGrid extends StatelessWidget {
     final List<FaturamentoEmpresas> loadedEmpresas =
         providerFatEmpresas.empresas;
 
-    return ListView.builder(
+    return ListView.builder(      
       physics: ClampingScrollPhysics(),
       shrinkWrap: true,
       itemCount: loadedEmpresas.length,
-      itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
+      itemBuilder: (ctx, i) => ChangeNotifierProvider.value(        
         value: loadedEmpresas[i],
         child: const FatEmpresaItem(),
       ),

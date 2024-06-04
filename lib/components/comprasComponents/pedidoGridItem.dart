@@ -73,7 +73,7 @@ class PedidoGridItem extends StatelessWidget {
             Padding(
               padding:  EdgeInsets.only(left: 5),
               child: Container(
-                width: 350,                
+                width: 370,                
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,

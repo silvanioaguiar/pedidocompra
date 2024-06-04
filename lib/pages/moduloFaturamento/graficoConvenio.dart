@@ -105,6 +105,7 @@ class _GraficoConvenioState extends State<GraficoConvenio> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     if (xempresa == 'Big Assistencia Tecnica' || xempresa == 'Big Locacao') {
       logo = 'assets/images/logo_big.png';
     } else if (xempresa == 'Biosat Matriz Fabrica' ||
@@ -153,130 +154,148 @@ class _GraficoConvenioState extends State<GraficoConvenio> {
                         )
                       ],
                     ),
-                    Row(
-                      children: [
-                        Column(
+                    Container(
+                      width: size.width,
+                      child: SingleChildScrollView(
+                        child: Row(
                           children: [
-                            Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 5),
-                              //width: double.infinity,
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStatePropertyAll(
-                                        Theme.of(context).primaryColor)),
-                                onPressed: () {
-                                  _selectDateInicio(context);
-                                  showDateInicio = true;
-                                },
-                                child: Text(
-                                  'Data Início',
-                                  style: TextStyle(
-                                    color:
-                                        Theme.of(context).secondaryHeaderColor,
+                            Column(
+                              children: [
+                                Container(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  //width: double.infinity,
+                                  child: ElevatedButton(
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStatePropertyAll(
+                                                Theme.of(context)
+                                                    .primaryColor)),
+                                    onPressed: () {
+                                      _selectDateInicio(context);
+                                      showDateInicio = true;
+                                    },
+                                    child: Text(
+                                      'Data Início',
+                                      style: TextStyle(
+                                        color: Theme.of(context)
+                                            .secondaryHeaderColor,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
+                                showDateInicio
+                                    ? Center(
+                                        child: Text(
+                                          getDateInicio(),
+                                          style: TextStyle(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      )
+                                    //: const SizedBox(width: 25),
+                                    : Center(
+                                        child: Text(
+                                          DateFormat('d MMM, yyyy', 'pt')
+                                              .format(selectedDateInicio),
+                                          style: TextStyle(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      )
+                              ],
                             ),
-                            showDateInicio
-                                ? Center(
+                            Column(
+                              children: [
+                                Container(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  //width: double.infinity,
+                                  child: ElevatedButton(
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStatePropertyAll(
+                                                Theme.of(context)
+                                                    .primaryColor)),
+                                    onPressed: () {
+                                      _selectDateFim(context);
+                                      showDateFim = true;
+                                    },
                                     child: Text(
-                                      getDateInicio(),
+                                      'Data Fim',
                                       style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
+                                        color: Theme.of(context)
+                                            .secondaryHeaderColor,
                                       ),
                                     ),
-                                  )
-                                //: const SizedBox(width: 25),
-                                : Center(
-                                    child: Text(
-                                      DateFormat('d MMM, yyyy', 'pt')
-                                          .format(selectedDateInicio),
-                                      style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                  )
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 5),
-                              //width: double.infinity,
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStatePropertyAll(
-                                        Theme.of(context).primaryColor)),
-                                onPressed: () {
-                                  _selectDateFim(context);
-                                  showDateFim = true;
-                                },
-                                child: Text(
-                                  'Data Fim',
-                                  style: TextStyle(
-                                    color:
-                                        Theme.of(context).secondaryHeaderColor,
                                   ),
                                 ),
-                              ),
+                                showDateFim
+                                    ? Center(
+                                        child: Text(
+                                          getDateFim(),
+                                          style: TextStyle(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      )
+                                    //: const SizedBox(width: 25),
+                                    : Center(
+                                        child: Text(
+                                          DateFormat('d MMM, yyyy', 'pt')
+                                              .format(selectedDateFim),
+                                          style: TextStyle(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      )
+                              ],
                             ),
-                            showDateFim
-                                ? Center(
-                                    child: Text(
-                                      getDateFim(),
-                                      style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
+                            SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5),
+                                    //width: double.infinity,
+                                    child: ElevatedButton(
+                                      style: const ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStatePropertyAll(
+                                                  Color.fromARGB(
+                                                      255, 202, 14, 1))),
+                                      onPressed: () =>
+                                          _refreshConvenios(context),
+                                      child: Text(
+                                        'Atualizar',
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .secondaryHeaderColor,
+                                        ),
                                       ),
                                     ),
-                                  )
-                                //: const SizedBox(width: 25),
-                                : Center(
-                                    child: Text(
-                                      DateFormat('d MMM, yyyy', 'pt')
-                                          .format(selectedDateFim),
-                                      style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                  )
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 5),
-                              //width: double.infinity,
-                              child: ElevatedButton(
-                                style: const ButtonStyle(
-                                    backgroundColor: MaterialStatePropertyAll(
-                                        Color.fromARGB(255, 202, 14, 1))),
-                                onPressed: () => _refreshConvenios(context),
-                                child: Text(
-                                  'Atualizar',
-                                  style: TextStyle(
-                                    color:
-                                        Theme.of(context).secondaryHeaderColor,
                                   ),
-                                ),
+                                  const SizedBox(
+                                    height: 22,
+                                  )
+                                ],
                               ),
                             ),
-                            const SizedBox(
-                              height: 22,
-                            )
                           ],
                         ),
-                      ],
+                      ),
                     ),
                   ],
                 ),

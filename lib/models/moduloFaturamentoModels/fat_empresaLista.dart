@@ -127,9 +127,11 @@ class FatEmpresaLista with ChangeNotifier {
       data.forEach((data) {
         empresas.add(
           FaturamentoEmpresas(
-            empresa: data['principal']['empresa'],               
+            empresa: data['principal']['empresa'],             
    
             valorReal: data['principal']['valor'], 
+            valorTotal: data['principal']['valorTotal'], 
+            valorDia: data['principal']['valorDia'], 
             
             //ranking:  data['principal']['ranking'],             
           ),

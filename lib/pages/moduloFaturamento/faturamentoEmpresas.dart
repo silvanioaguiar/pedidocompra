@@ -3,19 +3,20 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pedidocompra/components/appDrawer.dart';
 import 'package:pedidocompra/components/faturamentoComponents/fat_empresas_grid.dart';
+import 'package:pedidocompra/components/faturamentoComponents/fat_empresas_total.dart';
 import 'package:pedidocompra/models/moduloFaturamentoModels/fat_empresaLista.dart';
+import 'package:pedidocompra/models/moduloFaturamentoModels/faturamento_empresas.dart';
 import 'package:provider/provider.dart';
 
 class FaturamentoEmpresasPage extends StatefulWidget {
   const FaturamentoEmpresasPage({super.key});
 
   @override
-  State<FaturamentoEmpresasPage> createState() => _FaturamentoEmpresasFatState();
+  State<FaturamentoEmpresasPage> createState() =>
+      _FaturamentoEmpresasFatState();
 }
 
-
 class _FaturamentoEmpresasFatState extends State<FaturamentoEmpresasPage> {
-
   final String _bigAt = "Big Assistencia Tecnica";
   final String _bigLoc = "Big Locacao";
   final String _biosatMatriz = 'Biosat Matriz Fabrica';
@@ -23,21 +24,28 @@ class _FaturamentoEmpresasFatState extends State<FaturamentoEmpresasPage> {
   final String _libertad = 'Libertad';
   final String _emed = 'E-med';
   final String _brumed = 'Brumed';
+
   bool _isLoading = true;
   String xempresa = 'Biosat Matriz Fabrica';
   //String dropdownValue = list.first;
-  DateTime now = DateTime.now();
+  DateTime dataAtual = DateTime.now();
   static DateTime selectedDateFim = DateTime.now();
-  DateTime selectedDateInicio = selectedDateFim.add(const Duration(days: -30));
+  //DateTime selectedDateInicio = selectedDateFim.add(const Duration(days: -30));
+  DateTime selectedDateInicio = DateTime.utc(2000, 01, 01);
+
   bool showDateInicio = false;
   bool showDateFim = false;
   var logo;
 
+  DateTime primeiroDiaDoMes(DateTime data) {
+    return DateTime(data.year, data.month, 1);
+  }
+
   @override
   void initState() {
-    
     super.initState();
 
+    selectedDateInicio = primeiroDiaDoMes(dataAtual);
     Provider.of<FatEmpresaLista>(
       context,
       listen: false,
@@ -50,11 +58,17 @@ class _FaturamentoEmpresasFatState extends State<FaturamentoEmpresasPage> {
     });
   }
 
-  Future<void> _refreshEmpresas(BuildContext context) {
-    return Provider.of<FatEmpresaLista>(
+  Future<void> _refreshEmpresas(BuildContext context) async {
+    return await Provider.of<FatEmpresaLista>(
       context,
       listen: false,
-    ).loadEmpresas(context, xempresa, selectedDateInicio, selectedDateFim);
+    )
+        .loadEmpresas(context, xempresa, selectedDateInicio, selectedDateFim)
+        .then((value) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
   }
 
   Future<DateTime> _selectDateInicio(BuildContext context) async {
@@ -63,7 +77,7 @@ class _FaturamentoEmpresasFatState extends State<FaturamentoEmpresasPage> {
       context: context,
       initialDate: selectedDateInicio,
       firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
+      lastDate: DateTime(2050),
     );
     if (selected != null && selected != selectedDateInicio) {
       setState(() {
@@ -107,11 +121,8 @@ class _FaturamentoEmpresasFatState extends State<FaturamentoEmpresasPage> {
     }
   }
 
-
-
   @override
-  Widget build(BuildContext context) {    
-    
+  Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
@@ -246,30 +257,41 @@ class _FaturamentoEmpresasFatState extends State<FaturamentoEmpresasPage> {
                                   )
                           ],
                         ),
-                        Column(
-                          children: [
-                            Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 5),
-                              //width: double.infinity,
-                              child: ElevatedButton(
-                                style: const ButtonStyle(
-                                    backgroundColor: MaterialStatePropertyAll(
-                                        Color.fromARGB(255, 202, 14, 1))),
-                                onPressed: () => _refreshEmpresas(context),
-                                child: Text(
-                                  'Atualizar',
-                                  style: TextStyle(
-                                    color:
-                                        Theme.of(context).secondaryHeaderColor,
+                        SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                //width: double.infinity,
+                                child: ElevatedButton(
+                                  style: const ButtonStyle(
+                                      backgroundColor: MaterialStatePropertyAll(
+                                          Color.fromARGB(255, 202, 14, 1))),
+                                  // onPressed: () {
+                                  //   _isLoading = true;
+                                  //   _refreshEmpresas(context);
+                                  // } ,
+                                  onPressed: () {
+                                    setState(() {
+                                      _isLoading = true;
+                                      _refreshEmpresas(context);
+                                    });
+                                  },
+                                  child: Text(
+                                    'Atualizar',
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .secondaryHeaderColor,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(
-                              height: 22,
-                            )
-                          ],
+                              const SizedBox(
+                                height: 22,
+                              )
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -294,16 +316,27 @@ class _FaturamentoEmpresasFatState extends State<FaturamentoEmpresasPage> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 15, vertical: 5),
                         //width: double.infinity,
-                        child: const Text(
-                          'Total Faturado:',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18,
-                          ),
-                        ),
+                        child: _isLoading
+                            ? const Text(
+                                'Total Faturado: ',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            : const FatEmpresasTotal(),
+                        // child:  Text(
+                        //   'Total Faturado:',
+                        //   style: const TextStyle(
+                        //     color: Colors.black,
+                        //     fontSize: 22,
+                        //     fontWeight: FontWeight.bold,
+                        //   ),
+                        // ),
                       ),
                     ],
-                  ),                  
+                  ),
                 ],
               ),
             ),
