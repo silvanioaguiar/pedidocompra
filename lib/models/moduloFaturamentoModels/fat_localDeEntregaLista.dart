@@ -3,47 +3,57 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart ' as http;
-import 'package:pedidocompra/models/moduloFaturamentoModels/faturamento_empresas.dart';
+import 'package:pedidocompra/models/moduloFaturamentoModels/faturamento_localDeEntrega.dart';
 import 'package:pedidocompra/services/navigator_service.dart';
 import 'package:provider/provider.dart';
 
 
-class FatEmpresaLista with ChangeNotifier {
+class FatLocalDeEntregaLista with ChangeNotifier {
   final String _token;
   //final String _senha;
   //final String _empresa;
-  List<FaturamentoEmpresas> _empresas = [];
+  List<FaturamentoLocalDeEntrega> _localDeEntrega = [];
   List<dynamic> data = [];
   Map<String, dynamic> data0 = {};
   int n = 0;
 
-  List<FaturamentoEmpresas> get empresas => [..._empresas];
+  List<FaturamentoLocalDeEntrega> get localDeEntrega => [..._localDeEntrega];
  
 
-  FatEmpresaLista(this._token, this._empresas);
+  FatLocalDeEntregaLista(this._token, this._localDeEntrega);
 
-  int get empresasCount {
-    return _empresas.length;
-  }
-
-  
+  int get localDeEntregaCount {
+    return _localDeEntrega.length;
+  }  
  
   
-  Future<void> loadEmpresas(context, empresa,dataIni,dataFim) async {
-    List<FaturamentoEmpresas> empresas = [];
-    _empresas.clear();
-    empresas.clear();
+  Future<void> loadLocalDeEntrega(context, empresa,dataIni,dataFim) async {
+    List<FaturamentoLocalDeEntrega> localDeEntrega = [];
+    _localDeEntrega.clear();
+    localDeEntrega.clear();
     String empresaFilial = '';
     Map<String, dynamic> data0 = {};
     data = [];
 
-    empresa = 'Biosat Matriz Fabrica';
-    empresaFilial = '02,01';
-    
+    if (empresa == 'Libertad') {
+      empresaFilial = '01,01';
+    } else if (empresa == 'Biosat Matriz') {
+      empresaFilial = '02,01';
+    } else if (empresa == 'Biosat Filial') {
+      empresaFilial = '02,02';
+    } else if (empresa == 'Big Assistencia Tecnica') {
+      empresaFilial = '05,01';
+    } else if (empresa == 'Big Locacao') {
+      empresaFilial = '05,02';
+    } else if (empresa == 'E-med') {
+      empresaFilial = '06,01';
+    } else if (empresa == 'Brumed') {
+      empresaFilial = '08,01';
+    }
 
     final response = await http.get(
         Uri.parse(            
-            'http://biosat.dyndns.org:8084/REST/api/biosat/v1/FaturamentoEmpresas/$dataIni/$dataFim'),
+            'http://biosat.dyndns.org:8084/REST/api/biosat/v1/FaturamentoEmpresas/localDeEntrega/$empresa/$dataIni/$dataFim'),
         headers: {
           'Content-Type': 'application/json',
           "accept": "application/json",
@@ -125,24 +135,21 @@ class FatEmpresaLista with ChangeNotifier {
       utf8.decode(response.bodyBytes);
       data.asMap();
       data.forEach((data) {
-        empresas.add(
-          FaturamentoEmpresas(
-
+        localDeEntrega.add(
+          FaturamentoLocalDeEntrega(
             empresa: data['principal']['empresa'],
+            localDeEntrega: data['principal']['localDeEntrega'],            
+            // valor: data['principal']['valor'] == null
+            //     ? 0.0
+            //     : data['principal']['valor'].toDouble(), 
             valorReal: data['principal']['valor'], 
-            valorTotal: data['principal']['valorTotal'], 
-            valorDia: data['principal']['valorDia'], 
-            valorTotalDia: data['principal']['valorTotalDia'], 
-            dateIni: data['principal']['dataInicio'], 
-            dateFim: data['principal']['dataFim'], 
-            
-            //ranking:  data['principal']['ranking'],             
+            ranking:  data['principal']['ranking'],             
           ),
         );
       });
     }
    
-    _empresas = empresas.toList();
+    _localDeEntrega = localDeEntrega.toList();
    
 
     notifyListeners();

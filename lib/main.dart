@@ -2,6 +2,8 @@ import 'package:pedidocompra/models/auth.dart';
 import 'package:pedidocompra/models/moduloFaturamentoModels/fat_convenioLista.dart';
 import 'package:pedidocompra/models/moduloComprasModels/itens_pedidos.dart';
 import 'package:pedidocompra/models/moduloComprasModels/pedidosLista.dart';
+import 'package:pedidocompra/models/moduloFaturamentoModels/fat_localDeEntregaLista.dart';
+import 'package:pedidocompra/pages/moduloFaturamento/FatLocalDeEntrega.dart';
 import 'package:pedidocompra/pages/moduloFaturamento/faturamentoEmpresas.dart';
 import 'package:pedidocompra/pages/moduloFaturamento/graficoConvenio.dart';
 import 'package:pedidocompra/pages/authOrHomePage.dart';
@@ -73,6 +75,15 @@ class MyApp extends StatelessWidget {
             );
           },
         ),
+        ChangeNotifierProxyProvider<Auth, FatLocalDeEntregaLista>(
+          create: (_) => FatLocalDeEntregaLista('',[]),
+          update: (ctx, auth, previous) {
+            return FatLocalDeEntregaLista(
+              auth.token ?? '',
+              previous?.localDeEntrega ?? [],
+            );
+          },
+        ),
         ChangeNotifierProxyProvider<Auth, FatEmpresaLista>(
           create: (_) => FatEmpresaLista('',[]),
           update: (ctx, auth, previous) {
@@ -122,6 +133,7 @@ class MyApp extends StatelessWidget {
               ),
           AppRoutes.itensPedido: (ctx) => ItensPedido(itensPedido: []),
           AppRoutes.faturamentoEmpresas: (ctx) => const FaturamentoEmpresasPage(),
+          AppRoutes.fatLocalDeEntrega: (ctx) =>  FatLocalDeEntrega(empresa: '',dateIni: DateTime.now(), dateFim: DateTime.now(),),
           AppRoutes.graficoRepresentante: (ctx) => GraficoRepresentantePage(),
           AppRoutes.graficoConvenio: (ctx) =>  GraficoConvenio(
                 empresa: ''),

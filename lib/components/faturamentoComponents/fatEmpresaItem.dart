@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/models/moduloFaturamentoModels/faturamento_empresas.dart';
+import 'package:pedidocompra/pages/moduloFaturamento/fatLocalDeEntrega.dart';
 import 'package:pedidocompra/pages/moduloFaturamento/graficoConvenio.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -11,12 +12,25 @@ class FatEmpresaItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final ScrollController _mycontroller = new ScrollController();
     final empresa = Provider.of<FaturamentoEmpresas>(context);
+    var _detalhesFaturamento = [
+      'Detalhes',
+      'Local de Entrega',
+      'NFs de Hoje',
+      'NFs do Período ',
+    ];
+    var _itemSelecionado = 'Detalhes';
 
     var size = MediaQuery.of(context).size;
+    var dateIni =
+        DateFormat("yyyy-MM-dd").format(DateTime.parse(empresa.dateIni));
+    var dateFim =
+        DateFormat("yyyy-MM-dd").format(DateTime.parse(empresa.dateFim));
+    final dateIniFormate = DateTime.parse(dateIni);
+    final dateFimFormate = DateTime.parse(dateFim);
 
     return SingleChildScrollView(
       child: Container(
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(1),
         margin: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -48,7 +62,7 @@ class FatEmpresaItem extends StatelessWidget {
               child: Row(
                 children: [
                   Container(
-                    width: 200,
+                    width: 180,
                     child: Text(
                       'Hoje: ${empresa.valorDia}',
                       style: const TextStyle(
@@ -60,97 +74,64 @@ class FatEmpresaItem extends StatelessWidget {
                   ),
                   SingleChildScrollView(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.more,
-                            size: 50,
-                            color: Colors.white,
-                          ),
-                        )
-                        // ElevatedButton(
-                        //   style: ButtonStyle(
-                        //       alignment: Alignment.centerLeft,
-                        //       backgroundColor: MaterialStatePropertyAll(
-                        //           Theme.of(context).primaryColor)),
+                        // IconButton(
                         //   onPressed: () {
-                        //     // Navigator.of(context).push(
-                        //     //   MaterialPageRoute(builder: (ctx) {
-                        //     //     //return const MenuEmpresasFat();
-                        //     //     return GraficoConvenio(empresa: "Biosat Matriz Fabrica");
-                        //     //   }),
-                        //     // );
+                        //     Navigator.of(context).push(
+                        //       MaterialPageRoute(builder: (ctx) {
+                        //         return FatLocalDeEntrega(
+                        //             empresa: empresa.empresa);
+                        //       }),
+                        //     );
                         //   },
-                        //   child: Text(
-                        //     'Detalhes',
-                        //     style: TextStyle(
-                        //       color: Theme.of(context).secondaryHeaderColor,
-                        //     ),
+                        //   icon: const Icon(
+                        //     Icons.more,
+                        //     size: 50,
+                        //     color: Colors.white,
                         //   ),
                         // ),
+                        Theme(
+                          data: Theme.of(context)
+                              .copyWith(canvasColor: Colors.blue),
+                          child: DropdownButton<String>(
+                            items: _detalhesFaturamento
+                                .map((String dropDownStringItem) {
+                              return DropdownMenuItem<String>(
+                                value: dropDownStringItem,
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  dropDownStringItem,
+                                  style: const TextStyle(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (value) async {
+                              if (value == 'Local de Entrega') {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(builder: (ctx) {
+                                    return FatLocalDeEntrega(
+                                      empresa: empresa.empresa,
+                                      dateIni: dateIniFormate,
+                                      dateFim: dateFimFormate,
+                                    );
+                                  }),
+                                );
+                              }
+                            },
+                            value: _itemSelecionado,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ],
               ),
             ),
-            // subtitle: Row(
-            //   children: [
-            //     Column(
-            //       children: [
-            //         Container(
-            //           padding: const EdgeInsets.symmetric(horizontal: 5),
-            //           //width: double.infinity,
-            //           child: ElevatedButton(
-            //             style: ButtonStyle(
-            //                 backgroundColor: MaterialStatePropertyAll(
-            //                     Theme.of(context).primaryColor)),
-            //             onPressed: () {
-            //               Navigator.of(context).push(
-            //                 MaterialPageRoute(builder: (ctx) {
-            //                   //return const MenuEmpresasFat();
-            //                   return GraficoConvenio(
-            //                       empresa: "Biosat Matriz Fabrica");
-            //                 }),
-            //               );
-            //             },
-            //             child: Text(
-            //               'Convênios',
-            //               style: TextStyle(
-            //                 color: Theme.of(context).secondaryHeaderColor,
-            //               ),
-            //             ),
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //     Column(
-            //       children: [
-            //         Text(
-            //           'Hoje: ${empresa.valorDia}',
-            //           style: const TextStyle(
-            //             color: Color.fromARGB(255, 247, 247, 246),
-            //             fontSize: 16,
-            //             fontWeight: FontWeight.bold,
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //   ],
-            // ),
-            //leading: const Icon(Icons.account_circle),
-            // leading: Text(
-            //   '${convenio.ranking}°',
-            //   style: const TextStyle(
-            //     color: Color.fromARGB(255, 5, 34, 58),
-            //     fontSize: 24,
-            //     fontWeight: FontWeight.bold,
-            //   ),
-            // ),
-            //trailing: const Icon(Icons.arrow_forward_ios),
           ),
         ),
       ),

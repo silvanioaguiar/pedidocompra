@@ -14,18 +14,41 @@ class FatEmpresasTotal extends StatelessWidget {
         providerFatEmpresasTotal.empresas;
     double vlTotal = double.parse(loadedEmpresas[loadedEmpresas.length - 1].valorTotal);  
     String vlTotalFormatado = NumberFormat.currency(locale: "pt_BR", symbol: "R\$").format(vlTotal);
+     double vlTotalDia = double.parse(loadedEmpresas[loadedEmpresas.length - 1].valorTotalDia);  
+    String vlTotalDiaFormatado = NumberFormat.currency(locale: "pt_BR", symbol: "R\$").format(vlTotalDia);
     
 
-    return Container(
-      color: const Color.fromARGB(255, 138, 201, 253),
-      child: Text(
-        'Total Faturado: $vlTotalFormatado',
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          height: 30,
+          color: const Color.fromARGB(255, 138, 201, 253),
+          child: Text(
+            'Total Faturado: $vlTotalFormatado',
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
-      ),
+        const SizedBox(height: 5),
+        Container(
+          height: 30,
+          color: Color.fromARGB(255, 255, 251, 41),
+          child: Text(
+            'Total do Dia: $vlTotalDiaFormatado',
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        
+      ],
     );
   }
 }

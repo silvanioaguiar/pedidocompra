@@ -301,15 +301,15 @@ class _FaturamentoEmpresasFatState extends State<FaturamentoEmpresasPage> {
             ),
             const SizedBox(height: 15),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5),
-              child: Row(
+              padding: const EdgeInsets.symmetric(vertical: 3),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Column(
                     children: [
                       Container(
-                        height: 40,
+                        height: 80,
                         // decoration: BoxDecoration(
                         //   color: Theme.of(context).primaryColor,
                         // ),
@@ -325,18 +325,34 @@ class _FaturamentoEmpresasFatState extends State<FaturamentoEmpresasPage> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               )
-                            : const FatEmpresasTotal(),
-                        // child:  Text(
-                        //   'Total Faturado:',
-                        //   style: const TextStyle(
-                        //     color: Colors.black,
-                        //     fontSize: 22,
-                        //     fontWeight: FontWeight.bold,
-                        //   ),
-                        // ),
+                            : const FatEmpresasTotal(),                     
                       ),
                     ],
                   ),
+                  const SizedBox(height: 3),
+                  // Column(
+                  //   children: [
+                  //     Container(
+                  //       height: 40,
+                  //       // decoration: BoxDecoration(
+                  //       //   color: Theme.of(context).primaryColor,
+                  //       // ),
+                  //       padding: const EdgeInsets.symmetric(
+                  //           horizontal: 15, vertical: 5),
+                  //       //width: double.infinity,
+                  //       child: 
+                  //            Text(
+                  //               'Total do Dia: ',
+                  //               style: TextStyle(
+                  //                 color: Colors.black,
+                  //                 fontSize: 20,
+                  //                 fontWeight: FontWeight.bold,
+                  //               ),
+                  //             )
+                                              
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             ),

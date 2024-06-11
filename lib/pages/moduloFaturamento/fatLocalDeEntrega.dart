@@ -4,23 +4,28 @@ import 'package:intl/intl.dart';
 import 'package:pedidocompra/components/appDrawer.dart';
 //import 'package:pedidocompra/components/fatConvenioItem.dart';
 import 'package:pedidocompra/components/faturamentoComponents/fat_convenio_grid.dart';
-import 'package:pedidocompra/models/moduloFaturamentoModels/fat_convenioLista.dart';
+import 'package:pedidocompra/components/faturamentoComponents/fat_localDeEntrega_grid.dart';
+import 'package:pedidocompra/models/moduloFaturamentoModels/fat_localDeEntregaLista.dart';
 import 'package:provider/provider.dart';
 
 bool isLoading = true;
 
-class GraficoConvenio extends StatefulWidget {
+class FatLocalDeEntrega extends StatefulWidget {
   final String empresa;
+  final DateTime dateIni;
+  final DateTime dateFim;
 
-  GraficoConvenio({super.key, required this.empresa});
+  FatLocalDeEntrega({super.key, required this.empresa, required this.dateIni, required this.dateFim});
 
   @override
-  State<GraficoConvenio> createState() => _GraficoConvenioState();
+  State<FatLocalDeEntrega> createState() => _FatLocalDeEntregaState();
 }
 
-class _GraficoConvenioState extends State<GraficoConvenio> {
+class _FatLocalDeEntregaState extends State<FatLocalDeEntrega> {
   bool _isLoading = true;
   String xempresa = '';
+  DateTime xdateIni = DateTime.now();
+  DateTime xdateFim = DateTime.now();
   //String dropdownValue = list.first;
   DateTime now = DateTime.now();
   static DateTime selectedDateFim = DateTime.now();
@@ -28,17 +33,27 @@ class _GraficoConvenioState extends State<GraficoConvenio> {
   bool showDateInicio = false;
   bool showDateFim = false;
   var logo;
+  DateTime dataAtual = DateTime.now();
+
+  DateTime primeiroDiaDoMes(DateTime data) {
+    return DateTime(data.year, data.month, 1);
+  }
 
   @override
   void initState() {
     xempresa = widget.empresa;
+    xdateIni = widget.dateIni;
+    xdateFim = widget.dateFim;
     super.initState();
 
-    Provider.of<FatConvenioLista>(
+    //selectedDateInicio = primeiroDiaDoMes(dataAtual);
+
+    Provider.of<FatLocalDeEntregaLista>(
       context,
       listen: false,
     )
-        .loadConvenios(context, xempresa, selectedDateInicio, selectedDateFim)
+        .loadLocalDeEntrega(
+            context, xempresa, xdateIni, xdateFim)
         .then((value) {
       setState(() {
         _isLoading = false;
@@ -46,11 +61,12 @@ class _GraficoConvenioState extends State<GraficoConvenio> {
     });
   }
 
-  Future<void> _refreshConvenios(BuildContext context) {
-    return Provider.of<FatConvenioLista>(
+  Future<void> _refreshLocalDeEntrega(BuildContext context) {
+    return Provider.of<FatLocalDeEntregaLista>(
       context,
       listen: false,
-    ).loadConvenios(context, xempresa, selectedDateInicio, selectedDateFim);
+    ).loadLocalDeEntrega(
+        context, xempresa, selectedDateInicio, selectedDateFim);
   }
 
   Future<DateTime> _selectDateInicio(BuildContext context) async {
@@ -106,16 +122,17 @@ class _GraficoConvenioState extends State<GraficoConvenio> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    if (xempresa == 'Big Manutencao' || xempresa == 'Big Locacao') {
+    if (xempresa.trim() == 'Big Manutencao' ||
+        xempresa.trim() == 'Big Locacao') {
       logo = 'assets/images/logo_big.png';
-    } else if (xempresa == 'Biosat Matriz Fabrica' ||
-        xempresa == 'Biosat Filial') {
+    } else if (xempresa.trim() == 'Biosat Matriz' ||
+        xempresa.trim() == 'Biosat Filial') {
       logo = 'assets/images/logo_biosat2.png';
-    } else if (xempresa == 'Libertad') {
+    } else if (xempresa.trim() == 'Libertad') {
       logo = 'assets/images/logo_libertad.png';
-    } else if (xempresa == 'E-med') {
+    } else if (xempresa.trim() == 'E-med') {
       logo = 'assets/images/logo_emed.png';
-    } else if (xempresa == 'Brumed') {
+    } else if (xempresa.trim() == 'Brumed') {
       logo = 'assets/images/logo_Brumed.png';
     }
     return Scaffold(
@@ -123,7 +140,7 @@ class _GraficoConvenioState extends State<GraficoConvenio> {
           backgroundColor: Theme.of(context).primaryColor,
           foregroundColor: Colors.white,
           title: Text(
-            "Faturamento por Convênio",
+            "Fat. Por Local de Entrega",
             textAlign: TextAlign.left,
             style: TextStyle(
               color: Theme.of(context).secondaryHeaderColor,
@@ -200,7 +217,7 @@ class _GraficoConvenioState extends State<GraficoConvenio> {
                                     : Center(
                                         child: Text(
                                           DateFormat('d MMM, yyyy', 'pt')
-                                              .format(selectedDateInicio),
+                                              .format(xdateIni),
                                           style: TextStyle(
                                             color:
                                                 Theme.of(context).primaryColor,
@@ -252,7 +269,7 @@ class _GraficoConvenioState extends State<GraficoConvenio> {
                                     : Center(
                                         child: Text(
                                           DateFormat('d MMM, yyyy', 'pt')
-                                              .format(selectedDateFim),
+                                              .format(xdateFim),
                                           style: TextStyle(
                                             color:
                                                 Theme.of(context).primaryColor,
@@ -277,7 +294,7 @@ class _GraficoConvenioState extends State<GraficoConvenio> {
                                                   Color.fromARGB(
                                                       255, 202, 14, 1))),
                                       onPressed: () =>
-                                          _refreshConvenios(context),
+                                          _refreshLocalDeEntrega(context),
                                       child: Text(
                                         'Atualizar',
                                         style: TextStyle(
@@ -328,6 +345,25 @@ class _GraficoConvenioState extends State<GraficoConvenio> {
                       ),
                     ],
                   ),
+                  const SizedBox(width: 50),
+                  Container(
+                    height: 40,
+                    // decoration: BoxDecoration(
+                    //   color: Theme.of(context).primaryColor,
+                    // ),
+                    // padding:
+                    //     const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                    // //width: double.infinity,
+                    child:  Text(
+                      xempresa,
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  ),
+
                   // Column(
                   //   children: [
                   //     Container(
@@ -345,10 +381,10 @@ class _GraficoConvenioState extends State<GraficoConvenio> {
               ),
             ),
             RefreshIndicator(
-              onRefresh: () => _refreshConvenios(context),
+              onRefresh: () => _refreshLocalDeEntrega(context),
               child: _isLoading
                   ? const Center(child: CircularProgressIndicator())
-                  : const FatConvenioGrid(),
+                  : const FatLocalDeEntregaGrid(),
             ),
           ],
         ));

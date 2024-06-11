@@ -13,5 +13,6 @@ class AppRoutes {
   static const graficoRepresentante = '/graficoRepresentante';
   static const graficoConvenio = '/graficoConvenio';
   static const faturamentoEmpresas = '/faturamentoEmpresas';
+  static const fatLocalDeEntrega = '/fatLocalDeEntrega';
 
 }
