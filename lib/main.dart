@@ -3,7 +3,12 @@ import 'package:pedidocompra/models/moduloFaturamentoModels/fat_convenioLista.da
 import 'package:pedidocompra/models/moduloComprasModels/itens_pedidos.dart';
 import 'package:pedidocompra/models/moduloComprasModels/pedidosLista.dart';
 import 'package:pedidocompra/models/moduloFaturamentoModels/fat_localDeEntregaLista.dart';
+import 'package:pedidocompra/models/moduloFaturamentoModels/fat_notasDoDiaLista.dart';
+import 'package:pedidocompra/models/moduloFaturamentoModels/fat_notasDoPeriodoLista.dart';
 import 'package:pedidocompra/pages/moduloFaturamento/FatLocalDeEntrega.dart';
+import 'package:pedidocompra/pages/moduloFaturamento/fatNotasDoDia.dart';
+import 'package:pedidocompra/pages/moduloFaturamento/fatNotasDoPeriodo.dart';
+import 'package:pedidocompra/pages/moduloFaturamento/fat_grafico.dart';
 import 'package:pedidocompra/pages/moduloFaturamento/faturamentoEmpresas.dart';
 import 'package:pedidocompra/pages/moduloFaturamento/graficoConvenio.dart';
 import 'package:pedidocompra/pages/authOrHomePage.dart';
@@ -67,7 +72,7 @@ class MyApp extends StatelessWidget {
         //   ),
         // ),
         ChangeNotifierProxyProvider<Auth, FatConvenioLista>(
-          create: (_) => FatConvenioLista('',[]),
+          create: (_) => FatConvenioLista('', []),
           update: (ctx, auth, previous) {
             return FatConvenioLista(
               auth.token ?? '',
@@ -75,8 +80,26 @@ class MyApp extends StatelessWidget {
             );
           },
         ),
+        ChangeNotifierProxyProvider<Auth, FatNotasDoPeriodoLista>(
+          create: (_) => FatNotasDoPeriodoLista('', []),
+          update: (ctx, auth, previous) {
+            return FatNotasDoPeriodoLista(
+              auth.token ?? '',
+              previous?.notaFiscal ?? [],
+            );
+          },
+        ),
+        ChangeNotifierProxyProvider<Auth, FatNotasDoDiaLista>(
+          create: (_) => FatNotasDoDiaLista('', []),
+          update: (ctx, auth, previous) {
+            return FatNotasDoDiaLista(
+              auth.token ?? '',
+              previous?.notaFiscal ?? [],
+            );
+          },
+        ),
         ChangeNotifierProxyProvider<Auth, FatLocalDeEntregaLista>(
-          create: (_) => FatLocalDeEntregaLista('',[]),
+          create: (_) => FatLocalDeEntregaLista('', []),
           update: (ctx, auth, previous) {
             return FatLocalDeEntregaLista(
               auth.token ?? '',
@@ -85,7 +108,7 @@ class MyApp extends StatelessWidget {
           },
         ),
         ChangeNotifierProxyProvider<Auth, FatEmpresaLista>(
-          create: (_) => FatEmpresaLista('',[]),
+          create: (_) => FatEmpresaLista('', []),
           update: (ctx, auth, previous) {
             return FatEmpresaLista(
               auth.token ?? '',
@@ -132,11 +155,27 @@ class MyApp extends StatelessWidget {
                 pedido: '',
               ),
           AppRoutes.itensPedido: (ctx) => ItensPedido(itensPedido: []),
-          AppRoutes.faturamentoEmpresas: (ctx) => const FaturamentoEmpresasPage(),
-          AppRoutes.fatLocalDeEntrega: (ctx) =>  FatLocalDeEntrega(empresa: '',dateIni: DateTime.now(), dateFim: DateTime.now(),),
+          AppRoutes.faturamentoEmpresas: (ctx) =>
+              const FaturamentoEmpresasPage(),
+          AppRoutes.fatLocalDeEntrega: (ctx) => FatLocalDeEntrega(
+                empresa: '',
+                dateIni: DateTime.now(),
+                dateFim: DateTime.now(),
+              ),
+          AppRoutes.fatNotasDoPeriodo: (ctx) => FatNotasDoPeriodo(
+                empresa: '',
+                dateIni: DateTime.now(),
+                dateFim: DateTime.now(),
+              ),
+          AppRoutes.fatNotasDoDia: (ctx) => FatNotasDoDia(
+                empresa: '',
+                dateIni: DateTime.now(),
+                dateFim: DateTime.now(),
+                valorDiaFormatado: '',
+              ),
           AppRoutes.graficoRepresentante: (ctx) => GraficoRepresentantePage(),
-          AppRoutes.graficoConvenio: (ctx) =>  GraficoConvenio(
-                empresa: ''),
+          AppRoutes.graficoConvenio: (ctx) => GraficoConvenio(empresa: ''),
+          AppRoutes.fatGrafico: (ctx) => LineChartWidget(),
         },
         debugShowCheckedModeBanner: false,
       ),

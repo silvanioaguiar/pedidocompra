@@ -147,7 +147,7 @@ class _FatLocalDeEntregaState extends State<FatLocalDeEntrega> {
             ),
           ),
         ),
-        drawer: AppDrawer(),
+        //drawer: AppDrawer(),
         body: ListView(
           children: [
             Padding(
@@ -347,13 +347,7 @@ class _FatLocalDeEntregaState extends State<FatLocalDeEntrega> {
                   ),
                   const SizedBox(width: 50),
                   Container(
-                    height: 40,
-                    // decoration: BoxDecoration(
-                    //   color: Theme.of(context).primaryColor,
-                    // ),
-                    // padding:
-                    //     const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                    // //width: double.infinity,
+                    height: 40,                 
                     child:  Text(
                       xempresa,
                       style: TextStyle(
@@ -364,19 +358,7 @@ class _FatLocalDeEntregaState extends State<FatLocalDeEntrega> {
                     ),
                   ),
 
-                  // Column(
-                  //   children: [
-                  //     Container(
-                  //       child: BoxDecoration(
-                  //         borderRadius: BorderRadius.all(Radius.circular(15)),
-                  //         image: DecorationImage(
-                  //           image: AssetImage(logo),
-                  //           alignment: Alignment.topRight,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
+               
                 ],
               ),
             ),

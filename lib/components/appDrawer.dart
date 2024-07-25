@@ -4,10 +4,7 @@ import 'package:pedidocompra/models/auth.dart';
 import 'package:pedidocompra/routes/appRoutes.dart';
 import 'package:provider/provider.dart';
 
-
-
 class AppDrawer extends StatelessWidget {
-  
   AppDrawer({Key? key}) : super(key: key);
 
   @override
@@ -17,16 +14,21 @@ class AppDrawer extends StatelessWidget {
     var usuario = nameUser.usuario;
 
     return Drawer(
+      backgroundColor: const Color.fromARGB(255, 2, 33, 59),
       child: Column(
         children: [
           AppBar(
-            title:  Text('Bem vindo ${usuario}!'),            
+            backgroundColor: Color.fromARGB(255, 252, 164, 0),
+            title: Text('Bem vindo ${usuario}!'),
             automaticallyImplyLeading: false,
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.start_rounded),
-            title: const Text('Menu Empresas'),
+            leading: const Icon(Icons.business_rounded,color: Colors.white,),
+            title: const Text(
+              'Empresas - Compras',
+              style: TextStyle(color: Colors.white),
+            ),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(
                 AppRoutes.menuEmpresas,
@@ -35,8 +37,11 @@ class AppDrawer extends StatelessWidget {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.start_rounded),
-            title: const Text('Módulos'),
+            leading: const Icon(Icons.view_module,color: Colors.white,),
+            title: const Text(
+              'Módulos',
+              style: TextStyle(color: Colors.white),
+            ),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(
                 AppRoutes.menuModulos,
@@ -45,18 +50,33 @@ class AppDrawer extends StatelessWidget {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.exit_to_app),
-            title: const Text('Sair'),
+            leading: const Icon(Icons.attach_money,color: Colors.white,),
+            title: const Text(
+              'Faturamento',
+              style: TextStyle(color: Colors.white),
+            ),
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed(
+                AppRoutes.faturamentoEmpresas,
+              );
+            },
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.exit_to_app,color: Colors.white,),
+            title: const Text(
+              'Sair',
+              style: TextStyle(color: Colors.white),
+            ),
             onTap: () {
               //Navigator.of(context).pop();
               // SystemNavigator.pop();
-              Provider.of<Auth>(context,listen: false).logout();
+              Provider.of<Auth>(context, listen: false).logout();
               Navigator.of(context).pushReplacementNamed(
                 AppRoutes.authOrHome,
               );
             },
           ),
-          
         ],
       ),
     );

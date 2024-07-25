@@ -9,19 +9,37 @@ class FatLocalDeEntregaGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final providerFatLocalDeEntrega = Provider.of<FatLocalDeEntregaLista>(context);
+    final providerFatLocalDeEntrega =
+        Provider.of<FatLocalDeEntregaLista>(context);
     final List<FaturamentoLocalDeEntrega> loadedLocalDeEntrega =
         providerFatLocalDeEntrega.localDeEntrega;
+    var size = MediaQuery.of(context).size;
 
-    return ListView.builder(      
+    double sizeAspectRatio = 0;
+    int sizeCrossAxisCount = 0;
+
+    if (size.width >= 600 && size.height >= 600) {
+      sizeCrossAxisCount = 4;
+      sizeAspectRatio = 5.0;
+    } else {
+      sizeCrossAxisCount = 1;
+      sizeAspectRatio = 5.0;
+    }
+
+    return GridView.builder(
       physics: ClampingScrollPhysics(),
       shrinkWrap: true,
       itemCount: loadedLocalDeEntrega.length,
-      itemBuilder: (ctx, i) => ChangeNotifierProvider.value(        
+      itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
         value: loadedLocalDeEntrega[i],
         child: const FatLocalDeEntregaItem(),
       ),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: sizeCrossAxisCount,
+        childAspectRatio: sizeAspectRatio,
+        crossAxisSpacing: 1,
+        mainAxisSpacing: 1,
+      ),
     );
-    //);
   }
 }

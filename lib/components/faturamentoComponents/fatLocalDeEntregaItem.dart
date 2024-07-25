@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/models/moduloFaturamentoModels/faturamento_localDeEntrega.dart';
-import 'package:pedidocompra/pages/moduloFaturamento/fatLocalDeEntrega.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -8,8 +7,7 @@ class FatLocalDeEntregaItem extends StatelessWidget {
   const FatLocalDeEntregaItem({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final ScrollController _mycontroller = new ScrollController();
+  Widget build(BuildContext context) {    
     final empresa = Provider.of<FaturamentoLocalDeEntrega>(context);
 
     var size = MediaQuery.of(context).size;

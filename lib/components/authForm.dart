@@ -91,13 +91,10 @@ class _AuthFormState extends State<AuthForm> {
   final TextEditingController _controladorSenha = TextEditingController();
 
   @override
-  void initState() {    
-
-      _loginData();
+  void initState() {
+    _loginData();
 
     super.initState();
-
-    
   }
 
   Future<void> _loginData() async {
@@ -105,7 +102,7 @@ class _AuthFormState extends State<AuthForm> {
     if (userLogin.isEmpty) return;
 
     _passwordLog = userLogin['senha'];
-    _userLog = userLogin['usuario'];    
+    _userLog = userLogin['usuario'];
 
     _controladorNome.text = _userLog as String;
     _controladorSenha.text = _passwordLog as String;
@@ -115,69 +112,91 @@ class _AuthFormState extends State<AuthForm> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    double? widthScreen = 0;
+    double? heightScreen = 0;
+    double? sizeText = 0;
+
+    if (size.width >= 600) {
+      widthScreen = 400;
+      heightScreen = 300;
+      sizeText = 18;
+    } else {
+      widthScreen = size.width * 0.8;
+      heightScreen = size.height * 0.4;
+      sizeText = 16;
+    }
+
     return Card(
       margin: const EdgeInsets.all(20),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 50,
-                child: Text(
-                  'Entre com seu login de usuário e senha do sistema Protheus',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              TextFormField(
-                controller: _controladorNome,
-                //initialValue: 'silvanio.junior',
-                key: const ValueKey('usuario'),
-                decoration: const InputDecoration(labelText: 'Usuário'),
-                onSaved: (usuario) => _authData['usuario'] = usuario ?? '',
-              ),
-              TextFormField(
-                controller: _controladorSenha,
-                key: const ValueKey('senha'),
-                //initialValue: _passwordLog,
-                obscureText: _passwordInVisible,
-                decoration: InputDecoration(
-                  labelText: 'Senha',
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _passwordInVisible
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+          child: Container(
+            alignment: Alignment.center,
+            height: heightScreen,
+            width: widthScreen,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 60,
+                  child: Text(
+                    'Entre com seu login de usuário e senha do sistema Protheus',
+                    style: TextStyle(
+                      fontSize: sizeText,
+                      fontWeight: FontWeight.bold,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _passwordInVisible = !_passwordInVisible;
-                      });
-                    },
                   ),
                 ),
-                onSaved: (senha) => _authData['senha'] = senha ?? '',
-              ),
-              const SizedBox(height: 15),
-              ElevatedButton(
-                onPressed: _submit,
-                style: _formData.isLogin
-                    ? ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red.shade700)
-                    : ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColor),
-                child: Text(
-                  _formData.isLogin ? 'Entrar' : 'Cadastrar',
-                  style: const TextStyle(
-                    color: Colors.white,
+                TextFormField(
+                  controller: _controladorNome,
+                  //initialValue: 'silvanio.junior',
+                  key: const ValueKey('usuario'),
+                  decoration: const InputDecoration(labelText: 'Usuário'),
+                  onSaved: (usuario) => _authData['usuario'] = usuario ?? '',
+                ),
+                TextFormField(
+                  controller: _controladorSenha,
+                  key: const ValueKey('senha'),
+                  //initialValue: _passwordLog,
+                  obscureText: _passwordInVisible,
+                  decoration: InputDecoration(
+                    labelText: 'Senha',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _passwordInVisible
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _passwordInVisible = !_passwordInVisible;
+                        });
+                      },
+                    ),
+                  ),
+                  onSaved: (senha) => _authData['senha'] = senha ?? '',
+                ),
+                const SizedBox(height: 15),
+                ElevatedButton(
+                  onPressed: _submit,
+                  style: _formData.isLogin
+                      ? ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red.shade700)
+                      : ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).primaryColor),
+                  child: Text(
+                    _formData.isLogin ? 'Entrar' : 'Cadastrar',
+                    style: const TextStyle(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

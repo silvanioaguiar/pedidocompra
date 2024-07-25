@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/models/moduloFaturamentoModels/faturamento_empresas.dart';
 import 'package:pedidocompra/pages/moduloFaturamento/fatLocalDeEntrega.dart';
-import 'package:pedidocompra/pages/moduloFaturamento/graficoConvenio.dart';
+import 'package:pedidocompra/pages/moduloFaturamento/fatNotasDoDia.dart';
+import 'package:pedidocompra/pages/moduloFaturamento/fatNotasDoPeriodo.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -13,12 +14,11 @@ class FatEmpresaItem extends StatelessWidget {
     final ScrollController _mycontroller = new ScrollController();
     final empresa = Provider.of<FaturamentoEmpresas>(context);
     var _detalhesFaturamento = [
-      'Detalhes',
       'Local de Entrega',
       'NFs de Hoje',
-      'NFs do Período ',
+      'NFs do Período',
     ];
-    var _itemSelecionado = 'Detalhes';
+    var _itemSelecionado = 'NFs de Hoje';
 
     var size = MediaQuery.of(context).size;
     var dateIni =
@@ -27,6 +27,7 @@ class FatEmpresaItem extends StatelessWidget {
         DateFormat("yyyy-MM-dd").format(DateTime.parse(empresa.dateFim));
     final dateIniFormate = DateTime.parse(dateIni);
     final dateFimFormate = DateTime.parse(dateFim);
+    var valorDiaFormatado = empresa.valorDia;
 
     return SingleChildScrollView(
       child: Container(
@@ -51,7 +52,7 @@ class FatEmpresaItem extends StatelessWidget {
             // selectedTileColor: Colors.orange[100],
             // selected: active,
             title: Text(
-              '${empresa.empresa}${"-"} ${empresa.valorReal}',
+              '${empresa.empresa}${" "} ${empresa.valorReal}',
               style: const TextStyle(
                 color: Colors.black,
                 fontSize: 18,
@@ -67,7 +68,7 @@ class FatEmpresaItem extends StatelessWidget {
                       'Hoje: ${empresa.valorDia}',
                       style: const TextStyle(
                         color: Color.fromARGB(255, 247, 247, 246),
-                        fontSize: 16,
+                        fontSize: 15,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -77,21 +78,6 @@ class FatEmpresaItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // IconButton(
-                        //   onPressed: () {
-                        //     Navigator.of(context).push(
-                        //       MaterialPageRoute(builder: (ctx) {
-                        //         return FatLocalDeEntrega(
-                        //             empresa: empresa.empresa);
-                        //       }),
-                        //     );
-                        //   },
-                        //   icon: const Icon(
-                        //     Icons.more,
-                        //     size: 50,
-                        //     color: Colors.white,
-                        //   ),
-                        // ),
                         Theme(
                           data: Theme.of(context)
                               .copyWith(canvasColor: Colors.blue),
@@ -118,6 +104,27 @@ class FatEmpresaItem extends StatelessWidget {
                                       empresa: empresa.empresa,
                                       dateIni: dateIniFormate,
                                       dateFim: dateFimFormate,
+                                    );
+                                  }),
+                                );
+                              } else if (value == 'NFs do Período') {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(builder: (ctx) {
+                                    return FatNotasDoPeriodo(
+                                      empresa: empresa.empresa,
+                                      dateIni: dateIniFormate,
+                                      dateFim: dateFimFormate,
+                                    );
+                                  }),
+                                );
+                              } else if (value == 'NFs de Hoje') {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(builder: (ctx) {
+                                    return FatNotasDoDia(
+                                      empresa: empresa.empresa,
+                                      dateIni: dateIniFormate,
+                                      dateFim: dateFimFormate,
+                                      valorDiaFormatado: valorDiaFormatado,
                                     );
                                   }),
                                 );

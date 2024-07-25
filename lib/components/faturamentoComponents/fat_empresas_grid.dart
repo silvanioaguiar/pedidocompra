@@ -12,16 +12,33 @@ class FatEmpresasGrid extends StatelessWidget {
     final providerFatEmpresas = Provider.of<FatEmpresaLista>(context);
     final List<FaturamentoEmpresas> loadedEmpresas =
         providerFatEmpresas.empresas;
+      var size = MediaQuery.of(context).size;
+   
+    double sizeAspectRatio = 0;
+    int sizeCrossAxisCount = 0;
 
-    return ListView.builder(      
+    if (size.width >= 600 && size.height >= 600) {     
+      sizeCrossAxisCount = 2;
+      sizeAspectRatio = 6.0; 
+    } else {   
+      sizeCrossAxisCount = 1;
+      sizeAspectRatio = 4.0;
+    }     
+
+    return GridView.builder(
       physics: ClampingScrollPhysics(),
       shrinkWrap: true,
       itemCount: loadedEmpresas.length,
-      itemBuilder: (ctx, i) => ChangeNotifierProvider.value(        
+      itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
         value: loadedEmpresas[i],
         child: const FatEmpresaItem(),
       ),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: sizeCrossAxisCount,
+        childAspectRatio: sizeAspectRatio,
+        crossAxisSpacing: 1,
+        mainAxisSpacing: 1,
+      ),
     );
-    //);
   }
 }

@@ -11,6 +11,18 @@ class PedidoGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<PedidosLista>(context);
     final List<Pedidos> loadedPedidos = provider.pedidos;
+    var size = MediaQuery.of(context).size;
+
+    double sizeAspectRatio = 0;
+    int sizeCrossAxisCount = 0;
+
+    if (size.width >= 600 && size.height >= 600) {
+      sizeCrossAxisCount = 3;
+      sizeAspectRatio = 1.6;
+    } else {
+      sizeCrossAxisCount = 1;
+      sizeAspectRatio = 2.8 / 2.0;
+    }
 
     return GridView.builder(
       physics: ClampingScrollPhysics(),
@@ -20,9 +32,9 @@ class PedidoGrid extends StatelessWidget {
         value: loadedPedidos[i],
         child: const PedidoGridItem(),
       ),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 1,
-        childAspectRatio: 3.0 / 2,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: sizeCrossAxisCount,
+        childAspectRatio: sizeAspectRatio,
         crossAxisSpacing: 1,
         mainAxisSpacing: 1,
       ),

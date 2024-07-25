@@ -14,5 +14,8 @@ class AppRoutes {
   static const graficoConvenio = '/graficoConvenio';
   static const faturamentoEmpresas = '/faturamentoEmpresas';
   static const fatLocalDeEntrega = '/fatLocalDeEntrega';
+  static const fatNotasDoPeriodo = '/fatNotasDoPeriodo';
+  static const fatNotasDoDia = '/fatNotasDoDia';
+  static const fatGrafico = '/fatGrafico';
 
 }

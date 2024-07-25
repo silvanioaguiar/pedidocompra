@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:pedidocompra/components/appDrawer.dart';
 import 'package:pedidocompra/components/faturamentoComponents/fat_empresas_grid.dart';
 import 'package:pedidocompra/components/faturamentoComponents/fat_empresas_total.dart';
+import 'package:pedidocompra/pages/moduloFaturamento/fat_grafico.dart';
 import 'package:pedidocompra/models/moduloFaturamentoModels/fat_empresaLista.dart';
 import 'package:pedidocompra/models/moduloFaturamentoModels/faturamento_empresas.dart';
 import 'package:provider/provider.dart';
@@ -261,6 +262,7 @@ class _FaturamentoEmpresasFatState extends State<FaturamentoEmpresasPage> {
                           child: Column(
                             children: [
                               Container(
+                                width: 110,
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 5),
                                 //width: double.infinity,
@@ -283,6 +285,7 @@ class _FaturamentoEmpresasFatState extends State<FaturamentoEmpresasPage> {
                                     style: TextStyle(
                                       color: Theme.of(context)
                                           .secondaryHeaderColor,
+                                      fontSize: 12,
                                     ),
                                   ),
                                 ),
@@ -295,11 +298,12 @@ class _FaturamentoEmpresasFatState extends State<FaturamentoEmpresasPage> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 10)
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 5),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 3),
               child: Column(
@@ -309,10 +313,7 @@ class _FaturamentoEmpresasFatState extends State<FaturamentoEmpresasPage> {
                   Column(
                     children: [
                       Container(
-                        height: 80,
-                        // decoration: BoxDecoration(
-                        //   color: Theme.of(context).primaryColor,
-                        // ),
+                        height: 100,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 15, vertical: 5),
                         //width: double.infinity,
@@ -325,34 +326,31 @@ class _FaturamentoEmpresasFatState extends State<FaturamentoEmpresasPage> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               )
-                            : const FatEmpresasTotal(),                     
+                            : const FatEmpresasTotal(),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 3),
-                  // Column(
-                  //   children: [
-                  //     Container(
-                  //       height: 40,
-                  //       // decoration: BoxDecoration(
-                  //       //   color: Theme.of(context).primaryColor,
-                  //       // ),
-                  //       padding: const EdgeInsets.symmetric(
-                  //           horizontal: 15, vertical: 5),
-                  //       //width: double.infinity,
-                  //       child: 
-                  //            Text(
-                  //               'Total do Dia: ',
-                  //               style: TextStyle(
-                  //                 color: Colors.black,
-                  //                 fontSize: 20,
-                  //                 fontWeight: FontWeight.bold,
-                  //               ),
-                  //             )
-                                              
-                  //     ),
-                  //   ],
-                  // ),
+                  const SizedBox(height: 10),
+                  Container(
+                    color: Colors.amber,
+                    margin: const EdgeInsets.all(8),
+                    child: IconButton(
+                      onPressed: () {
+                        // Navigator.of(context).push(
+                        //         MaterialPageRoute(builder: (ctx) {
+                        //           //return const MenuEmpresasFat();
+                        //           return LineChartWidget();
+                        //         }),
+                        //       );
+                      },
+                      icon: const Icon(
+                        Icons.line_axis_rounded,
+                        color: Colors.black,
+                        size: 40,
+                        //opticalSize: 1.0,
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),

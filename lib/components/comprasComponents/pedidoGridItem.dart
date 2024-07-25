@@ -17,12 +17,33 @@ class PedidoGridItem extends StatelessWidget {
     final pedido = Provider.of<Pedidos>(context);
     //String valor1 = NumberFormat.currency(locale: 'br_Br', symbol: "R\$")
     //    .format(pedido.valor);
-    var size = MediaQuery.of(context).size;
+
     var empresa = pedido.empresa;
     var logo;
     var status = pedido.status;
     var color1Card;
     var color2Card;
+
+    var size = MediaQuery.of(context).size;
+    double? widthScreen = 0;
+    double? heightScreen = 0;
+    double? sizeText = 0;
+    double sizeAspectRatio = 0;
+    int sizeCrossAxisCount = 0;
+
+    if (size.width >= 600) {
+      widthScreen = 400;
+      heightScreen = 300;
+      sizeText = 18;
+      sizeCrossAxisCount = 4;
+      sizeAspectRatio = 1.2;
+    } else {
+      widthScreen = size.width * 0.8;
+      heightScreen = size.height * 0.6;
+      sizeText = 14;
+      sizeCrossAxisCount = 2;
+      sizeAspectRatio = 1.05;
+    }
 
     if (empresa == 'Big Assistencia Tecnica' || empresa == 'Big Locacao') {
       logo = 'assets/images/logo_big.png';
@@ -71,9 +92,9 @@ class PedidoGridItem extends StatelessWidget {
         child: Row(
           children: [
             Padding(
-              padding:  EdgeInsets.only(left: 5),
+              padding: EdgeInsets.only(left: 5),
               child: Container(
-                width: 370,                
+                width: 320,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
