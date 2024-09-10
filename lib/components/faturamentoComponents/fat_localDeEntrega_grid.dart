@@ -27,7 +27,7 @@ class FatLocalDeEntregaGrid extends StatelessWidget {
     }
 
     return GridView.builder(
-      physics: ClampingScrollPhysics(),
+      physics: const ClampingScrollPhysics(),
       shrinkWrap: true,
       itemCount: loadedLocalDeEntrega.length,
       itemBuilder: (ctx, i) => ChangeNotifierProvider.value(

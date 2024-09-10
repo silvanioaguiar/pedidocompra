@@ -8,7 +8,7 @@ class FatNotasDoDiaItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ScrollController _mycontroller = new ScrollController();
+    final ScrollController mycontroller = ScrollController();
     final empresa = Provider.of<FaturamentoNotasDoDia>(context);
     int timestamp = int.parse(empresa.emissaoNotaFiscal
         .substring(5, empresa.emissaoNotaFiscal.length - 1));

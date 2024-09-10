@@ -13,7 +13,7 @@ bool isLoading = true;
 class PedidosPendentesAprovacao extends StatefulWidget {
   final String empresa;
 
-  PedidosPendentesAprovacao({super.key, required this.empresa});
+  const PedidosPendentesAprovacao({super.key, required this.empresa});
 
   @override
   State<PedidosPendentesAprovacao> createState() =>

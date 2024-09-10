@@ -13,7 +13,7 @@ class FatNotasDoPeriodo extends StatefulWidget {
   final DateTime dateIni;
   final DateTime dateFim;
 
-  FatNotasDoPeriodo({super.key, required this.empresa, required this.dateIni, required this.dateFim});
+  const FatNotasDoPeriodo({super.key, required this.empresa, required this.dateIni, required this.dateFim});
 
   @override
   State<FatNotasDoPeriodo> createState() => _FatNotasDoPeriodoState();
@@ -169,7 +169,7 @@ class _FatNotasDoPeriodoState extends State<FatNotasDoPeriodo> {
                         )
                       ],
                     ),
-                    Container(
+                    SizedBox(
                       width: size.width,
                       child: SingleChildScrollView(
                         child: Row(
@@ -183,7 +183,7 @@ class _FatNotasDoPeriodoState extends State<FatNotasDoPeriodo> {
                                   child: ElevatedButton(
                                     style: ButtonStyle(
                                         backgroundColor:
-                                            MaterialStatePropertyAll(
+                                            WidgetStatePropertyAll(
                                                 Theme.of(context)
                                                     .primaryColor)),
                                     onPressed: () {
@@ -235,7 +235,7 @@ class _FatNotasDoPeriodoState extends State<FatNotasDoPeriodo> {
                                   child: ElevatedButton(
                                     style: ButtonStyle(
                                         backgroundColor:
-                                            MaterialStatePropertyAll(
+                                            WidgetStatePropertyAll(
                                                 Theme.of(context)
                                                     .primaryColor)),
                                     onPressed: () {
@@ -288,7 +288,7 @@ class _FatNotasDoPeriodoState extends State<FatNotasDoPeriodo> {
                                     child: ElevatedButton(
                                       style: const ButtonStyle(
                                           backgroundColor:
-                                              MaterialStatePropertyAll(
+                                              WidgetStatePropertyAll(
                                                   Color.fromARGB(
                                                       255, 202, 14, 1))),
                                       onPressed: () =>
@@ -344,7 +344,7 @@ class _FatNotasDoPeriodoState extends State<FatNotasDoPeriodo> {
                   //   ],
                   // ),
                   // const SizedBox(width: 50),
-                  Container(
+                  SizedBox(
                     height: 40,
                     width: 200,
                     // decoration: BoxDecoration(

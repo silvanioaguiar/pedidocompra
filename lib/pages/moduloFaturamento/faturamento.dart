@@ -1,4 +1,4 @@
-import 'package:d_chart/commons/data_model.dart';
+//import 'package:d_chart/commons/data_model.dart';
 import 'package:d_chart/ordinal/bar.dart';
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/components/appDrawer.dart';
@@ -199,7 +199,7 @@ class _FaturamentoPageState extends State<FaturamentoPage> {
                     //width: double.infinity,
                     child: ElevatedButton(
                       style: ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll(
+                          backgroundColor: WidgetStatePropertyAll(
                               Theme.of(context).primaryColor)),
                       onPressed: () {
                         _selectDateInicio(context);
@@ -225,7 +225,7 @@ class _FaturamentoPageState extends State<FaturamentoPage> {
                     //width: double.infinity,
                     child: ElevatedButton(
                       style: ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll(
+                          backgroundColor: WidgetStatePropertyAll(
                               Theme.of(context).primaryColor)),
                       onPressed: () {
                         _selectDateFim(context);

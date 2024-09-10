@@ -134,7 +134,7 @@ class FatLocalDeEntregaLista with ChangeNotifier {
       data = jsonDecode(response.body);
       utf8.decode(response.bodyBytes);
       data.asMap();
-      data.forEach((data) {
+      for (var data in data) {
         localDeEntrega.add(
           FaturamentoLocalDeEntrega(
             empresa: data['principal']['empresa'],
@@ -146,7 +146,7 @@ class FatLocalDeEntregaLista with ChangeNotifier {
             ranking:  data['principal']['ranking'],             
           ),
         );
-      });
+      }
     }
    
     _localDeEntrega = localDeEntrega.toList();

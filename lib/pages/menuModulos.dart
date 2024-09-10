@@ -63,7 +63,7 @@ class _MenuEmpresasState extends State<MenuModulos> {
                           },
                           icon: const Icon(Icons.shopping_cart),
                           iconSize: 100,
-                          color: Color.fromARGB(255, 187, 31, 31),
+                          color: const Color.fromARGB(255, 187, 31, 31),
                         ),
                         const Text(
                           "Compras",
@@ -92,7 +92,7 @@ class _MenuEmpresasState extends State<MenuModulos> {
                             },
                             icon: const Icon(Icons.attach_money_sharp),
                             iconSize: 100,
-                            color: Color.fromARGB(255, 5, 58, 36),
+                            color: const Color.fromARGB(255, 5, 58, 36),
                           ),
                           const Text(
                             "Faturamento",

@@ -4,7 +4,7 @@ import 'package:pedidocompra/services/auth/auth_service.dart';
 import '../../models/ProtheusUser.dart';
 
 class AuthMockService implements AuthService {
-  static Map<String, ProtheusUser> _users = {};
+  static final Map<String, ProtheusUser> _users = {};
   static ProtheusUser? _currentUser;
   static MultiStreamController<ProtheusUser?>? _controller;
   static final _userStream = Stream<ProtheusUser?>.multi((controller) {
@@ -13,19 +13,23 @@ class AuthMockService implements AuthService {
    });
 
 
+  @override
   ProtheusUser? get currentUser {
     return _currentUser;
   }
 
+  @override
   Stream<ProtheusUser?> get userChanges {
     return _userStream;
   }
 
+  @override
   Future<void> login(
     String protheusUsername,
     String password,
   ) async {}
 
+  @override
   Future<void> logout() async {
     _updateUser(null);
   }

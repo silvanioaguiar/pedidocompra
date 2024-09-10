@@ -15,7 +15,7 @@ class FatLocalDeEntrega extends StatefulWidget {
   final DateTime dateIni;
   final DateTime dateFim;
 
-  FatLocalDeEntrega({super.key, required this.empresa, required this.dateIni, required this.dateFim});
+  const FatLocalDeEntrega({super.key, required this.empresa, required this.dateIni, required this.dateFim});
 
   @override
   State<FatLocalDeEntrega> createState() => _FatLocalDeEntregaState();
@@ -171,7 +171,7 @@ class _FatLocalDeEntregaState extends State<FatLocalDeEntrega> {
                         )
                       ],
                     ),
-                    Container(
+                    SizedBox(
                       width: size.width,
                       child: SingleChildScrollView(
                         child: Row(
@@ -185,7 +185,7 @@ class _FatLocalDeEntregaState extends State<FatLocalDeEntrega> {
                                   child: ElevatedButton(
                                     style: ButtonStyle(
                                         backgroundColor:
-                                            MaterialStatePropertyAll(
+                                            WidgetStatePropertyAll(
                                                 Theme.of(context)
                                                     .primaryColor)),
                                     onPressed: () {
@@ -237,7 +237,7 @@ class _FatLocalDeEntregaState extends State<FatLocalDeEntrega> {
                                   child: ElevatedButton(
                                     style: ButtonStyle(
                                         backgroundColor:
-                                            MaterialStatePropertyAll(
+                                            WidgetStatePropertyAll(
                                                 Theme.of(context)
                                                     .primaryColor)),
                                     onPressed: () {
@@ -290,7 +290,7 @@ class _FatLocalDeEntregaState extends State<FatLocalDeEntrega> {
                                     child: ElevatedButton(
                                       style: const ButtonStyle(
                                           backgroundColor:
-                                              MaterialStatePropertyAll(
+                                              WidgetStatePropertyAll(
                                                   Color.fromARGB(
                                                       255, 202, 14, 1))),
                                       onPressed: () =>
@@ -346,7 +346,7 @@ class _FatLocalDeEntregaState extends State<FatLocalDeEntrega> {
                     ],
                   ),
                   const SizedBox(width: 50),
-                  Container(
+                  SizedBox(
                     height: 40,                 
                     child:  Text(
                       xempresa,

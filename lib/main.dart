@@ -8,7 +8,7 @@ import 'package:pedidocompra/models/moduloFaturamentoModels/fat_notasDoPeriodoLi
 import 'package:pedidocompra/pages/moduloFaturamento/FatLocalDeEntrega.dart';
 import 'package:pedidocompra/pages/moduloFaturamento/fatNotasDoDia.dart';
 import 'package:pedidocompra/pages/moduloFaturamento/fatNotasDoPeriodo.dart';
-import 'package:pedidocompra/pages/moduloFaturamento/fat_grafico.dart';
+import 'package:pedidocompra/pages/moduloFaturamento/fat_graficos.dart/fat_grafico.dart';
 import 'package:pedidocompra/pages/moduloFaturamento/faturamentoEmpresas.dart';
 import 'package:pedidocompra/pages/moduloFaturamento/graficoConvenio.dart';
 import 'package:pedidocompra/pages/authOrHomePage.dart';
@@ -154,7 +154,7 @@ class MyApp extends StatelessWidget {
                 empresa: '',
                 pedido: '',
               ),
-          AppRoutes.itensPedido: (ctx) => ItensPedido(itensPedido: []),
+          AppRoutes.itensPedido: (ctx) => ItensPedido(itensPedido: const []),
           AppRoutes.faturamentoEmpresas: (ctx) =>
               const FaturamentoEmpresasPage(),
           AppRoutes.fatLocalDeEntrega: (ctx) => FatLocalDeEntrega(

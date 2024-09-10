@@ -135,7 +135,7 @@ class FatNotasDoPeriodoLista with ChangeNotifier {
       data = jsonDecode(response.body);
       utf8.decode(response.bodyBytes);
       data.asMap();
-      data.forEach((data) {
+      for (var data in data) {
         notaFiscal.add(
           FaturamentoNotasDoPeriodo(
             empresa: data['principal']['empresa'],
@@ -149,7 +149,7 @@ class FatNotasDoPeriodoLista with ChangeNotifier {
             condicaoPagamento: data['principal']['condicaoPagamento']     
           ),
         );
-      });
+      }
     }
    
     _notaFiscal = notaFiscal.toList();

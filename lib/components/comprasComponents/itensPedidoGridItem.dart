@@ -21,7 +21,7 @@ class ItensPedidoGridItem extends StatelessWidget {
             .format(itensPedido.precoTotal);
     String empresa = itensPedido.empresa;
 
-    var logo;
+    String logo;
 
     if (empresa == 'Big Assistencia Tecnica' || empresa == 'Big Locacao') {
       logo = 'assets/images/logo_big.png';
@@ -41,8 +41,8 @@ class ItensPedidoGridItem extends StatelessWidget {
           padding: const EdgeInsets.all(4.0),
           child: Container(
             margin: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: <Color>[
@@ -71,57 +71,57 @@ class ItensPedidoGridItem extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             'Biosat Matriz Fábrica', //pedido.empresa,
                             textAlign: TextAlign.justify,
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 0, 102, 245)),
                           ),
                           const SizedBox(),
-                          Text(
+                          const Text(
                             'Fornecedor: Teste',
                             // pedido.fornecedor.length > 25
                             //     ? 'Fornecedor: ${pedido.fornecedor.substring(0, 25)}'
                             //     : 'Fornecedor: ${pedido.fornecedor}',
                             textAlign: TextAlign.start,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
                           ),
                           const SizedBox(),
-                          Text(
+                          const Text(
                             'Pedido: 0000001',
                             //'Pedido: ${pedido.pedido}',
                            
                             //'Pedido: ${itens[0]('empresa')}',
                             textAlign: TextAlign.start,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
                           ),
                           const SizedBox(),
-                          Text(
+                          const Text(
                             'Valor Total do Pedido: 1250,00',
                             //'Valor Total do Pedido: ${valor1.toString()}',
                             //pedido.valor.toStringAsFixed(2),
                             textAlign: TextAlign.start,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
                           ),
-                          Text(
+                          const Text(
                             'Cond.Pgeto: 30 dias',
                             //'Cond. Pgto: ${pedido.condicaoPagamento}',
                             textAlign: TextAlign.end,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
@@ -160,12 +160,12 @@ class ItensPedidoGridItem extends StatelessWidget {
                     
                           Row(
                             children: [
-                              Container(
+                              SizedBox(
                                 width: 120,
-                                child: Text(
+                                child: const Text(
                                   'Cod.Produto',
                                   style: TextStyle(
-                                    color: const Color.fromARGB(255, 1, 44, 78),
+                                    color: Color.fromARGB(255, 1, 44, 78),
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -174,12 +174,12 @@ class ItensPedidoGridItem extends StatelessWidget {
                               const SizedBox(
                                 width: 10,
                               ),
-                              Container(
+                              SizedBox(
                                 width: 150,
-                                child: Text(
+                                child: const Text(
                                   'Nome Produto',
                                   style: TextStyle(
-                                    color: const Color.fromARGB(255, 1, 44, 78),
+                                    color: Color.fromARGB(255, 1, 44, 78),
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -188,12 +188,12 @@ class ItensPedidoGridItem extends StatelessWidget {
                               const SizedBox(
                                 width: 10,
                               ),
-                              Container(
+                              SizedBox(
                                 width: 55,
-                                child: Text(
+                                child: const Text(
                                   'Quant.',
                                   style: TextStyle(
-                                    color: const Color.fromARGB(255, 1, 44, 78),
+                                    color: Color.fromARGB(255, 1, 44, 78),
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -202,12 +202,12 @@ class ItensPedidoGridItem extends StatelessWidget {
                               const SizedBox(
                                 width: 10,
                               ),
-                              Container(
+                              SizedBox(
                                 width: 80,
-                                child: Text(
+                                child: const Text(
                                   'Prc.Unit',
                                   style: TextStyle(
-                                    color: const Color.fromARGB(255, 1, 44, 78),
+                                    color: Color.fromARGB(255, 1, 44, 78),
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -216,12 +216,12 @@ class ItensPedidoGridItem extends StatelessWidget {
                               const SizedBox(
                                 width: 10,
                               ),
-                              Container(
+                              SizedBox(
                                 width: 80,
-                                child: Text(
+                                child: const Text(
                                   'Prc.Total',
                                   style: TextStyle(
-                                    color: const Color.fromARGB(255, 1, 44, 78),
+                                    color: Color.fromARGB(255, 1, 44, 78),
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -233,7 +233,7 @@ class ItensPedidoGridItem extends StatelessWidget {
                           // Itens
                           Row(
                             children: [
-                              Container(
+                              SizedBox(
                                 width: 120,
                                 child: Text(
                                   'P.FGH.032.00'.length > 15
@@ -242,8 +242,8 @@ class ItensPedidoGridItem extends StatelessWidget {
                                   // pedido.fornecedor.length > 25
                                   //     ? 'Fornecedor: ${pedido.fornecedor.substring(0, 25)}'
                                   //     : 'Fornecedor: ${pedido.fornecedor}',
-                                  style: TextStyle(
-                                    color: const Color.fromARGB(255, 95, 5, 5),
+                                  style: const TextStyle(
+                                    color: Color.fromARGB(255, 95, 5, 5),
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -252,14 +252,14 @@ class ItensPedidoGridItem extends StatelessWidget {
                               const SizedBox(
                                 width: 10,
                               ),
-                              Container(
+                              SizedBox(
                                 width: 150,
                                 child: Text(
                                   'Fio Guia Hidrofilico 35'.length > 20
                                       ? 'Fio Guia Hidrofilico 35'.substring(0, 20)
                                       : 'Fio Guia Hidrofilico 35',
-                                  style: TextStyle(
-                                    color:const Color.fromARGB(255, 95, 5, 5),
+                                  style: const TextStyle(
+                                    color:Color.fromARGB(255, 95, 5, 5),
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -268,12 +268,12 @@ class ItensPedidoGridItem extends StatelessWidget {
                               const SizedBox(
                                 width: 10,
                               ),
-                              Container(
+                              SizedBox(
                                 width: 55,
-                                child: Text(
+                                child: const Text(
                                   '1',
                                   style: TextStyle(
-                                    color: const Color.fromARGB(255, 95, 5, 5),
+                                    color: Color.fromARGB(255, 95, 5, 5),
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -282,12 +282,12 @@ class ItensPedidoGridItem extends StatelessWidget {
                               const SizedBox(
                                 width: 10,
                               ),
-                              Container(
+                              SizedBox(
                                 width: 80,
-                                child: Text(
+                                child: const Text(
                                   '99,00',
                                   style: TextStyle(
-                                    color: const Color.fromARGB(255, 95, 5, 5),
+                                    color: Color.fromARGB(255, 95, 5, 5),
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -296,12 +296,12 @@ class ItensPedidoGridItem extends StatelessWidget {
                               const SizedBox(
                                 width: 10,
                               ),
-                              Container(
+                              SizedBox(
                                 width: 80,
-                                child: Text(
+                                child: const Text(
                                   '99,00',
                                   style: TextStyle(
-                                    color: const Color.fromARGB(255, 95, 5, 5),
+                                    color: Color.fromARGB(255, 95, 5, 5),
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -311,7 +311,7 @@ class ItensPedidoGridItem extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                              Container(
+                              SizedBox(
                                 width: 120,
                                 child: Text(
                                   'P.FGH.032.00'.length > 15
@@ -320,8 +320,8 @@ class ItensPedidoGridItem extends StatelessWidget {
                                   // pedido.fornecedor.length > 25
                                   //     ? 'Fornecedor: ${pedido.fornecedor.substring(0, 25)}'
                                   //     : 'Fornecedor: ${pedido.fornecedor}',
-                                  style: TextStyle(
-                                    color: const Color.fromARGB(255, 95, 5, 5),
+                                  style: const TextStyle(
+                                    color: Color.fromARGB(255, 95, 5, 5),
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -330,14 +330,14 @@ class ItensPedidoGridItem extends StatelessWidget {
                               const SizedBox(
                                 width: 10,
                               ),
-                              Container(
+                              SizedBox(
                                 width: 150,
                                 child: Text(
                                   'Fio Guia Hidrofilico 35'.length > 20
                                       ? 'Fio Guia Hidrofilico 35'.substring(0, 20)
                                       : 'Fio Guia Hidrofilico 35',
-                                  style: TextStyle(
-                                    color:const Color.fromARGB(255, 95, 5, 5),
+                                  style: const TextStyle(
+                                    color:Color.fromARGB(255, 95, 5, 5),
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -346,12 +346,12 @@ class ItensPedidoGridItem extends StatelessWidget {
                               const SizedBox(
                                 width: 10,
                               ),
-                              Container(
+                              SizedBox(
                                 width: 55,
-                                child: Text(
+                                child: const Text(
                                   '1',
                                   style: TextStyle(
-                                    color: const Color.fromARGB(255, 95, 5, 5),
+                                    color: Color.fromARGB(255, 95, 5, 5),
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -360,12 +360,12 @@ class ItensPedidoGridItem extends StatelessWidget {
                               const SizedBox(
                                 width: 10,
                               ),
-                              Container(
+                              SizedBox(
                                 width: 80,
-                                child: Text(
+                                child: const Text(
                                   '99,00',
                                   style: TextStyle(
-                                    color: const Color.fromARGB(255, 95, 5, 5),
+                                    color: Color.fromARGB(255, 95, 5, 5),
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -374,12 +374,12 @@ class ItensPedidoGridItem extends StatelessWidget {
                               const SizedBox(
                                 width: 10,
                               ),
-                              Container(
+                              SizedBox(
                                 width: 80,
-                                child: Text(
+                                child: const Text(
                                   '99,00',
                                   style: TextStyle(
-                                    color: const Color.fromARGB(255, 95, 5, 5),
+                                    color: Color.fromARGB(255, 95, 5, 5),
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),

@@ -144,15 +144,13 @@ class PedidosLista with ChangeNotifier {
       data = jsonDecode(response.body);
       utf8.decode(response.bodyBytes);
       data.asMap();
-      data.forEach((data) {
+      for (var data in data) {
         pedidos.add(
           Pedidos(
             empresa: data['principal']['dadospedidos']['empresa'],
             pedido: data['principal']['pedido'],
             fornecedor: data['principal']['dadospedidos']['fornecedor'],
-            valor: data['principal']['dadospedidos']['valor'] == null
-                ? "0.0"
-                : data['principal']['dadospedidos']['valor'],
+            valor: data['principal']['dadospedidos']['valor'] ?? "0.0",
             condicaoPagamento: data['principal']['dadospedidos']
                 ['condicaoPagamento'],
             status: data['principal']['status'], 
@@ -160,7 +158,7 @@ class PedidosLista with ChangeNotifier {
             aprovadorPedido: data['principal']['dadospedidos']['aprovador'],           
           ),
         );
-      });
+      }
     }
    
     _pedidos = pedidos.reversed.toList();
@@ -195,15 +193,13 @@ class PedidosLista with ChangeNotifier {
     data2 = jsonDecode(response.body);
     utf8.decode(response.bodyBytes);
     data2.asMap();
-    data2.forEach((data2) {
+    for (var data2 in data2) {
       itensDoPedido.add(
         ItensPedidos(
           empresa: data2['principal']['dadospedidos']['empresa'],
           pedido: data2['principal']['pedido'],
           fornecedor: data2['principal']['dadospedidos']['fornecedor'],
-          valor: data2['principal']['dadospedidos']['valor'] == null
-              ? "0.0"
-              : data2['principal']['dadospedidos']['valor'],
+          valor: data2['principal']['dadospedidos']['valor'] ?? "0.0",
           condicaoPagamento: data2['principal']['dadospedidos']
               ['condicaoPagamento'],
           sc: data2['principal']['dadospedidos']['sc'],
@@ -218,17 +214,12 @@ class PedidosLista with ChangeNotifier {
               ? 0.0
               : data2['principal']['dadospedidos']['quantidade'].toDouble(),
           unidadeMedida: data2['principal']['dadospedidos']['unidadeMedida'],
-          precoUnitario: data2['principal']['dadospedidos']['valorUnitario'] ==
-                  null
-              ? "0.0"
-              : data2['principal']['dadospedidos']['valorUnitario'],
-          precoTotal: data2['principal']['dadospedidos']['valorTotal'] == null
-              ? "0.0"
-              : data2['principal']['dadospedidos']['valorTotal'],
+          precoUnitario: data2['principal']['dadospedidos']['valorUnitario'] ?? "0.0",
+          precoTotal: data2['principal']['dadospedidos']['valorTotal'] ?? "0.0",
           status: data2['principal']['status'],
         ),
       );
-    });
+    }
 
     //_pedidos.reversed.toList();
     notifyListeners();
@@ -266,7 +257,7 @@ class PedidosLista with ChangeNotifier {
     String empresa = Pedidos.empresa;
     String empresaFilial = '';
 
-    var data = Map();
+    var data = {};
 
     if (empresa == 'Libertad') {
       empresaFilial = '01,01';
@@ -416,7 +407,7 @@ class PedidosLista with ChangeNotifier {
   Future<void> aprovarPedidoemVisualizar(context, pedido, empresa) async {
     String empresaFilial = '';
 
-    var data = Map();
+    var data = {};
 
     if (empresa == 'Libertad') {
       empresaFilial = '01,01';
@@ -567,7 +558,7 @@ class PedidosLista with ChangeNotifier {
     String empresa = Pedidos.empresa;
     String empresaFilial = '';
 
-    var data = Map();
+    var data = {};
 
     if (empresa == 'Libertad') {
       empresaFilial = '01,01';
@@ -712,7 +703,7 @@ class PedidosLista with ChangeNotifier {
   Future<void> reprovarPedidoemVisualizar(context, pedido, empresa) async {
     String empresaFilial = '';
 
-    var data = Map();
+    var data = {};
 
     if (empresa == 'Libertad') {
       empresaFilial = '01,01';
@@ -957,15 +948,13 @@ class PedidosLista with ChangeNotifier {
       data = jsonDecode(response.body);
       utf8.decode(response.bodyBytes);
       data.asMap();
-      data.forEach((data) {
+      for (var data in data) {
         pedidos.add(
           Pedidos(
             empresa: data['principal']['dadospedidos']['empresa'],
             pedido: data['principal']['pedido'],
             fornecedor: data['principal']['dadospedidos']['fornecedor'],
-            valor: data['principal']['dadospedidos']['valor'] == null
-                ? "0.0"
-                : data['principal']['dadospedidos']['valor'],
+            valor: data['principal']['dadospedidos']['valor'] ?? "0.0",
             condicaoPagamento: data['principal']['dadospedidos']
                 ['condicaoPagamento'], 
             status: data['principal']['status'], 
@@ -973,7 +962,7 @@ class PedidosLista with ChangeNotifier {
             aprovadorPedido: data['principal']['dadospedidos']['aprovador'],        
           ),
         );
-      });
+      }
     }
    
     _pedidos = pedidos.reversed.toList();
@@ -1007,15 +996,13 @@ class PedidosLista with ChangeNotifier {
     data2 = jsonDecode(response.body);
     utf8.decode(response.bodyBytes);
     data2.asMap();
-    data2.forEach((data2) {
+    for (var data2 in data2) {
       itensDoPedido.add(
         ItensPedidos(
           empresa: data2['principal']['dadospedidos']['empresa'],
           pedido: data2['principal']['pedido'],
           fornecedor: data2['principal']['dadospedidos']['fornecedor'],
-          valor: data2['principal']['dadospedidos']['valor'] == null
-              ? "0.0"
-              : data2['principal']['dadospedidos']['valor'],
+          valor: data2['principal']['dadospedidos']['valor'] ?? "0.0",
           condicaoPagamento: data2['principal']['dadospedidos']
               ['condicaoPagamento'],
           sc: data2['principal']['dadospedidos']['sc'],
@@ -1030,17 +1017,12 @@ class PedidosLista with ChangeNotifier {
               ? 0.0
               : data2['principal']['dadospedidos']['quantidade'].toDouble(),
           unidadeMedida: data2['principal']['dadospedidos']['unidadeMedida'],
-          precoUnitario: data2['principal']['dadospedidos']['valorUnitario'] ==
-                  null
-              ? "0.0"
-              : data2['principal']['dadospedidos']['valorUnitario'],
-          precoTotal: data2['principal']['dadospedidos']['valorTotal'] == null
-              ? "0.0"
-              : data2['principal']['dadospedidos']['valorTotal'],
+          precoUnitario: data2['principal']['dadospedidos']['valorUnitario'] ?? "0.0",
+          precoTotal: data2['principal']['dadospedidos']['valorTotal'] ?? "0.0",
           status: data2['principal']['status'],
         ),
       );
-    });
+    }
 
     //_pedidos.reversed.toList();
     notifyListeners();
@@ -1051,6 +1033,153 @@ class PedidosLista with ChangeNotifier {
             builder: (context) => ItensPedido(
                   itensPedido: itensDoPedido,
                 )));
+  }
+
+  Future<void> estornarLiberacao(context, Pedidos) async {
+    String pedido = Pedidos.pedido;
+    String empresa = Pedidos.empresa;
+    String empresaFilial = '';
+
+    var data = {};
+
+    if (empresa == 'Libertad') {
+      empresaFilial = '01,01';
+    } else if (empresa == 'Biosat Matriz Fabrica') {
+      empresaFilial = '02,01';
+    } else if (empresa == 'Biosat Filial') {
+      empresaFilial = '02,02';
+    } else if (empresa == 'Big Assistencia Tecnica') {
+      empresaFilial = '05,01';
+    } else if (empresa == 'Big Locacao') {
+      empresaFilial = '05,02';
+    } else if (empresa == 'E-med') {
+      empresaFilial = '06,01';
+    } else if (empresa == 'Brumed') {
+      empresaFilial = '08,01';
+    }
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text(
+          'Estornar Liberação',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+        content: Text(
+          'Tem certeza que deseja estornar liberação do pedido $pedido ?',
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              showLoaderDialog(context);
+              final response = await http.put(
+                  Uri.parse(
+                      'http://biosat.dyndns.org:8084/REST/api/biosat/v1/PedidosPendentes/Estornar/$pedido/$empresa'),
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Accept-Charset': 'utf-8',
+                    'tenantId': empresaFilial,
+                    'Authorization': 'Bearer $_token',
+                  });
+
+              if (response.body == 'null') return;
+
+              if (response.statusCode == 500) {
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: const Text(
+                      'Erro',
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                    content: const Text(
+                      'Ocorreu um arro ao tentar estornar a liberação do pedido.Por favor entrar em contato com o suporte do sistema',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("Fechar",
+                            style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 5, 0, 0))),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              notifyListeners();
+              Navigator.of(context, rootNavigator: true).pop();
+
+              if (response.statusCode >= 200 && response.statusCode <= 299) {
+                data = jsonDecode(response.body);
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: Text(
+                      data['MESSAGE'],
+                      style: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                    content: Text(
+                      data['Mensagem Principal'],
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true).pop();
+                          // Navigator.of(context).push(
+                          //   MaterialPageRoute(builder: (ctx) {
+                          //     return PedidosPendentesAprovacao(
+                          //         empresa: empresa);
+                          //   }),
+                          // );
+                          Provider.of<PedidosLista>(
+                            context,
+                            listen: false,
+                          ).loadPendentesEntrega(context, empresa);
+                        },
+                        child: const Text("Fechar",
+                            style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 5, 0, 0))),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            },
+            child: const Text(
+              "Sim",
+              style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 4, 47, 82)),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text("Não",
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 196, 6, 6))),
+          ),
+        ],
+      ),
+    );
   }
 
 }

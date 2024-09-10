@@ -13,7 +13,7 @@ bool isLoading = true;
 class PedidosPendentesAprovacao extends StatefulWidget {
   final String empresa;
 
-  PedidosPendentesAprovacao({super.key, required this.empresa});
+  const PedidosPendentesAprovacao({super.key, required this.empresa});
 
   @override
   State<PedidosPendentesAprovacao> createState() =>
@@ -61,7 +61,7 @@ class _PedidosPendentesAprovacaoState extends State<PedidosPendentesAprovacao> {
     final double itemHeight = (size.height - kToolbarHeight - 24) / 7;
     //final double itemWidth = size.width / 2;
     final double itemWidth = size.width ;
-    final ScrollController _mycontroller = new ScrollController();
+    final ScrollController mycontroller = ScrollController();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
@@ -78,7 +78,7 @@ class _PedidosPendentesAprovacaoState extends State<PedidosPendentesAprovacao> {
       body: ListView(
         children: [
           Padding(
-            padding: EdgeInsets.all(5.0),
+            padding: const EdgeInsets.all(5.0),
             child: Row(
               children: [
                 TextButton.icon(

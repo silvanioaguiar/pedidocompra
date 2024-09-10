@@ -20,7 +20,7 @@ class AuthForm extends StatefulWidget {
 }
 
 class _AuthFormState extends State<AuthForm> {
-  AuthMode _authMode = AuthMode.login;
+  final AuthMode _authMode = AuthMode.login;
   bool _isLogin() => _authMode == AuthMode.login;
   //bool _isSignup() => _authMode == AuthMode.signup;
   final _formKey = GlobalKey<FormState>();

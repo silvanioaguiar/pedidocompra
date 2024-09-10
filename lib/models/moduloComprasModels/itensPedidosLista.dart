@@ -44,15 +44,13 @@ class ItensPedidosLista with ChangeNotifier {
     data = jsonDecode(response.body);
     utf8.decode(response.bodyBytes);
     data.asMap();
-    data.forEach((data) {
+    for (var data in data) {
       pedidos.add(
         ItensPedidos(
           empresa: data['principal']['dadospedidos']['empresa'],
           pedido: data['principal']['pedido'],
           fornecedor: data['principal']['dadospedidos']['fornecedor'],
-          valor: data['principal']['dadospedidos']['valor'] == null
-              ? "0.0"
-              : data['principal']['dadospedidos']['valor'],
+          valor: data['principal']['dadospedidos']['valor'] ?? "0.0",
           condicaoPagamento: data['principal']['dadospedidos']
               ['condicaoPagamento'],
 
@@ -69,17 +67,12 @@ class ItensPedidosLista with ChangeNotifier {
               ? 0.0
               : data['principal']['dadospedidos']['quantidade'].toDouble(),
           unidadeMedida: data['principal']['dadospedidos']['unidadeMedida'],
-          precoUnitario: data['principal']['dadospedidos']['valorUnitario'] ==
-                  null
-              ? "0.0"
-              : data['principal']['dadospedidos']['valorUnitario'],
-          precoTotal: data['principal']['dadospedidos']['valorTotal'] == null
-              ? "0.0"
-              : data['principal']['dadospedidos']['valorTotal'],
+          precoUnitario: data['principal']['dadospedidos']['valorUnitario'] ?? "0.0",
+          precoTotal: data['principal']['dadospedidos']['valorTotal'] ?? "0.0",
           status: data['principal']['status'],
         ),
       );
-    });
+    }
 
     
 
@@ -91,7 +84,7 @@ class ItensPedidosLista with ChangeNotifier {
     String empresa = Pedidos.empresa;
     String empresaFilial = '';
 
-    var data = Map();
+    var data = {};
 
     if (empresa == 'Libertad') {
       empresaFilial = '01,01';
@@ -225,7 +218,7 @@ class ItensPedidosLista with ChangeNotifier {
     String empresa = Pedidos.empresa;
     String empresaFilial = '';
 
-    var data = Map();
+    var data = {};
 
     if (empresa == 'Libertad') {
       empresaFilial = '01,01';

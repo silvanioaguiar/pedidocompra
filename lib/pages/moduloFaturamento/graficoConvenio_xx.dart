@@ -23,7 +23,7 @@ class GraficoConvenio extends StatelessWidget {
     /*24 is for notification bar on Android*/
     //final double itemHeight = (size.height - kToolbarHeight - 24) / 7;
     //final double itemWidth = size.width / 2;
-    final ScrollController _mycontroller = new ScrollController();
+    final ScrollController mycontroller = ScrollController();
     final provider = Provider.of<FatConvenioLista>(context);
     final List<FaturamentoConvenio> loadedConvenios = provider.convenios;
     final convenios = Provider.of<FaturamentoConvenio>(context);

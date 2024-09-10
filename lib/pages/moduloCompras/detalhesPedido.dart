@@ -9,7 +9,7 @@ class DetalhesPedido extends StatefulWidget {
   final String empresa;
   final String pedido;
 
-  DetalhesPedido({super.key, required this.empresa, required this.pedido});
+  const DetalhesPedido({super.key, required this.empresa, required this.pedido});
 
    
 

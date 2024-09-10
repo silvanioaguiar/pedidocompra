@@ -136,7 +136,7 @@ class FatConvenioLista with ChangeNotifier {
       data = jsonDecode(response.body);
       utf8.decode(response.bodyBytes);
       data.asMap();
-      data.forEach((data) {
+      for (var data in data) {
         convenios.add(
           FaturamentoConvenio(
             empresa: data['principal']['empresa'],
@@ -148,7 +148,7 @@ class FatConvenioLista with ChangeNotifier {
             ranking:  data['principal']['ranking'],             
           ),
         );
-      });
+      }
     }
    
     _convenios = convenios.toList();

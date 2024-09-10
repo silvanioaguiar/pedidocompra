@@ -14,7 +14,7 @@ class FatConvenioGrid extends StatelessWidget {
         providerFatConvenio.convenios;
 
     return ListView.builder(
-      physics: ClampingScrollPhysics(),
+      physics: const ClampingScrollPhysics(),
       shrinkWrap: true,
       itemCount: loadedConvenios.length,
       itemBuilder: (ctx, i) => ChangeNotifierProvider.value(

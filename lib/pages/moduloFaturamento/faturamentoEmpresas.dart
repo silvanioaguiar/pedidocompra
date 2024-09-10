@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:pedidocompra/components/appDrawer.dart';
 import 'package:pedidocompra/components/faturamentoComponents/fat_empresas_grid.dart';
 import 'package:pedidocompra/components/faturamentoComponents/fat_empresas_total.dart';
-import 'package:pedidocompra/pages/moduloFaturamento/fat_grafico.dart';
+import 'package:pedidocompra/pages/moduloFaturamento/fat_graficos.dart/fat_grafico.dart';
 import 'package:pedidocompra/models/moduloFaturamentoModels/fat_empresaLista.dart';
 import 'package:pedidocompra/models/moduloFaturamentoModels/faturamento_empresas.dart';
 import 'package:provider/provider.dart';
@@ -170,7 +170,7 @@ class _FaturamentoEmpresasFatState extends State<FaturamentoEmpresasPage> {
                               //width: double.infinity,
                               child: ElevatedButton(
                                 style: ButtonStyle(
-                                    backgroundColor: MaterialStatePropertyAll(
+                                    backgroundColor: WidgetStatePropertyAll(
                                         Theme.of(context).primaryColor)),
                                 onPressed: () {
                                   _selectDateInicio(context);
@@ -218,7 +218,7 @@ class _FaturamentoEmpresasFatState extends State<FaturamentoEmpresasPage> {
                               //width: double.infinity,
                               child: ElevatedButton(
                                 style: ButtonStyle(
-                                    backgroundColor: MaterialStatePropertyAll(
+                                    backgroundColor: WidgetStatePropertyAll(
                                         Theme.of(context).primaryColor)),
                                 onPressed: () {
                                   _selectDateFim(context);
@@ -268,7 +268,7 @@ class _FaturamentoEmpresasFatState extends State<FaturamentoEmpresasPage> {
                                 //width: double.infinity,
                                 child: ElevatedButton(
                                   style: const ButtonStyle(
-                                      backgroundColor: MaterialStatePropertyAll(
+                                      backgroundColor: WidgetStatePropertyAll(
                                           Color.fromARGB(255, 202, 14, 1))),
                                   // onPressed: () {
                                   //   _isLoading = true;
@@ -336,12 +336,12 @@ class _FaturamentoEmpresasFatState extends State<FaturamentoEmpresasPage> {
                     margin: const EdgeInsets.all(8),
                     child: IconButton(
                       onPressed: () {
-                        // Navigator.of(context).push(
-                        //         MaterialPageRoute(builder: (ctx) {
-                        //           //return const MenuEmpresasFat();
-                        //           return LineChartWidget();
-                        //         }),
-                        //       );
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (ctx) {
+                            //return const MenuEmpresasFat();
+                            return LineChartWidget();
+                          }),
+                        );
                       },
                       icon: const Icon(
                         Icons.line_axis_rounded,

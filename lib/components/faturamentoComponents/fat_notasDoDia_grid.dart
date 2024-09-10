@@ -14,7 +14,7 @@ class FatNotasDoDiaGrid extends StatelessWidget {
         providerFatNotasDoDia.notaFiscal;
 
     return ListView.builder(      
-      physics: ClampingScrollPhysics(),
+      physics: const ClampingScrollPhysics(),
       shrinkWrap: true,
       itemCount: loadedNotasDoDia.length,
       itemBuilder: (ctx, i) => ChangeNotifierProvider.value(        

@@ -158,15 +158,13 @@ class PedidosLista with ChangeNotifier {
       data = jsonDecode(response.body);
       utf8.decode(response.bodyBytes);
       data.asMap();
-      data.forEach((data) {
+      for (var data in data) {
         pedidos.add(
           Pedidos(
             empresa: data['principal']['dadospedidos']['empresa'],
             pedido: data['principal']['pedido'],
             fornecedor: data['principal']['dadospedidos']['fornecedor'],
-            valor: data['principal']['dadospedidos']['valor'] == null
-                ? "0.0"
-                : data['principal']['dadospedidos']['valor'],
+            valor: data['principal']['dadospedidos']['valor'] ?? "0.0",
             condicaoPagamento: data['principal']['dadospedidos']
                 ['condicaoPagamento'],
             status: data['principal']['status'], 
@@ -180,7 +178,7 @@ class PedidosLista with ChangeNotifier {
              aprovadorPedido: data['principal']['dadospedidos']['aprovador'],
           ),
         );
-      });
+      }
     }
     // } else {
     //   data = jsonDecode(response.body);
@@ -233,15 +231,13 @@ class PedidosLista with ChangeNotifier {
     data2 = jsonDecode(response.body);
     utf8.decode(response.bodyBytes);
     data2.asMap();
-    data2.forEach((data2) {
+    for (var data2 in data2) {
       itensDoPedido.add(
         ItensPedidos(
           empresa: data2['principal']['dadospedidos']['empresa'],
           pedido: data2['principal']['pedido'],
           fornecedor: data2['principal']['dadospedidos']['fornecedor'],
-          valor: data2['principal']['dadospedidos']['valor'] == null
-              ? "0.0"
-              : data2['principal']['dadospedidos']['valor'],
+          valor: data2['principal']['dadospedidos']['valor'] ?? "0.0",
           condicaoPagamento: data2['principal']['dadospedidos']
               ['condicaoPagamento'],
           sc: data2['principal']['dadospedidos']['sc'],
@@ -256,17 +252,12 @@ class PedidosLista with ChangeNotifier {
               ? 0.0
               : data2['principal']['dadospedidos']['quantidade'].toDouble(),
           unidadeMedida: data2['principal']['dadospedidos']['unidadeMedida'],
-          precoUnitario: data2['principal']['dadospedidos']['valorUnitario'] ==
-                  null
-              ? "0.0"
-              : data2['principal']['dadospedidos']['valorUnitario'],
-          precoTotal: data2['principal']['dadospedidos']['valorTotal'] == null
-              ? "0.0"
-              : data2['principal']['dadospedidos']['valorTotal'],
+          precoUnitario: data2['principal']['dadospedidos']['valorUnitario'] ?? "0.0",
+          precoTotal: data2['principal']['dadospedidos']['valorTotal'] ?? "0.0",
           status: data2['principal']['status'],
         ),
       );
-    });
+    }
 
     //_pedidos.reversed.toList();
     notifyListeners();
@@ -304,7 +295,7 @@ class PedidosLista with ChangeNotifier {
     String empresa = Pedidos.empresa;
     String empresaFilial = '';
 
-    var data = Map();
+    var data = {};
 
     if (empresa == 'Libertad') {
       empresaFilial = '01,01';
@@ -454,7 +445,7 @@ class PedidosLista with ChangeNotifier {
   Future<void> aprovarPedidoemVisualizar(context, pedido, empresa) async {
     String empresaFilial = '';
 
-    var data = Map();
+    var data = {};
 
     if (empresa == 'Libertad') {
       empresaFilial = '01,01';
@@ -605,7 +596,7 @@ class PedidosLista with ChangeNotifier {
     String empresa = Pedidos.empresa;
     String empresaFilial = '';
 
-    var data = Map();
+    var data = {};
 
     if (empresa == 'Libertad') {
       empresaFilial = '01,01';
@@ -750,7 +741,7 @@ class PedidosLista with ChangeNotifier {
   Future<void> reprovarPedidoemVisualizar(context, pedido, empresa) async {
     String empresaFilial = '';
 
-    var data = Map();
+    var data = {};
 
     if (empresa == 'Libertad') {
       empresaFilial = '01,01';

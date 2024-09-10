@@ -124,7 +124,7 @@ class FatEmpresaLista with ChangeNotifier {
       data = jsonDecode(response.body);
       utf8.decode(response.bodyBytes);
       data.asMap();
-      data.forEach((data) {
+      for (var data in data) {
         empresas.add(
           FaturamentoEmpresas(
 
@@ -139,7 +139,7 @@ class FatEmpresaLista with ChangeNotifier {
             //ranking:  data['principal']['ranking'],             
           ),
         );
-      });
+      }
     }
    
     _empresas = empresas.toList();

@@ -21,11 +21,11 @@ class PedidoGrid extends StatelessWidget {
       sizeAspectRatio = 1.6;
     } else {
       sizeCrossAxisCount = 1;
-      sizeAspectRatio = 2.8 / 2.0;
+      sizeAspectRatio = 2.6 / 2.0;
     }
 
     return GridView.builder(
-      physics: ClampingScrollPhysics(),
+      physics: const ClampingScrollPhysics(),
       shrinkWrap: true,
       itemCount: loadedPedidos.length,
       itemBuilder: (ctx, i) => ChangeNotifierProvider.value(

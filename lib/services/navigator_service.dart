@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class NavigatorService {
   final _key = GlobalKey<NavigatorState>();
 
-  static NavigatorService _instance = NavigatorService._();
+  static final NavigatorService _instance = NavigatorService._();
 
   NavigatorService._();
 

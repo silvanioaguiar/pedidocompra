@@ -12,7 +12,7 @@ bool isLoading = true;
 class GraficoConvenio extends StatefulWidget {
   final String empresa;
 
-  GraficoConvenio({super.key, required this.empresa});
+  const GraficoConvenio({super.key, required this.empresa});
 
   @override
   State<GraficoConvenio> createState() => _GraficoConvenioState();
@@ -154,7 +154,7 @@ class _GraficoConvenioState extends State<GraficoConvenio> {
                         )
                       ],
                     ),
-                    Container(
+                    SizedBox(
                       width: size.width,
                       child: SingleChildScrollView(
                         child: Row(
@@ -168,7 +168,7 @@ class _GraficoConvenioState extends State<GraficoConvenio> {
                                   child: ElevatedButton(
                                     style: ButtonStyle(
                                         backgroundColor:
-                                            MaterialStatePropertyAll(
+                                            WidgetStatePropertyAll(
                                                 Theme.of(context)
                                                     .primaryColor)),
                                     onPressed: () {
@@ -220,7 +220,7 @@ class _GraficoConvenioState extends State<GraficoConvenio> {
                                   child: ElevatedButton(
                                     style: ButtonStyle(
                                         backgroundColor:
-                                            MaterialStatePropertyAll(
+                                            WidgetStatePropertyAll(
                                                 Theme.of(context)
                                                     .primaryColor)),
                                     onPressed: () {
@@ -273,7 +273,7 @@ class _GraficoConvenioState extends State<GraficoConvenio> {
                                     child: ElevatedButton(
                                       style: const ButtonStyle(
                                           backgroundColor:
-                                              MaterialStatePropertyAll(
+                                              WidgetStatePropertyAll(
                                                   Color.fromARGB(
                                                       255, 202, 14, 1))),
                                       onPressed: () =>

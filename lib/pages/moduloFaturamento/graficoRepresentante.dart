@@ -4,15 +4,17 @@ import 'package:d_chart/d_chart.dart' ;
 
 
 class GraficoRepresentantePage extends StatelessWidget {
+  const GraficoRepresentantePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('D\'Chart')),
+      appBar: AppBar(title: const Text('D\'Chart')),
       backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListView(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           children: [
             AspectRatio(
               aspectRatio: 16 / 9,

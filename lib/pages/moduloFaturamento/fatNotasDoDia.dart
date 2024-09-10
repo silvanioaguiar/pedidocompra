@@ -13,7 +13,7 @@ class FatNotasDoDia extends StatefulWidget {
   final DateTime dateFim;
   final String valorDiaFormatado;
 
-  FatNotasDoDia({
+  const FatNotasDoDia({
     super.key,
     required this.empresa,
     required this.dateIni,
@@ -206,7 +206,7 @@ class _FatNotasDoDiaState extends State<FatNotasDoDia> {
                   //   ],
                   // ),
                   // const SizedBox(width: 50),
-                  Container(
+                  SizedBox(
                     height: 40,
                     width: 200,
                     // decoration: BoxDecoration(

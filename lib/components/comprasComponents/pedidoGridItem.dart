@@ -59,11 +59,11 @@ class PedidoGridItem extends StatelessWidget {
     }
 
     if (status == "Aguardando Aprovação") {
-      color1Card = Color.fromARGB(255, 5, 34, 58);
-      color2Card = Color.fromARGB(255, 85, 170, 250);
+      color1Card = const Color.fromARGB(255, 5, 34, 58);
+      color2Card = const Color.fromARGB(255, 85, 170, 250);
     } else if (status == "Pendente de Entrega") {
-      color1Card = Color.fromARGB(255, 58, 5, 5);
-      color2Card = Color.fromARGB(255, 162, 230, 255);
+      color1Card = const Color.fromARGB(255, 58, 5, 5);
+      color2Card = const Color.fromARGB(255, 162, 230, 255);
     }
     return Padding(
       padding: const EdgeInsets.all(2),
@@ -82,7 +82,7 @@ class PedidoGridItem extends StatelessWidget {
               color2Card,
             ],
           ),
-          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderRadius: const BorderRadius.all(Radius.circular(15)),
           image: DecorationImage(
             image: AssetImage(logo),
             alignment: Alignment.topRight,
@@ -92,8 +92,8 @@ class PedidoGridItem extends StatelessWidget {
         child: Row(
           children: [
             Padding(
-              padding: EdgeInsets.only(left: 5),
-              child: Container(
+              padding: const EdgeInsets.only(left: 5),
+              child: SizedBox(
                 width: 320,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -219,7 +219,7 @@ class PedidoGridItem extends StatelessWidget {
                     if (status == "Pendente de Entrega")
                       Row(
                         children: [
-                          const SizedBox(width: 115),
+                          const SizedBox(width: 60),
                           IconButton(
                             onPressed: () {
                               Provider.of<PedidosLista>(
@@ -232,11 +232,18 @@ class PedidoGridItem extends StatelessWidget {
                             iconSize: 30,
                             tooltip: 'Vizualizar Pedido',
                           ),
-                          const Text(
-                            'Visualizar',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
+                          const SizedBox(width: 80),
+                          IconButton(
+                            onPressed: () {
+                              Provider.of<PedidosLista>(
+                                context,
+                                listen: false,
+                              ).estornarLiberacao(context, pedido);
+                            },
+                            icon: const Icon(Icons.cancel,
+                                color: Color.fromARGB(255, 155, 27, 27)),
+                            iconSize: 30,
+                            tooltip: "Estornar",
                           ),
                         ],
                       ),
@@ -262,6 +269,25 @@ class PedidoGridItem extends StatelessWidget {
                             'Visualizar',
                             style: TextStyle(
                                 color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    if (status == "Pendente de Entrega")
+                      const Row(
+                        children: [
+                          SizedBox(width: 50),
+                          Text(
+                            'Vizualizar',
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 34, 185, 39),
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(width: 35),
+                          Text(
+                            'Estornar Liberação',
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 155, 21, 21),
                                 fontWeight: FontWeight.bold),
                           ),
                         ],

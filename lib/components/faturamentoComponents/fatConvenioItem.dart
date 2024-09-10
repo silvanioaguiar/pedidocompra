@@ -8,7 +8,7 @@ class FatConvenioItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ScrollController _mycontroller = new ScrollController();
+    final ScrollController mycontroller = ScrollController();
     final convenio = Provider.of<FaturamentoConvenio>(context);
 
     var size = MediaQuery.of(context).size;

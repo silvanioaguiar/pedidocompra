@@ -26,7 +26,7 @@ class FatEmpresasGrid extends StatelessWidget {
     }     
 
     return GridView.builder(
-      physics: ClampingScrollPhysics(),
+      physics: const ClampingScrollPhysics(),
       shrinkWrap: true,
       itemCount: loadedEmpresas.length,
       itemBuilder: (ctx, i) => ChangeNotifierProvider.value(

@@ -14,7 +14,7 @@ class FatNotasDoPeriodoGrid extends StatelessWidget {
         providerFatNotasDoPeriodo.notaFiscal;
 
     return ListView.builder(      
-      physics: ClampingScrollPhysics(),
+      physics: const ClampingScrollPhysics(),
       shrinkWrap: true,
       itemCount: loadedNotasDoPeriodo.length,
       itemBuilder: (ctx, i) => ChangeNotifierProvider.value(        

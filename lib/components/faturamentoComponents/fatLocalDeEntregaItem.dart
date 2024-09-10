@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/models/moduloFaturamentoModels/faturamento_localDeEntrega.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 
 class FatLocalDeEntregaItem extends StatelessWidget {
   const FatLocalDeEntregaItem({Key? key}) : super(key: key);

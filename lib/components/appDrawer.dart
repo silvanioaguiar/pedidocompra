@@ -5,7 +5,7 @@ import 'package:pedidocompra/routes/appRoutes.dart';
 import 'package:provider/provider.dart';
 
 class AppDrawer extends StatelessWidget {
-  AppDrawer({Key? key}) : super(key: key);
+  const AppDrawer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +18,8 @@ class AppDrawer extends StatelessWidget {
       child: Column(
         children: [
           AppBar(
-            backgroundColor: Color.fromARGB(255, 252, 164, 0),
-            title: Text('Bem vindo ${usuario}!'),
+            backgroundColor: const Color.fromARGB(255, 252, 164, 0),
+            title: Text('Bem vindo $usuario!'),
             automaticallyImplyLeading: false,
           ),
           const Divider(),
