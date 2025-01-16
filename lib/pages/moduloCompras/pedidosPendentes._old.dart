@@ -60,7 +60,7 @@ class _PedidosPendentesAprovacaoState extends State<PedidosPendentesAprovacao> {
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Colors.white,
         title: Text(
-          "Pedidos Aguardando Aprovação",
+          "Pedidos Aguardando Aprovacao",
           textAlign: TextAlign.left,
           style: TextStyle(
             color: Theme.of(context).secondaryHeaderColor,

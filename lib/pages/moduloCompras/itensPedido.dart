@@ -68,7 +68,7 @@ class _ItensPedidoState extends State<ItensPedido> {
       logo = 'assets/images/logo_Brumed.png';
     }
 
-    if (itensDoPedido[0].status == "Aguardando Aprovação") {
+    if (itensDoPedido[0].status == "Aguardando Aprovacao") {
       color1 = Color.fromARGB(255, 231, 235, 238);
       color2 = Color.fromARGB(255, 85, 170, 250);
       colorText1 = Colors.black;
@@ -461,7 +461,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                               ],
                             ),
                           const SizedBox(height: 20),
-                          if (itensDoPedido[0].status == "Aguardando Aprovação")
+                          if (itensDoPedido[0].status == "Aguardando Aprovacao")
                             Row(
                               children: [
                                 const SizedBox(width: 120),
@@ -498,7 +498,7 @@ class _ItensPedidoState extends State<ItensPedido> {
                                 ),
                               ],
                             ),
-                          if (itensDoPedido[0].status == "Aguardando Aprovação")
+                          if (itensDoPedido[0].status == "Aguardando Aprovacao")
                             const Row(
                               children: [
                                 SizedBox(width: 120),

@@ -58,7 +58,7 @@ class PedidoGridItem extends StatelessWidget {
       logo = 'assets/images/logo_Brumed.png';
     }
 
-    if (status == "Aguardando Aprovação") {
+    if (status == "Aguardando Aprovacao") {
       color1Card = const Color.fromARGB(255, 5, 34, 58);
       color2Card = const Color.fromARGB(255, 85, 170, 250);
     } else if (status == "Pendente de Entrega") {
@@ -170,7 +170,7 @@ class PedidoGridItem extends StatelessWidget {
                         ),
                       ),
                     const SizedBox(height: 10, width: 100),
-                    if (status == "Aguardando Aprovação")
+                    if (status == "Aguardando Aprovacao")
                       SingleChildScrollView(
                         child: Row(
                           children: [
@@ -247,7 +247,7 @@ class PedidoGridItem extends StatelessWidget {
                           ),
                         ],
                       ),
-                    if (status == "Aguardando Aprovação")
+                    if (status == "Aguardando Aprovacao")
                       const Row(
                         children: [
                           SizedBox(width: 50),
