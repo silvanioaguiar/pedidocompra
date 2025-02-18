@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pedidocompra/components/appDrawer.dart';
+import 'package:pedidocompra/pages/crm/crmPage.dart';
+import 'package:pedidocompra/pages/crm/menuCrm.dart';
 import 'package:pedidocompra/pages/moduloCompras/menuEmpresas.dart';
 import 'package:pedidocompra/pages/moduloFaturamento/faturamentoEmpresas.dart';
 
@@ -13,7 +15,7 @@ class MenuModulos extends StatefulWidget {
 
 class _MenuEmpresasState extends State<MenuModulos> {
   @override
-  Widget build(BuildContext context) {   
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
@@ -98,6 +100,36 @@ class _MenuEmpresasState extends State<MenuModulos> {
                             "Faturamento",
                             style: TextStyle(
                               color: Color.fromARGB(255, 5, 58, 36),
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                     SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(builder: (ctx) {
+                                  //return const MenuEmpresasFat();
+                                  return const MenuCrm();
+                                }),
+                              );
+                            },
+                            icon: const Icon(Icons.handshake_sharp),
+                            iconSize: 100,
+                            color: const Color.fromARGB(255, 6, 5, 58),
+                          ),
+                          const Text(
+                            "CRM",
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 6, 5, 58),
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),

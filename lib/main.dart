@@ -5,6 +5,11 @@ import 'package:pedidocompra/models/moduloComprasModels/pedidosLista.dart';
 import 'package:pedidocompra/models/moduloFaturamentoModels/fat_localDeEntregaLista.dart';
 import 'package:pedidocompra/models/moduloFaturamentoModels/fat_notasDoDiaLista.dart';
 import 'package:pedidocompra/models/moduloFaturamentoModels/fat_notasDoPeriodoLista.dart';
+import 'package:pedidocompra/pages/crm/clientesCrm.dart';
+import 'package:pedidocompra/pages/crm/faturamentoCrm.dart';
+import 'package:pedidocompra/pages/crm/formularioCrm.dart';
+import 'package:pedidocompra/pages/crm/menuCrm.dart';
+import 'package:pedidocompra/pages/crm/prospectCrm.dart';
 import 'package:pedidocompra/pages/moduloFaturamento/FatLocalDeEntrega.dart';
 import 'package:pedidocompra/pages/moduloFaturamento/fatNotasDoDia.dart';
 import 'package:pedidocompra/pages/moduloFaturamento/fatNotasDoPeriodo.dart';
@@ -176,6 +181,11 @@ class MyApp extends StatelessWidget {
           AppRoutes.graficoRepresentante: (ctx) => GraficoRepresentantePage(),
           AppRoutes.graficoConvenio: (ctx) => GraficoConvenio(empresa: ''),
           AppRoutes.fatGrafico: (ctx) => LineChartWidget(),
+          AppRoutes.menuCrm: (ctx) => const MenuCrm(),
+          AppRoutes.clientesCrm: (ctx) => const ClientesCrm(),
+          AppRoutes.prospectCrm: (ctx) => const ProspectCrm(),
+          AppRoutes.faturamentoCrm: (ctx) => const FaturamentoCrm(),
+          AppRoutes.formularioCrm: (ctx) => const FormularioCrm(),
         },
         debugShowCheckedModeBanner: false,
       ),

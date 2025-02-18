@@ -62,6 +62,19 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           const Divider(),
+           ListTile(
+            leading: const Icon(Icons.handshake,color: Colors.white,),
+            title: const Text(
+              'CRM',
+              style: TextStyle(color: Colors.white),
+            ),
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed(
+                AppRoutes.menuCrm,
+              );
+            },
+          ),
+          const Divider(),
           ListTile(
             leading: const Icon(Icons.exit_to_app,color: Colors.white,),
             title: const Text(
