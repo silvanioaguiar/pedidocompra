@@ -9,7 +9,7 @@ import 'package:table_calendar/table_calendar.dart';
 class Event {
   final String title;
 
-  const Event(this.title);
+ Event(this.title);
 
   @override
   String toString() => title;
@@ -31,9 +31,9 @@ final _kEventSource = {
     ),
 }..addAll({
     kToday: [
-      const Event("10:00 - Visita ao Dr. José "),
-      const Event("15:00 - Visita Dr. Carlos"),
-      const Event("18:00 - Hospital São Luiz Itaim "),
+       Event("10:00 - Visita ao Dr. José "),
+       Event("15:00 - Visita Dr. Carlos"),
+       Event("18:00 - Hospital São Luiz Itaim "),
     ],
   });
 

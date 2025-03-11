@@ -24,6 +24,9 @@ class AppRoutes {
   static const menuCrm = '/menuCrm';
   static const formularioCrm = '/formularioCrm';
   static const prospectCrm = '/prospectCrm';
+  static const incluirAgendaCrm = '/incluirAgendaCrm';
+  static const editarAgendaCrm = '/editarAgendaCrm';
+  static const formularioVisitaCrm = '/formularioVisitaCrm';
 
 }
 

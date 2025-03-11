@@ -1,4 +1,6 @@
+import 'package:pedidocompra/components/crm/utils.dart';
 import 'package:pedidocompra/models/auth.dart';
+import 'package:pedidocompra/models/crm/visitasLista.dart';
 import 'package:pedidocompra/models/moduloFaturamentoModels/fat_convenioLista.dart';
 import 'package:pedidocompra/models/moduloComprasModels/itens_pedidos.dart';
 import 'package:pedidocompra/models/moduloComprasModels/pedidosLista.dart';
@@ -6,8 +8,11 @@ import 'package:pedidocompra/models/moduloFaturamentoModels/fat_localDeEntregaLi
 import 'package:pedidocompra/models/moduloFaturamentoModels/fat_notasDoDiaLista.dart';
 import 'package:pedidocompra/models/moduloFaturamentoModels/fat_notasDoPeriodoLista.dart';
 import 'package:pedidocompra/pages/crm/clientesCrm.dart';
+import 'package:pedidocompra/pages/crm/editarAgendaCrm.dart';
 import 'package:pedidocompra/pages/crm/faturamentoCrm.dart';
 import 'package:pedidocompra/pages/crm/formularioCrm.dart';
+import 'package:pedidocompra/pages/crm/formularioVisitaCrm.dart';
+import 'package:pedidocompra/pages/crm/incluirAgendaCrm.dart';
 import 'package:pedidocompra/pages/crm/menuCrm.dart';
 import 'package:pedidocompra/pages/crm/prospectCrm.dart';
 import 'package:pedidocompra/pages/moduloFaturamento/FatLocalDeEntrega.dart';
@@ -132,15 +137,27 @@ class MyApp extends StatelessWidget {
             );
           },
         ),
+        ChangeNotifierProxyProvider<Auth, VisitasLista>(
+          create: (_) => VisitasLista('', []),
+          update: (ctx, auth, previous) {
+            return VisitasLista(
+              auth.token ?? '',
+              previous?.visitas ?? [],
+              //auth.senha ?? '',
+              
+            );
+          },
+        ),
       ],
       child: MaterialApp(
+        locale: const Locale('pt', 'BR'),
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: const [Locale('en'), Locale('pt')],
-        title: 'Flutter Demo',
+        title: 'App Biosat',
         theme: ThemeData(
           primaryColor: const Color.fromARGB(255, 0, 30, 52),
           useMaterial3: true,
@@ -186,6 +203,9 @@ class MyApp extends StatelessWidget {
           AppRoutes.prospectCrm: (ctx) => const ProspectCrm(),
           AppRoutes.faturamentoCrm: (ctx) => const FaturamentoCrm(),
           AppRoutes.formularioCrm: (ctx) => const FormularioCrm(),
+          AppRoutes.incluirAgendaCrm: (ctx) => const IncluirAgendaCrm(),
+          AppRoutes.editarAgendaCrm: (ctx) =>  EditarAgendaCrm(event: Event("")),
+          AppRoutes.formularioVisitaCrm: (ctx) =>  FormularioVisitaCrm(event: Event("")),
         },
         debugShowCheckedModeBanner: false,
       ),

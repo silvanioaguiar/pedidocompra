@@ -46,98 +46,102 @@ class _MenuEmpresasState extends State<MenuModulos> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: 250,
-                  height: 100,
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  height: MediaQuery.of(context).size.height * 0.2,
                   child: Image.asset('assets/images/logo_Biosat.png'),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(builder: (ctx) {
-                                return const MenuEmpresas();
-                              }),
-                            );
-                          },
-                          icon: const Icon(Icons.shopping_cart),
-                          iconSize: 100,
-                          color: const Color.fromARGB(255, 187, 31, 31),
+                SingleChildScrollView(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,                    
+                    children: [
+                      Expanded(
+                        child: Column(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(builder: (ctx) {
+                                    return const MenuEmpresas();
+                                  }),
+                                );
+                              },
+                              icon: const Icon(Icons.shopping_cart),
+                              iconSize: 100,
+                              color: const Color.fromARGB(255, 187, 31, 31),
+                            ),
+                            const Text(
+                              "Compras",
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 8, 54, 75),
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          ],
                         ),
-                        const Text(
-                          "Compras",
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 8, 54, 75),
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(builder: (ctx) {
-                                  //return const MenuEmpresasFat();
-                                  return const FaturamentoEmpresasPage();
-                                }),
-                              );
-                            },
-                            icon: const Icon(Icons.attach_money_sharp),
-                            iconSize: 100,
-                            color: const Color.fromARGB(255, 5, 58, 36),
-                          ),
-                          const Text(
-                            "Faturamento",
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 5, 58, 36),
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
-                        ],
                       ),
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                     SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(builder: (ctx) {
-                                  //return const MenuEmpresasFat();
-                                  return const MenuCrm();
-                                }),
-                              );
-                            },
-                            icon: const Icon(Icons.handshake_sharp),
-                            iconSize: 100,
-                            color: const Color.fromARGB(255, 6, 5, 58),
-                          ),
-                          const Text(
-                            "CRM",
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 6, 5, 58),
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
-                        ],
+                      const SizedBox(
+                        width: 10,
                       ),
-                    ),
-                  ],
+                      Expanded(
+                        child: Column(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(builder: (ctx) {
+                                    //return const MenuEmpresasFat();
+                                    return const FaturamentoEmpresasPage();
+                                  }),
+                                );
+                              },
+                              icon: const Icon(Icons.attach_money_sharp),
+                              iconSize: 100,
+                              color: const Color.fromARGB(255, 5, 58, 36),
+                            ),
+                            const Text(
+                              "Faturamento",
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 5, 58, 36),
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                       Expanded(
+                        child: Column(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(builder: (ctx) {
+                                    //return const MenuEmpresasFat();
+                                    return const MenuCrm();
+                                  }),
+                                );
+                              },
+                              icon: const Icon(Icons.handshake_sharp),
+                              iconSize: 100,
+                              color: const Color.fromARGB(255, 6, 5, 58),
+                            ),
+                            const Text(
+                              "CRM",
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 6, 5, 58),
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/components/appDrawer.dart';
 import 'package:pedidocompra/components/crm/utils.dart';
+import 'package:pedidocompra/models/crm/visitas.dart';
+import 'package:pedidocompra/models/crm/visitasLista.dart';
+import 'package:pedidocompra/pages/crm/editarAgendaCrm.dart';
+import 'package:pedidocompra/pages/crm/formularioVisitaCrm.dart';
+import 'package:pedidocompra/pages/crm/incluirAgendaCrm.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class AgendaCrm extends StatefulWidget {
@@ -19,13 +25,24 @@ class _AgendaCrmState extends State<AgendaCrm> {
       .toggledOff; // Can be toggled on/off by longpressing a date
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
+  List<Visitas>? loadedVisitas;
+  
 
   @override
   void initState() {
     super.initState();
-
+    _loadVisitas();
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+  }
+
+  
+  Future<void> _loadVisitas() async {
+    final provider = Provider.of<VisitasLista>(context, listen: false);
+    loadedVisitas = await provider.loadVisitas(provider);
+    setState(() {
+
+    }); // Atualize a interface do usuário após carregar as visitas
   }
 
   @override
@@ -34,9 +51,21 @@ class _AgendaCrmState extends State<AgendaCrm> {
     super.dispose();
   }
 
+  // List<Event> _getEventsForDay(DateTime day) {
+  //   // Implementation example
+  //   return kEvents[day] ?? [];
+  // }
+
   List<Event> _getEventsForDay(DateTime day) {
-    // Implementation example
-    return kEvents[day] ?? [];
+    if (loadedVisitas == null) return [];
+    return loadedVisitas!
+        .where((visita) =>
+            isSameDay(visita.dataPrevista, day) ||
+            (visita.dataRealizada != null && isSameDay(visita.dataRealizada, day)))
+        .map((visita) => Event(
+            title: visita.local,
+            description: visita.status))
+        .toList();
   }
 
   List<Event> _getEventsForRange(DateTime start, DateTime end) {
@@ -83,6 +112,9 @@ class _AgendaCrmState extends State<AgendaCrm> {
 
   @override
   Widget build(BuildContext context) {
+
+    //final provider = Provider.of<VisitasLista>(context);
+    //final List<Visitas> loadedVisitas = provider.visitas;
     var size = MediaQuery.of(context).size;
     double? widthScreen = 0;
 
@@ -172,9 +204,52 @@ class _AgendaCrmState extends State<AgendaCrm> {
                         borderRadius: BorderRadius.circular(12.0),
                       ),
                       child: ListTile(
-                        onTap: () => print('${value[index]}'),
-                        title: Text('${value[index]}'),
-                      ),
+                          onTap: () => print('${value[index]}'),
+                          title: Text('${value[index]}'),
+                          subtitle: const Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Local:'),
+                              Text('Status:'),
+                            ],
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(builder: (ctx) {
+                                      return EditarAgendaCrm(
+                                          event: value[index]);
+                                    }),
+                                  );
+                                },
+                                icon: const Icon(
+                                  Icons.edit,
+                                  color: Color.fromARGB(255, 255, 153, 0),
+                                ),
+                                //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
+                              ),
+                              const SizedBox(width: 5),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(builder: (ctx) {
+                                      return FormularioVisitaCrm(
+                                          event: value[index]);
+                                    }),
+                                  );
+                                },
+                                icon: const Icon(
+                                  Icons.file_open_sharp,
+                                  color: Color.fromARGB(255, 1, 49, 88),
+                                ),
+                                //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
+                              ),
+                            ],
+                          )),
                     );
                   },
                 );
@@ -185,10 +260,17 @@ class _AgendaCrmState extends State<AgendaCrm> {
             padding: const EdgeInsets.all(8.0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.end,              
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 FloatingActionButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (ctx) {
+                        //return const MenuEmpresasFat();
+                        return const IncluirAgendaCrm();
+                      }),
+                    );
+                  },
                   backgroundColor: const Color.fromARGB(255, 0, 40, 73),
                   child: const Icon(
                     Icons.add,
