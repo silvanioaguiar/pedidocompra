@@ -9,7 +9,9 @@ import 'package:table_calendar/table_calendar.dart';
 
 class FormularioVisitaCrm extends StatefulWidget {
   final Event event;
-  FormularioVisitaCrm({Key? key, required this.event}) : super(key: key);
+  //final String local;
+  //final String status;
+  FormularioVisitaCrm({Key? key, required this.event, }) : super(key: key);
 
   @override
   State<FormularioVisitaCrm> createState() => _FormularioVisitaCrmState();
@@ -187,7 +189,7 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
                   hintText: "Digite o nome do médico",
                   border: OutlineInputBorder()),
               //controller: _medicoController,
-              initialValue: widget.event.title,
+              initialValue: widget.event.nomeMedico,
               style: TextStyle(
                 color: Colors.black,
                 fontSize: sizeText,

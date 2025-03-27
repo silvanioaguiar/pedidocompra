@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/components/faturamentoComponents/fatNotasDoPeriodoItem.dart';
-import 'package:pedidocompra/models/moduloFaturamentoModels/fat_notasDoPeriodoLista.dart';
+import 'package:pedidocompra/providers/faturamento/fat_notasDoPeriodoLista.dart';
 import 'package:pedidocompra/models/moduloFaturamentoModels/faturamento_notasDoPeriodo.dart';
 import 'package:provider/provider.dart';
 

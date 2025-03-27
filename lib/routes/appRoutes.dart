@@ -20,11 +20,13 @@ class AppRoutes {
   static const crm = '/crmPage';
   static const agendaCrm = '/agendaCrm';
   static const clientesCrm = '/clientesCrm';
+  static const concorrentesCrm = '/concorrentesCrm';
   static const faturamentoCrm = '/faturamentoCrm';
   static const menuCrm = '/menuCrm';
   static const formularioCrm = '/formularioCrm';
   static const prospectCrm = '/prospectCrm';
   static const incluirAgendaCrm = '/incluirAgendaCrm';
+  static const incluirConcorrenteCrm = '/incluirConcorrenteCrm';
   static const editarAgendaCrm = '/editarAgendaCrm';
   static const formularioVisitaCrm = '/formularioVisitaCrm';
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pedidocompra/components/appDrawer.dart';
-import 'package:pedidocompra/models/moduloFaturamentoModels/fat_empresaLista.dart';
 import 'package:pedidocompra/pages/moduloFaturamento/graficoConvenio.dart';
 import 'package:pedidocompra/pages/moduloCompras/pedidosPendentes.dart';
+import 'package:pedidocompra/providers/faturamento/fat_empresaLista.dart';
 import 'package:provider/provider.dart';
 
 class MenuEmpresasFat extends StatefulWidget {

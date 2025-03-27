@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pedidocompra/components/faturamentoComponents/fat_notasDoDia_grid.dart';
-import 'package:pedidocompra/models/moduloFaturamentoModels/fat_notasDoDiaLista.dart';
+import 'package:pedidocompra/providers/faturamento/fat_notasDoDiaLista.dart';
 import 'package:provider/provider.dart';
 
 bool isLoading = true;

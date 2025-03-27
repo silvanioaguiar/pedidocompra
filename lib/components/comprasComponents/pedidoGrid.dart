@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/components/comprasComponents/pedidoGridItem.dart';
 import 'package:pedidocompra/models/moduloComprasModels/pedidos.dart';
-import 'package:pedidocompra/models/moduloComprasModels/pedidosLista.dart';
+import 'package:pedidocompra/providers/compras/pedidosLista.dart';
 import 'package:provider/provider.dart';
 
 class PedidoGrid extends StatelessWidget {

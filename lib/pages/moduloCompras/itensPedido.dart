@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pedidocompra/models/moduloComprasModels/pedidosLista.dart';
+import 'package:pedidocompra/providers/compras/pedidosLista.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
+
 
 class ItensPedido extends StatefulWidget {
   //Map? itensDoPedido;

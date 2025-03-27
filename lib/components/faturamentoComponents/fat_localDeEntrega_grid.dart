@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/components/faturamentoComponents/fatLocalDeEntregaItem.dart';
-import 'package:pedidocompra/models/moduloFaturamentoModels/fat_localDeEntregaLista.dart';
 import 'package:pedidocompra/models/moduloFaturamentoModels/faturamento_localDeEntrega.dart';
+import 'package:pedidocompra/providers/faturamento/fat_localDeEntregaLista.dart';
 import 'package:provider/provider.dart';
 
 class FatLocalDeEntregaGrid extends StatelessWidget {

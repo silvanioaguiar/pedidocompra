@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pedidocompra/components/appDrawer.dart';
 import 'package:pedidocompra/components/faturamentoComponents/fat_empresas_grid.dart';
 import 'package:pedidocompra/components/faturamentoComponents/fat_empresas_total.dart';
 import 'package:pedidocompra/pages/moduloFaturamento/fat_graficos.dart/fat_grafico.dart';
-import 'package:pedidocompra/models/moduloFaturamentoModels/fat_empresaLista.dart';
-import 'package:pedidocompra/models/moduloFaturamentoModels/faturamento_empresas.dart';
+import 'package:pedidocompra/providers/faturamento/fat_empresaLista.dart';
 import 'package:provider/provider.dart';
 
 class CrmPage extends StatefulWidget {

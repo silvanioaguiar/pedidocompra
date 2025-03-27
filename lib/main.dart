@@ -1,18 +1,25 @@
 import 'package:pedidocompra/components/crm/utils.dart';
 import 'package:pedidocompra/models/auth.dart';
-import 'package:pedidocompra/models/crm/visitasLista.dart';
-import 'package:pedidocompra/models/moduloFaturamentoModels/fat_convenioLista.dart';
+import 'package:pedidocompra/providers/crm/concorrentesLista.dart';
+import 'package:pedidocompra/providers/crm/locaisDeEntregaLista.dart';
+import 'package:pedidocompra/providers/crm/medicosLista.dart';
+import 'package:pedidocompra/providers/crm/representantesLista.dart';
+import 'package:pedidocompra/providers/crm/viaCepModel.dart';
+import 'package:pedidocompra/providers/crm/visitasLista.dart';
+import 'package:pedidocompra/providers/faturamento/fat_convenioLista.dart';
 import 'package:pedidocompra/models/moduloComprasModels/itens_pedidos.dart';
-import 'package:pedidocompra/models/moduloComprasModels/pedidosLista.dart';
-import 'package:pedidocompra/models/moduloFaturamentoModels/fat_localDeEntregaLista.dart';
-import 'package:pedidocompra/models/moduloFaturamentoModels/fat_notasDoDiaLista.dart';
-import 'package:pedidocompra/models/moduloFaturamentoModels/fat_notasDoPeriodoLista.dart';
+import 'package:pedidocompra/providers/compras/pedidosLista.dart';
+import 'package:pedidocompra/providers/faturamento/fat_localDeEntregaLista.dart';
+import 'package:pedidocompra/providers/faturamento/fat_notasDoDiaLista.dart';
+import 'package:pedidocompra/providers/faturamento/fat_notasDoPeriodoLista.dart';
 import 'package:pedidocompra/pages/crm/clientesCrm.dart';
+import 'package:pedidocompra/pages/crm/concorrentesCrm.dart';
 import 'package:pedidocompra/pages/crm/editarAgendaCrm.dart';
 import 'package:pedidocompra/pages/crm/faturamentoCrm.dart';
 import 'package:pedidocompra/pages/crm/formularioCrm.dart';
 import 'package:pedidocompra/pages/crm/formularioVisitaCrm.dart';
 import 'package:pedidocompra/pages/crm/incluirAgendaCrm.dart';
+import 'package:pedidocompra/pages/crm/incluirConcorrenteCrm.dart';
 import 'package:pedidocompra/pages/crm/menuCrm.dart';
 import 'package:pedidocompra/pages/crm/prospectCrm.dart';
 import 'package:pedidocompra/pages/moduloFaturamento/FatLocalDeEntrega.dart';
@@ -36,7 +43,7 @@ import 'package:pedidocompra/services/navigator_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'models/moduloFaturamentoModels/fat_empresaLista.dart';
+import 'providers/faturamento/fat_empresaLista.dart';
 
 void main() {
   runApp(const MyApp());
@@ -144,7 +151,56 @@ class MyApp extends StatelessWidget {
               auth.token ?? '',
               previous?.visitas ?? [],
               //auth.senha ?? '',
-              
+            );
+          },
+        ),
+        ChangeNotifierProxyProvider<Auth, MedicosLista>(
+          create: (_) => MedicosLista('', []),
+          update: (ctx, auth, previous) {
+            return MedicosLista(
+              auth.token ?? '',
+              previous?.medicos ?? [],
+              //auth.senha ?? '',
+            );
+          },
+        ),
+        ChangeNotifierProxyProvider<Auth, RepresentantesLista>(
+          create: (_) => RepresentantesLista('', []),
+          update: (ctx, auth, previous) {
+            return RepresentantesLista(
+              auth.token ?? '',
+              previous?.representantes ?? [],
+              //auth.senha ?? '',
+            );
+          },
+        ),
+        ChangeNotifierProxyProvider<Auth, LocaisDeEntregaLista>(
+          create: (_) => LocaisDeEntregaLista('', []),
+          update: (ctx, auth, previous) {
+            return LocaisDeEntregaLista(
+              auth.token ?? '',
+              previous?.locaisDeEntrega ?? [],
+              //auth.senha ?? '',
+            );
+          },
+        ),
+        ChangeNotifierProxyProvider<Auth, ConcorrentesLista>(
+          create: (_) => ConcorrentesLista('', []),
+          update: (ctx, auth, previous) {
+            return ConcorrentesLista(
+              auth.token ?? '',
+              previous?.concorrentes ?? [],
+              //auth.senha ?? '',
+            );
+          },
+        ),
+        ChangeNotifierProxyProvider<Auth, ViaCepModel>(
+          create: (_) => ViaCepModel('', []),
+          update: (ctx, auth, previous) {
+            return ViaCepModel(
+              auth.token ?? '',
+              previous?.endereco ?? [],
+              //auth.senha ?? '',
             );
           },
         ),
@@ -200,12 +256,45 @@ class MyApp extends StatelessWidget {
           AppRoutes.fatGrafico: (ctx) => LineChartWidget(),
           AppRoutes.menuCrm: (ctx) => const MenuCrm(),
           AppRoutes.clientesCrm: (ctx) => const ClientesCrm(),
+          AppRoutes.concorrentesCrm: (ctx) => const ConcorrentesCrm(),
           AppRoutes.prospectCrm: (ctx) => const ProspectCrm(),
           AppRoutes.faturamentoCrm: (ctx) => const FaturamentoCrm(),
           AppRoutes.formularioCrm: (ctx) => const FormularioCrm(),
           AppRoutes.incluirAgendaCrm: (ctx) => const IncluirAgendaCrm(),
-          AppRoutes.editarAgendaCrm: (ctx) =>  EditarAgendaCrm(event: Event("")),
-          AppRoutes.formularioVisitaCrm: (ctx) =>  FormularioVisitaCrm(event: Event("")),
+          AppRoutes.incluirConcorrenteCrm: (ctx) => IncluirConcorrenteCrm(),
+          AppRoutes.editarAgendaCrm: (ctx) => EditarAgendaCrm(
+                  event: Event(
+                codigo: "",
+                codigoMedico: "",
+                nomeMedico: "",
+                codigoRepresentante: "",
+                nomeRepresentante: "",
+                codigoLocalDeEntrega: "",
+                local: "",
+                status: "",
+                dataPrevista: DateTime.now(),
+                dataRealizada: DateTime.now(),
+                horaPrevista: "",
+                horaRealizada: "",
+                nomeUsuario: "",
+              )),
+          AppRoutes.formularioVisitaCrm: (ctx) => FormularioVisitaCrm(
+                event: Event(
+                  codigo: "",
+                  codigoMedico: "",
+                  nomeMedico: "",
+                  codigoRepresentante: "",
+                  nomeRepresentante: "",
+                  codigoLocalDeEntrega: "",
+                  local: "",
+                  status: "",
+                  dataPrevista: DateTime.now(),
+                  dataRealizada: DateTime.now(),
+                  horaPrevista: "",
+                  horaRealizada: "",
+                  nomeUsuario: "",
+                ),
+              ),
         },
         debugShowCheckedModeBanner: false,
       ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:pedidocompra/models/moduloFaturamentoModels/fat_empresaLista.dart';
 import 'package:pedidocompra/models/moduloFaturamentoModels/faturamento_empresas.dart';
+import 'package:pedidocompra/providers/faturamento/fat_empresaLista.dart';
 import 'package:provider/provider.dart';
 
 class FatEmpresasTotal extends StatelessWidget {

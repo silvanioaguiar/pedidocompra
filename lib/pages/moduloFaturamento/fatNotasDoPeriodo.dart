@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:pedidocompra/components/appDrawer.dart';
 import 'package:pedidocompra/components/faturamentoComponents/fat_notasDoPeriodo_grid.dart';
-import 'package:pedidocompra/models/moduloFaturamentoModels/fat_notasDoPeriodoLista.dart';
+import 'package:pedidocompra/providers/faturamento/fat_notasDoPeriodoLista.dart';
 import 'package:provider/provider.dart';
 
 bool isLoading = true;

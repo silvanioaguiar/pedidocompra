@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/components/appDrawer.dart';
 import 'package:pedidocompra/components/crm/utils.dart';
+import 'package:pedidocompra/models/auth.dart';
+import 'package:pedidocompra/models/crm/representantes.dart';
+import 'package:pedidocompra/providers/crm/representantesLista.dart';
 import 'package:pedidocompra/models/crm/visitas.dart';
-import 'package:pedidocompra/models/crm/visitasLista.dart';
+import 'package:pedidocompra/providers/crm/visitasLista.dart';
 import 'package:pedidocompra/pages/crm/editarAgendaCrm.dart';
 import 'package:pedidocompra/pages/crm/formularioVisitaCrm.dart';
 import 'package:pedidocompra/pages/crm/incluirAgendaCrm.dart';
@@ -26,23 +29,53 @@ class _AgendaCrmState extends State<AgendaCrm> {
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
   List<Visitas>? loadedVisitas;
-  
+  List<Representantes>? loadedRepresentantes;
+  String? _representanteSelecionado;
+  // late List<String> _representantes = [
+  //   'Denis',
+  //   'ANTONIO MARCOS OLIVEIRA DE SOUZA'
+  // ];
+  late List<Event> _todosEventos = [];
+  List? _eventosFiltrados = [];
 
   @override
   void initState() {
     super.initState();
     _loadVisitas();
+    _loadRepresentantes();
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+    _eventosFiltrados = List.from(_todosEventos);
   }
 
-  
   Future<void> _loadVisitas() async {
     final provider = Provider.of<VisitasLista>(context, listen: false);
     loadedVisitas = await provider.loadVisitas(provider);
-    setState(() {
+  }
 
-    }); // Atualize a interface do usuário após carregar as visitas
+  Future<void> _loadRepresentantes() async {
+    final provider = Provider.of<RepresentantesLista>(context, listen: false);
+    loadedRepresentantes = await provider.loadRepresentantes(provider);
+    loadedRepresentantes!
+        .add(Representantes(codigo: "000000", nomeRepresentante: "Todos"));
+  }
+
+  void _filtrarEventos() {
+    setState(() {
+      if (_representanteSelecionado == null ||
+          _representanteSelecionado == "Todos") {
+        _eventosFiltrados = loadedVisitas;
+      } else {
+        _eventosFiltrados = loadedVisitas
+            ?.where(
+                (event) => event.nomeRepresentante == _representanteSelecionado)
+            .toList();
+        _selectedEvents.value = [];
+        _selectedDay = DateTime.now();
+      }
+      // Atualizar eventos selecionados para o dia atual ou limpar se não houver eventos
+      _selectedEvents.value = _getEventsForDay(_selectedDay ?? DateTime.now());
+    });
   }
 
   @override
@@ -51,20 +84,46 @@ class _AgendaCrmState extends State<AgendaCrm> {
     super.dispose();
   }
 
-  // List<Event> _getEventsForDay(DateTime day) {
-  //   // Implementation example
-  //   return kEvents[day] ?? [];
-  // }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Limpar os eventos selecionados e o estado
+    setState(() {
+      _selectedEvents.value = [];
+      _selectedDay = null;
+      _representanteSelecionado = null; // Resetar o dropdown
+    });
+  }
 
   List<Event> _getEventsForDay(DateTime day) {
+    final visitasLista = Provider.of<VisitasLista>(context, listen: false);
+
     if (loadedVisitas == null) return [];
-    return loadedVisitas!
+    //return loadedVisitas!
+    return visitasLista.visitas
         .where((visita) =>
-            isSameDay(visita.dataPrevista, day) ||
-            (visita.dataRealizada != null && isSameDay(visita.dataRealizada, day)))
+            (isSameDay(visita.dataPrevista, day) ||
+                (visita.dataRealizada != null &&
+                    isSameDay(visita.dataRealizada, day))) &&
+            (visita.nomeRepresentante == _representanteSelecionado ||
+                _representanteSelecionado == null ||
+                _representanteSelecionado == "Todos"))
         .map((visita) => Event(
-            title: visita.local,
-            description: visita.status))
+              codigo: visita.codigo,
+              codigoMedico: visita.codigoMedico,
+              nomeMedico: visita.nomeMedico,
+              codigoRepresentante: visita.codigoRepresentante,
+              nomeRepresentante: visita.nomeRepresentante,
+              codigoLocalDeEntrega: visita.codigoLocalDeEntrega,
+              local: visita.local,
+              status: visita.status,
+              dataPrevista: visita.dataPrevista,
+              dataRealizada: visita.dataRealizada,
+              horaPrevista: visita.horaPrevista,
+              horaRealizada: visita.horaRealizada,
+              nomeUsuario: visita.nomeUsuario,
+            ))
         .toList();
   }
 
@@ -110,11 +169,20 @@ class _AgendaCrmState extends State<AgendaCrm> {
     }
   }
 
+  // String formatUserName(String usuario) {
+  //   // Divide os nomes pelo ponto
+  //   List<String> parts = usuario.split('.');
+  //   // Capitaliza a primeira letra de cada nome
+  //   List<String> formattedParts = parts.map((part) {
+  //     return part[0].toUpperCase() + part.substring(1).toLowerCase();
+  //   }).toList();
+  //   // Junta os nomes com um espaço
+  //   return formattedParts.join(' ');
+  // }
+
   @override
   Widget build(BuildContext context) {
-
-    //final provider = Provider.of<VisitasLista>(context);
-    //final List<Visitas> loadedVisitas = provider.visitas;
+    //String formattedName = formatUserName("");
     var size = MediaQuery.of(context).size;
     double? widthScreen = 0;
 
@@ -150,137 +218,279 @@ class _AgendaCrmState extends State<AgendaCrm> {
         ),
       ),
       drawer: AppDrawer(),
-      body: Column(
-        children: [
-          TableCalendar<Event>(
-            locale: 'pt_Br',
-            firstDay: DateTime(2020, 01, 01),
-            lastDay: DateTime(2050, 01, 01),
-            focusedDay: _focusedDay,
-            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-            rangeStartDay: _rangeStart,
-            rangeEndDay: _rangeEnd,
-            calendarFormat: _calendarFormat,
-            rangeSelectionMode: _rangeSelectionMode,
-            eventLoader: _getEventsForDay,
-            startingDayOfWeek: StartingDayOfWeek.monday,
-            calendarStyle: const CalendarStyle(
-              // Use `CalendarStyle` to customize the UI
-              outsideDaysVisible: false,
-            ),
-            onDaySelected: _onDaySelected,
-            onRangeSelected: _onRangeSelected,
-            onFormatChanged: (format) {
-              if (_calendarFormat != format) {
-                setState(() {
-                  _calendarFormat = format;
-                });
-              }
-            },
-            onPageChanged: (focusedDay) {
-              _focusedDay = focusedDay;
-            },
-            availableCalendarFormats: const {
-              CalendarFormat.month: 'Mês Completo',
-              CalendarFormat.twoWeeks: '2 Semanas',
-              CalendarFormat.week: 'Semana',
-            },
-          ),
-          const SizedBox(height: 8.0),
-          Expanded(
-            child: ValueListenableBuilder<List<Event>>(
-              valueListenable: _selectedEvents,
-              builder: (context, value, _) {
-                return ListView.builder(
-                  itemCount: value.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 12.0,
-                        vertical: 4.0,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: ListTile(
-                          onTap: () => print('${value[index]}'),
-                          title: Text('${value[index]}'),
-                          subtitle: const Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Local:'),
-                              Text('Status:'),
-                            ],
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(builder: (ctx) {
-                                      return EditarAgendaCrm(
-                                          event: value[index]);
-                                    }),
-                                  );
-                                },
-                                icon: const Icon(
-                                  Icons.edit,
-                                  color: Color.fromARGB(255, 255, 153, 0),
-                                ),
-                                //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
-                              ),
-                              const SizedBox(width: 5),
-                              IconButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(builder: (ctx) {
-                                      return FormularioVisitaCrm(
-                                          event: value[index]);
-                                    }),
-                                  );
-                                },
-                                icon: const Icon(
-                                  Icons.file_open_sharp,
-                                  color: Color.fromARGB(255, 1, 49, 88),
-                                ),
-                                //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
-                              ),
-                            ],
-                          )),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                FloatingActionButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (ctx) {
-                        //return const MenuEmpresasFat();
-                        return const IncluirAgendaCrm();
-                      }),
-                    );
-                  },
-                  backgroundColor: const Color.fromARGB(255, 0, 40, 73),
-                  child: const Icon(
-                    Icons.add,
-                    color: Colors.white,
+      body: Consumer<VisitasLista>(
+        builder: (context, visitasLista, _) {
+          return Column(
+            children: [
+              TableCalendar<Event>(
+                locale: 'pt_Br',
+                firstDay: DateTime(2020, 01, 01),
+                lastDay: DateTime(2050, 01, 01),
+                focusedDay: _focusedDay,
+                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                rangeStartDay: _rangeStart,
+                rangeEndDay: _rangeEnd,
+                calendarFormat: _calendarFormat,
+                rangeSelectionMode: _rangeSelectionMode,
+                eventLoader: _getEventsForDay,
+                startingDayOfWeek: StartingDayOfWeek.sunday,
+                calendarStyle: const CalendarStyle(
+                    // Use `CalendarStyle` to customize the UI
+                    outsideDaysVisible: false,
+                    weekendDecoration: BoxDecoration(
+                        color: Color.fromARGB(255, 214, 215, 216))),
+                onDaySelected: _onDaySelected,
+                onRangeSelected: _onRangeSelected,
+                onFormatChanged: (format) {
+                  if (_calendarFormat != format) {
+                    setState(() {
+                      _calendarFormat = format;
+                    });
+                  }
+                },
+                onPageChanged: (focusedDay) {
+                  _focusedDay = focusedDay;
+                },
+                availableCalendarFormats: const {
+                  CalendarFormat.month: 'Mês Completo',
+                  CalendarFormat.twoWeeks: '2 Semanas',
+                  CalendarFormat.week: 'Semana',
+                },
+                headerStyle: HeaderStyle(
+                    formatButtonDecoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 152, 204, 247),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    formatButtonTextStyle: const TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold)),
+                onHeaderTapped: (focusedDay) async {
+                  final selectedDate = await showDatePicker(
+                    context: context,
+                    initialDate: focusedDay,
+                    firstDate: DateTime(2010),
+                    lastDate: DateTime(2030),
+                  );
+                  if (selectedDate != null) {
+                    setState(() {
+                      _focusedDay = selectedDate;
+                    });
+                  }
+                },
+              ),
+              const SizedBox(height: 8.0),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: 40,
+                  color: const Color.fromARGB(255, 152, 204, 247),
+                  child: DropdownButton<String>(
+                    dropdownColor: const Color.fromARGB(255, 152, 204, 247),
+                    isExpanded: true,
+                    iconSize: 25,
+                    hint: const Text('Selecione um representante'),
+                    value: _representanteSelecionado,
+                    items: loadedRepresentantes?.map((representante) {
+                      return DropdownMenuItem<String>(
+                        value: representante.nomeRepresentante,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(representante.nomeRepresentante),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (valor) {
+                      setState(() {
+                        _representanteSelecionado = valor;
+                      });
+                      _filtrarEventos();
+                    },
                   ),
                 ),
-              ],
-            ),
-          ),
-        ],
+              ),
+              const SizedBox(height: 8.0),
+              Expanded(
+                child: ValueListenableBuilder<List<Event>>(
+                  valueListenable: _selectedEvents,
+                  builder: (context, value, _) {
+                    return ListView.builder(
+                      itemCount: value.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 12.0,
+                            vertical: 4.0,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(),
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          child: ListTile(
+                              //onTap: () => print('${value[index]}'),
+                              title: SizedBox(
+                                width: 100,
+                                child: Text(
+                                  '${value[index].horaPrevista} - ${value[index].nomeMedico}',
+                                  style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              subtitle: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    child:  Text(
+                                      'Local: ${value[index].local}',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    
+                                  ),
+                                  if (value[index].status == '1')
+                                    const Row(
+                                      children: [
+                                        Text('Status: ',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                        Text('Pendente',
+                                            style:
+                                                TextStyle(color: Colors.blue)),
+                                      ],
+                                    )
+                                  else if (value[index].status == '2')
+                                    const Row(
+                                      children: [
+                                        Text('Status: ',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                        Text('Concluída',
+                                            style:
+                                                TextStyle(color: Colors.green))
+                                      ],
+                                    )
+                                  else if (value[index].status == '3')
+                                    const Row(
+                                      children: [
+                                        Text('Status: ',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                        Text('Remarcada',
+                                            style:
+                                                TextStyle(color: Colors.orange))
+                                      ],
+                                    )
+                                  else if (value[index].status == '4')
+                                    const Row(
+                                      children: [
+                                        Text('Status: ',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                        Text('Cancelada',
+                                            style:
+                                                TextStyle(color: Colors.red)),
+                                      ],
+                                    ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        'Resp.: ',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        value[index].nomeUsuario!,
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              trailing: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Flexible(
+                                    child: IconButton(
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(builder: (ctx) {
+                                            return EditarAgendaCrm(
+                                              event: value[index],
+                                            );
+                                          }),
+                                        ).then(
+                                          (_) {
+                                            // Ações após o retorno
+                                            _loadVisitas();
+                                            setState(() {
+                                              _selectedEvents.value = [];
+                                              _selectedDay = null;
+                                              _representanteSelecionado =
+                                                  null; // Reseta o filtro
+                                            });
+                                          },
+                                        );
+                                      },
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Color.fromARGB(255, 255, 153, 0),
+                                      ),
+                                      //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
+                                    ),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(builder: (ctx) {
+                                          return FormularioVisitaCrm(
+                                            event: value[index],
+                                          );
+                                        }),
+                                      );
+                                    },
+                                    icon: const Icon(
+                                      Icons.file_open_sharp,
+                                      color: Color.fromARGB(255, 1, 49, 88),
+                                    ),
+                                    //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
+                                  ),
+                                ],
+                              )),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    FloatingActionButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (ctx) {
+                            return const IncluirAgendaCrm();
+                          }),
+                        );
+                      },
+                      backgroundColor: const Color.fromARGB(255, 0, 40, 73),
+                      child: const Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

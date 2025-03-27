@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/models/moduloComprasModels/pedidos.dart';
-import 'package:pedidocompra/models/moduloComprasModels/pedidosLista.dart';
-import 'package:pedidocompra/pages/moduloCompras/detalhesPedido.dart';
-import 'package:pedidocompra/pages/moduloCompras/itensPedido.dart';
-import 'package:pedidocompra/pages/moduloCompras/pedidosPendentes.dart';
-import 'package:pedidocompra/routes/appRoutes.dart';
+import 'package:pedidocompra/providers/compras/pedidosLista.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
+
 
 class PedidoGridItem extends StatelessWidget {
   const PedidoGridItem({Key? key}) : super(key: key);

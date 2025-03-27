@@ -1,0 +1,313 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings
+
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart ' as http;
+import 'package:pedidocompra/models/crm/visitas.dart';
+import 'package:pedidocompra/services/navigator_service.dart';
+import 'package:provider/provider.dart';
+
+class VisitasLista with ChangeNotifier {
+  final String _token;
+
+  List<Visitas> _visitas = [];
+  List<dynamic> data = [];
+  List<dynamic> data2 = [];
+  Map<String, dynamic> data0 = {};
+
+  int n = 0;
+
+  List<Visitas> get visitas => [..._visitas];
+
+  VisitasLista(this._token, this._visitas);
+
+  int get visitasCount {
+    return _visitas.length;
+  }
+
+  // Carregar Visitas
+
+  Future<dynamic> loadVisitas(context) async {
+    List<Visitas> visitas = [];
+    _visitas.clear();
+    visitas.clear();
+    //String empresaFilial = '';
+    Map<String, dynamic> data0 = {};
+    data = [];
+
+    final response = await http.get(
+        Uri.parse(
+            'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas'),
+        headers: {
+          'Content-Type': 'application/json',
+          "accept": "application/json",
+          "Accept-Charset": "utf-8",
+          'tenantId': '02,01', // fixado como Biosat Matriz
+          'Authorization': 'Bearer $_token',
+        });
+
+    if (response.statusCode == 500) {
+      data0 = jsonDecode(response.body);
+
+      if (data0['errorMessage'] ==
+          'Não existem dados para serem apresentados') {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text(
+              'ATENÇÃO!',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            content: const Text(
+              //'Ocorreu um arro ao tentar aprovar o pedido.Por favor entrar em contato com o suporte do sistema',
+              'Nenhuma visita registrada.',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  NavigatorService.instance.pop();
+                },
+                child: const Text("Fechar",
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 5, 0, 0))),
+              ),
+            ],
+          ),
+        );
+      }
+    } else if (response.statusCode == 200 &&
+        response.body ==
+            '{"Mensagem Principal":"Usuário não cadastrado como aprovador para essa empresa.","RETURN":true,"MESSAGE":"Usuário não cadastrado."}') {
+      data0 = jsonDecode(response.body);
+
+      if (data0['MESSAGE'] == 'Usuário não cadastrado.') {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text(
+              'ATENÇÃO!',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            content: const Text(
+              //'Ocorreu um arro ao tentar aprovar o pedido.Por favor entrar em contato com o suporte do sistema',
+              'Usuário não cadastrado como aprovador para essa empresa.',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  NavigatorService.instance.pop();
+                },
+                child: const Text("Fechar",
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 5, 0, 0))),
+              ),
+            ],
+          ),
+        );
+      }
+    } else {
+      data = jsonDecode(response.body);
+      utf8.decode(response.bodyBytes);
+      data.asMap();
+      for (var data in data) {
+        visitas.add(
+          Visitas(
+            codigo: data['principal']['codigo'],
+            status: data['principal']['status'],
+            codigoRepresentante: data['principal']['codigoRepresentante'],
+            nomeRepresentante: data['principal']['nomeRepresentante'],
+            codigoMedico: data['principal']['codigoMedico'],
+            nomeMedico: data['principal']['nomeMedico'],
+            codigoLocalDeEntrega: data['principal']['codigoLocalDeEntrega']?? "",
+            local: data['principal']['local'],
+            dataPrevista: DateTime.parse(data['principal']['dataPrevista']),
+            horaPrevista: data['principal']['horaPrevista'],
+            dataRealizada: data['principal']['dataRealizada'] != null &&
+                    data['principal']['dataRealizada'].trim().isNotEmpty
+                ? DateTime.parse(data['principal']['dataRealizada'].trim())
+                : null,
+            horaRealizada: data['principal']['horaRealizada'] ?? "00:00",
+            nomeUsuario:   data['principal']['nomeUsuario']  ?? ""        
+            
+          ),
+        );
+      }
+    }
+
+    _visitas = visitas.reversed.toList();
+
+    notifyListeners();
+    return _visitas;
+  }
+
+  Future<dynamic> editarVisitas(context, dadosVisita) async {
+    final uri = Uri.parse(
+        'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/Editar');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Accept-Charset': 'utf-8',
+      'tenantId': '02,01', // fixado como Biosat Matriz
+      'Authorization': 'Bearer $_token',
+    };
+
+    final body = jsonEncode({
+      'codigo': dadosVisita['codigo'],
+      'medico': dadosVisita['medico'],
+      'codigoMedico': dadosVisita['codigoMedico'],
+      'localVisita': dadosVisita['local'],
+      'dataVisita': dadosVisita['dataPrevista'],
+      'horaVisita': dadosVisita['horaPrevista'],
+      'statusVisita': dadosVisita['status'],
+    });
+
+    final response = await http.post(uri, headers: headers, body: body);
+
+    if (response.statusCode == 500) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text(
+            'ATENÇÃO!',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          content: const Text(
+            //'Ocorreu um arro ao tentar aprovar o pedido.Por favor entrar em contato com o suporte do sistema',
+            'Não foi possivel editar a visita. Contate o administrador do sistema',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                NavigatorService.instance.pop();
+              },
+              child: const Text("Fechar",
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 5, 0, 0))),
+            ),
+          ],
+        ),
+      );
+    } else if (response.statusCode >= 200 && response.statusCode <= 299) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text(
+            'ATENÇÃO!',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          content: const Text(
+            //'Ocorreu um arro ao tentar aprovar o pedido.Por favor entrar em contato com o suporte do sistema',
+            'Visita atualizada com sucesso',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Fecha o dialog
+                Navigator.of(context).pop(); // Fecha a tela principal
+              },
+              child: const Text("Fechar",
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 5, 0, 0))),
+            ),
+          ],
+        ),
+      );
+    }
+    notifyListeners();
+    await loadVisitas(context);
+  }
+
+  Future<dynamic> incluirVisitas(context, dadosVisita) async {
+    final uri = Uri.parse(
+        'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/Incluir');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Accept-Charset': 'utf-8',
+      'tenantId': '02,01', // fixado como Biosat Matriz
+      'Authorization': 'Bearer $_token',
+    };
+
+    final body = jsonEncode({
+      'codigoMedico': dadosVisita['codigoMedico'],
+      'medico': dadosVisita['medico'],
+      'codigoLocalDeEntrega': dadosVisita['codigoLocalDeEntrega'],
+      'localVisita': dadosVisita['localDescricao'],
+      'dataVisita': dadosVisita['dataPrevista'],
+      'horaVisita': dadosVisita['horaPrevista'],
+    });
+
+    final response = await http.put(uri, headers: headers, body: body);
+
+    if (response.statusCode == 500) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text(
+            'ATENÇÃO!',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          content: const Text(
+            //'Ocorreu um arro ao tentar aprovar o pedido.Por favor entrar em contato com o suporte do sistema',
+            'Não foi possivel incluir a visita. Contate o administrador do sistema',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                NavigatorService.instance.pop();
+              },
+              child: const Text("Fechar",
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 5, 0, 0))),
+            ),
+          ],
+        ),
+      );
+    } else if (response.statusCode >= 200 && response.statusCode <= 299) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text(
+            'ATENÇÃO!',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          content: const Text(
+            //'Ocorreu um arro ao tentar aprovar o pedido.Por favor entrar em contato com o suporte do sistema',
+            'Visita incluída com sucesso',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Fecha o dialog
+                Navigator.of(context).pop(); // Fecha a tela principal
+              },
+              child: const Text("Fechar",
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 5, 0, 0))),
+            ),
+          ],
+        ),
+      );
+    }
+    notifyListeners();
+    await loadVisitas(context);
+  }
+}

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/components/comprasComponents/itensPedidoGridItem.dart';
 import 'package:pedidocompra/models/moduloComprasModels/itens_pedidos.dart';
-import 'package:pedidocompra/models/moduloComprasModels/pedidosLista.dart';
+import 'package:pedidocompra/providers/compras/pedidosLista.dart';
 import 'package:provider/provider.dart';
 
 

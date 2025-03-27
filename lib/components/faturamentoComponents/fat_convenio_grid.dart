@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/components/faturamentoComponents/fatConvenioItem.dart';
-import 'package:pedidocompra/models/moduloFaturamentoModels/fat_convenioLista.dart';
 import 'package:pedidocompra/models/moduloFaturamentoModels/faturamento_convenio.dart';
+import 'package:pedidocompra/providers/faturamento/fat_convenioLista.dart';
 import 'package:provider/provider.dart';
 
 class FatConvenioGrid extends StatelessWidget {

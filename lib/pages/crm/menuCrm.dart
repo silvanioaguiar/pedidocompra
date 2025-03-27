@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pedidocompra/components/appDrawer.dart';
 import 'package:pedidocompra/pages/crm/agendaCrm.dart';
 import 'package:pedidocompra/pages/crm/clientesCrm.dart';
+import 'package:pedidocompra/pages/crm/concorrentesCrm.dart';
 import 'package:pedidocompra/pages/crm/faturamentoCrm.dart';
 import 'package:pedidocompra/pages/crm/formularioCrm.dart';
 import 'package:pedidocompra/pages/crm/prospectCrm.dart';
@@ -129,6 +130,43 @@ class _MenuCrmState extends State<MenuCrm> {
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (ctx) {
                       return const ClientesCrm();
+                    }),
+                  );
+                },
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                image: const DecorationImage(
+                  image: AssetImage('assets/images/customers.png'),scale:0.7
+
+                ),
+                //color: const Color.fromARGB(255, 165, 214, 255),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: const Color.fromARGB(255, 1, 30, 54),
+                  width: 2,
+                ),
+              ),
+              child: TextButton(
+                child: const Padding(
+                  padding: EdgeInsets.all(5),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Text(
+                      'Concorrentes',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (ctx) {
+                      return const ConcorrentesCrm();
                     }),
                   );
                 },
