@@ -14,12 +14,13 @@ class ConcorrentesCrm extends StatefulWidget {
 }
 
 class _ConcorrentesCrmState extends State<ConcorrentesCrm> {
-  List<Concorrentes> _concorrentes = [];
+  List<Concorrentes> concorrentes = [];
 
   @override
   void initState() {
     super.initState();
-    _loadConcorrentes();
+    Future.microtask(() => _loadConcorrentes());
+
   }
 
   @override
@@ -29,11 +30,8 @@ class _ConcorrentesCrmState extends State<ConcorrentesCrm> {
 
   Future<void> _loadConcorrentes() async {
     final provider = Provider.of<ConcorrentesLista>(context, listen: false);
-    final concorrentes = await provider.loadConcorrentes(provider);
-
-    setState(() {
-      _concorrentes = concorrentes;
-    });
+    await provider.loadConcorrentes(provider);
+   
   }
 
   @override
@@ -73,96 +71,97 @@ class _ConcorrentesCrmState extends State<ConcorrentesCrm> {
         ),
       ),
       drawer: AppDrawer(),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: _concorrentes.length,
-                itemBuilder: (context, index) {
-                  final concorrente = _concorrentes[index];
-                  return Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 12.0,
-                      vertical: 4.0,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    child: ListTile(
-                        title: SizedBox(
-                          width: 100,
-                          child: Text(
-                            concorrente.nomeFantasia,
-                            style: const TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.bold),
-                          ),
+      body: Consumer<ConcorrentesLista>(
+        builder: (context, concorrentesLista, _) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: concorrentesLista.concorrentes.length,
+                    itemBuilder: (context, index) {
+                      final concorrente = concorrentesLista.concorrentes[index];
+                      return Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 12.0,
+                          vertical: 4.0,
                         ),
-                        subtitle: Text(concorrente.endereco!),
-                        trailing: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Flexible(
-                              child: IconButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(builder: (ctx) {
-                                      return EditarConcorrenteCrm(
-                                        concorrente: _concorrentes[index],
-                                      );
-                                    }),
-                                  ).then(
-                                    (_) {
-                                      // Ações após o retorno
-                                      _loadConcorrentes();
-                                      setState(() {
-                                         
-                                      });
-                                    },
-                                  );
-                                },
-                                icon: const Icon(
-                                  Icons.edit,
-                                  color: Color.fromARGB(255, 255, 153, 0),
-                                ),
-                                //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
+                        decoration: BoxDecoration(
+                          border: Border.all(),
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: ListTile(
+                            title: SizedBox(
+                              width: 100,
+                              child: Text(
+                                concorrente.nomeFantasia,
+                                style: const TextStyle(
+                                    fontSize: 12, fontWeight: FontWeight.bold),
                               ),
                             ),
-                            
-                          ],
-                        )),
-                  );
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  FloatingActionButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (ctx) {
-                          return  IncluirConcorrenteCrm();
-                        }),
+                            subtitle: Text(concorrente.endereco!),
+                            trailing: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Flexible(
+                                  child: IconButton(
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(builder: (ctx) {
+                                          return EditarConcorrenteCrm(
+                                            concorrente: concorrente,
+                                          );
+                                        }),
+                                      ).then(
+                                        (_) {
+                                          // Ações após o retorno
+                                          _loadConcorrentes();
+                                          
+                                        },
+                                      );
+                                    },
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      color: Color.fromARGB(255, 255, 153, 0),
+                                    ),
+                                    //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
+                                  ),
+                                ),
+                              ],
+                            )),
                       );
                     },
-                    backgroundColor: const Color.fromARGB(255, 0, 40, 73),
-                    child: const Icon(
-                      Icons.add,
-                      color: Colors.white,
-                    ),
                   ),
-                ],
-              ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      FloatingActionButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (ctx) {
+                              return IncluirConcorrenteCrm();
+                            }),
+                          );
+                        },
+                        backgroundColor: const Color.fromARGB(255, 0, 40, 73),
+                        child: const Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

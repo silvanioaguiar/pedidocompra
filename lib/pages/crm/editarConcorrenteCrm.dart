@@ -2,7 +2,7 @@ import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/models/crm/concorrentes.dart';
 import 'package:pedidocompra/providers/crm/concorrentesLista.dart';
-import 'package:pedidocompra/providers/crm/viaCepModel.dart';
+import 'package:pedidocompra/services/viacep_service.dart';
 import 'package:provider/provider.dart';
 
 
@@ -81,33 +81,39 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
   }
 
   Future<void> _editarConcorrentes(context) async {
-    final dadosVisita = {
+    final dadosConcorrente = {
       'codigo': widget.concorrente.codigo,
       'razaoSocial': _razaoSocialController.text,
-      'nomeFantasia': _nomeFantasiaController,
-      'endereco': _enderecoController,
-      'municipio': _municipioController,
-      'estado': _estadoController,
-      'bairro': _bairroController,
-      'cep': _cepController,
-      'ddd': _dddController,
-      'telefone': _telefoneController,
-      'contato': _contatoController,
-      'homePage': _homePageController,
+      'nomeFantasia': _nomeFantasiaController.text,
+      'endereco': _enderecoController.text,
+      'municipio': _municipioController.text,
+      'estado': _estadoController.text,
+      'bairro': _bairroController.text,
+      'cep': _cepController.text,
+      'ddd': _dddController.text,
+      'telefone': _telefoneController.text,
+      'contato': _contatoController.text,
+      'homePage': _homePageController.text,
     };
 
     await Provider.of<ConcorrentesLista>(
       context,
       listen: false,
-    ).editarConcorrente(context, dadosVisita);
+    ).editarConcorrente(context, dadosConcorrente);
   }
 
-  Future<void> _loadEndereco() async {
-    final provider = Provider.of<ViaCepModel>(context, listen: false);
-    final enderecoViaCep = await provider.loadEndereco(provider);
+  Future<void> _loadEndereco(cep) async {
+    final provider = Provider.of<ViaCepService>(context, listen: false);
+    final enderecoViaCep = await provider.loadEndereco(provider,cep);
+
+    
 
     setState(() {
-        _enderecoController.text = "";
+        _enderecoController.text = enderecoViaCep[0].logradouro;
+        _bairroController.text = enderecoViaCep[0].bairro;
+        _municipioController.text = enderecoViaCep[0].localidade;
+        _estadoController.text = enderecoViaCep[0].uf;
+        _dddController.text = enderecoViaCep[0].ddd;
     });
   }
 
@@ -289,7 +295,7 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
                         ),
                       ),
                       onPressed: () {
-                        _loadEndereco();
+                        _loadEndereco(_cepController.text);
                       },
                       child: const Text("Buscar Endereço"),
                     ),

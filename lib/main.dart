@@ -4,7 +4,7 @@ import 'package:pedidocompra/providers/crm/concorrentesLista.dart';
 import 'package:pedidocompra/providers/crm/locaisDeEntregaLista.dart';
 import 'package:pedidocompra/providers/crm/medicosLista.dart';
 import 'package:pedidocompra/providers/crm/representantesLista.dart';
-import 'package:pedidocompra/providers/crm/viaCepModel.dart';
+import 'package:pedidocompra/services/viacep_service.dart';
 import 'package:pedidocompra/providers/crm/visitasLista.dart';
 import 'package:pedidocompra/providers/faturamento/fat_convenioLista.dart';
 import 'package:pedidocompra/models/moduloComprasModels/itens_pedidos.dart';
@@ -194,12 +194,13 @@ class MyApp extends StatelessWidget {
             );
           },
         ),
-        ChangeNotifierProxyProvider<Auth, ViaCepModel>(
-          create: (_) => ViaCepModel('', []),
+        ChangeNotifierProxyProvider<Auth, ViaCepService>(
+          create: (_) => ViaCepService('', []),
           update: (ctx, auth, previous) {
-            return ViaCepModel(
+            return ViaCepService(
               auth.token ?? '',
               previous?.endereco ?? [],
+              
               //auth.senha ?? '',
             );
           },
@@ -224,11 +225,11 @@ class MyApp extends StatelessWidget {
           AppRoutes.authOrHome: (ctx) => const AuthOrHomePage(),
           AppRoutes.authPage: (ctx) => const AuthPage(),
           AppRoutes.pedidosPendentes: (ctx) =>
-              PedidosPendentesAprovacao(empresa: ''),
+              const PedidosPendentesAprovacao(empresa: ''),
           AppRoutes.menuModulos: (ctx) => const MenuModulos(),
           AppRoutes.menuEmpresas: (ctx) => const MenuEmpresas(),
           AppRoutes.menuEmpresasFat: (ctx) => const MenuEmpresasFat(),
-          AppRoutes.detalhesPedido: (ctx) => DetalhesPedido(
+          AppRoutes.detalhesPedido: (ctx) => const DetalhesPedido(
                 empresa: '',
                 pedido: '',
               ),
@@ -251,9 +252,9 @@ class MyApp extends StatelessWidget {
                 dateFim: DateTime.now(),
                 valorDiaFormatado: '',
               ),
-          AppRoutes.graficoRepresentante: (ctx) => GraficoRepresentantePage(),
-          AppRoutes.graficoConvenio: (ctx) => GraficoConvenio(empresa: ''),
-          AppRoutes.fatGrafico: (ctx) => LineChartWidget(),
+          AppRoutes.graficoRepresentante: (ctx) => const GraficoRepresentantePage(),
+          AppRoutes.graficoConvenio: (ctx) => const GraficoConvenio(empresa: ''),
+          AppRoutes.fatGrafico: (ctx) => const LineChartWidget(),
           AppRoutes.menuCrm: (ctx) => const MenuCrm(),
           AppRoutes.clientesCrm: (ctx) => const ClientesCrm(),
           AppRoutes.concorrentesCrm: (ctx) => const ConcorrentesCrm(),

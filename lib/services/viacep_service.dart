@@ -7,18 +7,20 @@ import 'package:pedidocompra/models/crm/viacep.dart';
 import 'package:pedidocompra/services/navigator_service.dart';
 import 'package:provider/provider.dart';
 
-class ViaCepModel with ChangeNotifier {
+class ViaCepService with ChangeNotifier {
   final String _token;
+ 
+  
 
   List<ViaCep> _endereco = [];
-  List<dynamic> data = [];
+  Map<String, dynamic> data = {};
   Map<String, dynamic> data0 = {};
 
   int n = 0;
 
   List<ViaCep> get endereco => [..._endereco];
 
-  ViaCepModel(this._token, this._endereco);
+  ViaCepService(this._token, this._endereco);
 
   int get enderecoCount {
     return _endereco.length;
@@ -26,16 +28,16 @@ class ViaCepModel with ChangeNotifier {
 
   // Carregar Endereco
 
-  Future<dynamic> loadEndereco(context) async {
+  Future<dynamic> loadEndereco(context, cep) async {
     List<ViaCep> endereco = [];
     _endereco.clear();
     endereco.clear();
     //String empresaFilial = '';
     Map<String, dynamic> data0 = {};
-    data = [];
+    Map<String, dynamic> data = {};
 
     final response = await http
-        .get(Uri.parse('http://viacep.com.br/ws/01001000/json/'), headers: {
+        .get(Uri.parse('http://viacep.com.br/ws/${cep}/json/'), headers: {
       'Content-Type': 'application/json',
       "accept": "application/json",
       "Accept-Charset": "utf-8",
@@ -74,27 +76,24 @@ class ViaCepModel with ChangeNotifier {
       }
     } else if (response.statusCode == 200) {
       data = jsonDecode(response.body);
-      utf8.decode(response.bodyBytes);
-      data.asMap();
-      for (var data in data) {
-        endereco.add(
-          ViaCep(
-            cep: data['cep'],
-            logradouro: data['logradouro'],
-            complemento: data['complemento'],
-            unidade: data['unidade'],
-            bairro: data['bairro'],
-            localidade: data['localidade'],
-            uf: data['uf'],
-            estado: data['estado'],
-            regiao: data['regiao'],
-            ddd: data['ddd'],
-          ),
-        );
-      }
+
+      endereco.add(
+        ViaCep(
+          cep: data['cep'],
+          logradouro: data['logradouro'],
+          complemento: data['complemento'],
+          unidade: data['unidade'],
+          bairro: data['bairro'],
+          localidade: data['localidade'],
+          uf: data['uf'],
+          estado: data['estado'],
+          regiao: data['regiao'],
+          ddd: data['ddd'],
+        ),
+      );
     }
 
-    notifyListeners();
+    
     return endereco;
   }
 }

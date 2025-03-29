@@ -101,9 +101,10 @@ class ConcorrentesLista with ChangeNotifier {
         );
       }
     }
+    _concorrentes = concorrentes;
 
     notifyListeners();
-    return concorrentes;
+    return _concorrentes;
   }
 
   Future<dynamic> editarConcorrente(context, dadosConcorrente) async {
@@ -128,7 +129,7 @@ class ConcorrentesLista with ChangeNotifier {
       'cep': dadosConcorrente['cep'],
       'ddd': dadosConcorrente['ddd'],
       'telefone': dadosConcorrente['telefone'],
-      'contato': dadosConcorrente['contado'],
+      'contato': dadosConcorrente['contato'],
       'homePage': dadosConcorrente['homePage'],
     });
 
@@ -215,7 +216,7 @@ class ConcorrentesLista with ChangeNotifier {
       'cep': dadosConcorrente['cep'],
       'ddd': dadosConcorrente['ddd'],
       'telefone': dadosConcorrente['telefone'],
-      'contato': dadosConcorrente['contado'],
+      'contato': dadosConcorrente['contato'],
       'homePage': dadosConcorrente['homePage'],
     });
 

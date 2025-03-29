@@ -2,7 +2,7 @@ import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/models/crm/concorrentes.dart';
 import 'package:pedidocompra/providers/crm/concorrentesLista.dart';
-import 'package:pedidocompra/providers/crm/viaCepModel.dart';
+import 'package:pedidocompra/services/viacep_service.dart';
 import 'package:provider/provider.dart';
 
 class IncluirConcorrenteCrm extends StatefulWidget {
@@ -15,17 +15,17 @@ class IncluirConcorrenteCrm extends StatefulWidget {
 }
 
 class _IncluirConcorrenteCrmState extends State<IncluirConcorrenteCrm> {
-  late TextEditingController _razaoSocialController;
-  late TextEditingController _nomeFantasiaController;
-  late TextEditingController _enderecoController;
-  late TextEditingController _municipioController;
-  late TextEditingController _estadoController;
-  late TextEditingController _bairroController;
-  late TextEditingController _cepController;
-  late TextEditingController _dddController;
-  late TextEditingController _telefoneController;
-  late TextEditingController _contatoController;
-  late TextEditingController _homePageController;
+  final TextEditingController _razaoSocialController = TextEditingController();
+  final TextEditingController _nomeFantasiaController = TextEditingController();
+  final TextEditingController _enderecoController = TextEditingController();
+  final TextEditingController _municipioController = TextEditingController();
+  final TextEditingController _estadoController = TextEditingController();
+  final TextEditingController _bairroController = TextEditingController();
+  final TextEditingController _cepController = TextEditingController();
+  final TextEditingController _dddController = TextEditingController();
+  final TextEditingController _telefoneController = TextEditingController();
+  final TextEditingController _contatoController = TextEditingController();
+  final TextEditingController _homePageController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -35,16 +35,16 @@ class _IncluirConcorrenteCrmState extends State<IncluirConcorrenteCrm> {
   Future<void> _incluirConcorrente(context) async {
     final dadosConcorrente = {
       'razaoSocial': _razaoSocialController.text,
-      'nomeFantasia': _nomeFantasiaController,
-      'endereco': _enderecoController,
-      'municipio': _municipioController,
-      'estado': _estadoController,
-      'bairro': _bairroController,
-      'cep': _cepController,
-      'ddd': _dddController,
-      'telefone': _telefoneController,
-      'contato': _contatoController,
-      'homePage': _homePageController,
+      'nomeFantasia': _nomeFantasiaController.text,
+      'endereco': _enderecoController.text,
+      'municipio': _municipioController.text,
+      'estado': _estadoController.text,
+      'bairro': _bairroController.text,
+      'cep': _cepController.text,
+      'ddd': _dddController.text,
+      'telefone': _telefoneController.text,
+      'contato': _contatoController.text,
+      'homePage': _homePageController.text,
     };
 
     await Provider.of<ConcorrentesLista>(
@@ -53,12 +53,16 @@ class _IncluirConcorrenteCrmState extends State<IncluirConcorrenteCrm> {
     ).incluirConcorrente(context, dadosConcorrente);
   }
 
-  Future<void> _loadEndereco() async {
-    final provider = Provider.of<ViaCepModel>(context, listen: false);
-    final enderecoViaCep = await provider.loadEndereco(provider);
+  Future<void> _loadEndereco(cep) async {
+    final provider = Provider.of<ViaCepService>(context, listen: false);
+    final enderecoViaCep = await provider.loadEndereco(provider, cep);
 
     setState(() {
-      _enderecoController.text = "";
+      _enderecoController.text = enderecoViaCep[0].logradouro;
+      _bairroController.text = enderecoViaCep[0].bairro;
+      _municipioController.text = enderecoViaCep[0].localidade;
+      _estadoController.text = enderecoViaCep[0].uf;
+      _dddController.text = enderecoViaCep[0].ddd;
     });
   }
 
@@ -92,7 +96,7 @@ class _IncluirConcorrenteCrmState extends State<IncluirConcorrenteCrm> {
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Colors.white,
         title: Text(
-          "Editar Concorrente",
+          "Incluir Concorrente",
           textAlign: TextAlign.left,
           style: TextStyle(
             color: Theme.of(context).secondaryHeaderColor,
@@ -129,7 +133,7 @@ class _IncluirConcorrenteCrmState extends State<IncluirConcorrenteCrm> {
                     }
                     return null;
                   },
-                ),                
+                ),
                 const SizedBox(height: 20),
                 TextFormField(
                   decoration: const InputDecoration(
@@ -178,7 +182,7 @@ class _IncluirConcorrenteCrmState extends State<IncluirConcorrenteCrm> {
                         ),
                       ),
                       onPressed: () {
-                        _loadEndereco();
+                        _loadEndereco(_cepController.text);
                       },
                       child: const Text("Buscar Endereço"),
                     ),
