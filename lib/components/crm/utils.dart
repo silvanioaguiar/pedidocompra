@@ -7,7 +7,7 @@ class Event {
   final String codigo;
   final String local;
   final String codigoLocalDeEntrega;
-  final String status;
+  String status;
   final String codigoRepresentante;
   final String nomeRepresentante;
   final String codigoMedico;

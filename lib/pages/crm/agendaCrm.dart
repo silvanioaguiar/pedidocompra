@@ -23,7 +23,7 @@ class _AgendaCrmState extends State<AgendaCrm> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  late final ValueNotifier<List<Event>> _selectedEvents;
+  late ValueNotifier<List<Event>> _selectedEvents;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
       .toggledOff; // Can be toggled on/off by longpressing a date
   DateTime? _rangeStart;
@@ -51,6 +51,9 @@ class _AgendaCrmState extends State<AgendaCrm> {
   Future<void> _loadVisitas() async {
     final provider = Provider.of<VisitasLista>(context, listen: false);
     loadedVisitas = await provider.loadVisitas(provider);
+    _selectedDay = _focusedDay;
+    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+    _eventosFiltrados = List.from(_todosEventos);
   }
 
   Future<void> _loadRepresentantes() async {
@@ -340,12 +343,11 @@ class _AgendaCrmState extends State<AgendaCrm> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
-                                    child:  Text(
+                                    child: Text(
                                       'Local: ${value[index].local}',
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    
                                   ),
                                   if (value[index].status == '1')
                                     const Row(
@@ -449,7 +451,15 @@ class _AgendaCrmState extends State<AgendaCrm> {
                                             event: value[index],
                                           );
                                         }),
-                                      );
+                                      ).then((_) {
+                                        _loadVisitas();
+                                        setState(() {
+                                          //value[index].status = '2';
+                                          _selectedEvents = ValueNotifier(
+                                              _getEventsForDay(_selectedDay!));
+                                          
+                                        });
+                                      });
                                     },
                                     icon: const Icon(
                                       Icons.file_open_sharp,

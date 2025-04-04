@@ -1,6 +1,8 @@
 import 'package:pedidocompra/components/crm/utils.dart';
 import 'package:pedidocompra/models/auth.dart';
+import 'package:pedidocompra/providers/crm/HospitaisLista.dart';
 import 'package:pedidocompra/providers/crm/concorrentesLista.dart';
+import 'package:pedidocompra/providers/crm/formularioVisitaProvider.dart';
 import 'package:pedidocompra/providers/crm/locaisDeEntregaLista.dart';
 import 'package:pedidocompra/providers/crm/medicosLista.dart';
 import 'package:pedidocompra/providers/crm/representantesLista.dart';
@@ -194,12 +196,33 @@ class MyApp extends StatelessWidget {
             );
           },
         ),
+        ChangeNotifierProxyProvider<Auth, HospitaisLista>(
+          create: (_) => HospitaisLista('', []),
+          update: (ctx, auth, previous) {
+            return HospitaisLista(
+              auth.token ?? '',
+              previous?.hospitais ?? [],
+              //auth.senha ?? '',
+            );
+          },
+        ),
         ChangeNotifierProxyProvider<Auth, ViaCepService>(
           create: (_) => ViaCepService('', []),
           update: (ctx, auth, previous) {
             return ViaCepService(
               auth.token ?? '',
               previous?.endereco ?? [],
+              
+              //auth.senha ?? '',
+            );
+          },
+        ),
+        ChangeNotifierProxyProvider<Auth, FormularioVisitaProvider>(
+          create: (_) => FormularioVisitaProvider('', []),
+          update: (ctx, auth, previous) {
+            return FormularioVisitaProvider(
+              auth.token ?? '',
+              previous?.formulario ?? [],
               
               //auth.senha ?? '',
             );
