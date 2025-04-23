@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/components/appDrawer.dart';
 import 'package:pedidocompra/components/crm/utils.dart';
-import 'package:pedidocompra/models/auth.dart';
 import 'package:pedidocompra/models/crm/representantes.dart';
+import 'package:pedidocompra/pages/crm/gerenciarVisitaCrm.dart';
 import 'package:pedidocompra/providers/crm/representantesLista.dart';
 import 'package:pedidocompra/models/crm/visitas.dart';
 import 'package:pedidocompra/providers/crm/visitasLista.dart';
-import 'package:pedidocompra/pages/crm/editarAgendaCrm.dart';
-import 'package:pedidocompra/pages/crm/formularioVisitaCrm.dart';
 import 'package:pedidocompra/pages/crm/incluirAgendaCrm.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -31,10 +29,6 @@ class _AgendaCrmState extends State<AgendaCrm> {
   List<Visitas>? loadedVisitas;
   List<Representantes>? loadedRepresentantes;
   String? _representanteSelecionado;
-  // late List<String> _representantes = [
-  //   'Denis',
-  //   'ANTONIO MARCOS OLIVEIRA DE SOUZA'
-  // ];
   late List<Event> _todosEventos = [];
   List? _eventosFiltrados = [];
 
@@ -106,7 +100,7 @@ class _AgendaCrmState extends State<AgendaCrm> {
     //return loadedVisitas!
     return visitasLista.visitas
         .where((visita) =>
-            (isSameDay(visita.dataPrevista, day) ||
+            (isSameDay(visita.dataPrevista, day) && visita.dataRealizada == null  ||
                 (visita.dataRealizada != null &&
                     isSameDay(visita.dataRealizada, day))) &&
             (visita.nomeRepresentante == _representanteSelecionado ||
@@ -126,6 +120,7 @@ class _AgendaCrmState extends State<AgendaCrm> {
               horaPrevista: visita.horaPrevista,
               horaRealizada: visita.horaRealizada,
               nomeUsuario: visita.nomeUsuario,
+              codFormulario: visita.codFormulario,
             ))
         .toList();
   }
@@ -281,32 +276,34 @@ class _AgendaCrmState extends State<AgendaCrm> {
                 },
               ),
               const SizedBox(height: 8.0),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  height: 40,
-                  color: const Color.fromARGB(255, 152, 204, 247),
-                  child: DropdownButton<String>(
-                    dropdownColor: const Color.fromARGB(255, 152, 204, 247),
-                    isExpanded: true,
-                    iconSize: 25,
-                    hint: const Text('Selecione um representante'),
-                    value: _representanteSelecionado,
-                    items: loadedRepresentantes?.map((representante) {
-                      return DropdownMenuItem<String>(
-                        value: representante.nomeRepresentante,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(representante.nomeRepresentante),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (valor) {
-                      setState(() {
-                        _representanteSelecionado = valor;
-                      });
-                      _filtrarEventos();
-                    },
+              SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    height: 40,
+                    color: const Color.fromARGB(255, 152, 204, 247),
+                    child: DropdownButton<String>(
+                      dropdownColor: const Color.fromARGB(255, 152, 204, 247),
+                      isExpanded: true,
+                      iconSize: 25,
+                      hint: const Text('Selecione um representante'),
+                      value: _representanteSelecionado,
+                      items: loadedRepresentantes?.map((representante) {
+                        return DropdownMenuItem<String>(
+                          value: representante.nomeRepresentante,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(representante.nomeRepresentante),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (valor) {
+                        setState(() {
+                          _representanteSelecionado = valor;
+                        });
+                        _filtrarEventos();
+                      },
+                    ),
                   ),
                 ),
               ),
@@ -328,147 +325,169 @@ class _AgendaCrmState extends State<AgendaCrm> {
                             borderRadius: BorderRadius.circular(12.0),
                           ),
                           child: ListTile(
-                              //onTap: () => print('${value[index]}'),
-                              title: SizedBox(
-                                width: 100,
-                                child: Text(
-                                  '${value[index].horaPrevista} - ${value[index].nomeMedico}',
-                                  style: const TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold),
+                            //onTap: () => print('${value[index]}'),
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (ctx) {
+                                    return GerenciarVisitaCrm(
+                                      event: value[index],
+                                    );
+                                  },
                                 ),
+                              ).then((value){
+                                if (value == true) {
+                                  _loadVisitas();
+                                }
+                              });
+                            },
+                            title: SizedBox(
+                              width: 100,
+                              child: Text(
+                                '${value[index].horaPrevista} - ${value[index].nomeMedico}',
+                                style: const TextStyle(
+                                    fontSize: 12, fontWeight: FontWeight.bold),
                               ),
-                              subtitle: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    child: Text(
-                                      'Local: ${value[index].local}',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                            ),
+                            subtitle: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  child: Text(
+                                    'Local: ${value[index].local}',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                  if (value[index].status == '1')
-                                    const Row(
-                                      children: [
-                                        Text('Status: ',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold)),
-                                        Text('Pendente',
-                                            style:
-                                                TextStyle(color: Colors.blue)),
-                                      ],
-                                    )
-                                  else if (value[index].status == '2')
-                                    const Row(
-                                      children: [
-                                        Text('Status: ',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold)),
-                                        Text('Concluída',
-                                            style:
-                                                TextStyle(color: Colors.green))
-                                      ],
-                                    )
-                                  else if (value[index].status == '3')
-                                    const Row(
-                                      children: [
-                                        Text('Status: ',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold)),
-                                        Text('Remarcada',
-                                            style:
-                                                TextStyle(color: Colors.orange))
-                                      ],
-                                    )
-                                  else if (value[index].status == '4')
-                                    const Row(
-                                      children: [
-                                        Text('Status: ',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold)),
-                                        Text('Cancelada',
-                                            style:
-                                                TextStyle(color: Colors.red)),
-                                      ],
-                                    ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                                ),
+                                if (value[index].status == '1')
+                                  const Row(
                                     children: [
-                                      const Text(
-                                        'Resp.: ',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        value[index].nomeUsuario!,
-                                        style: const TextStyle(fontSize: 12),
-                                      ),
+                                      Text('Status: ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      Text('Pendente',
+                                          style: TextStyle(color: Colors.blue)),
+                                    ],
+                                  )
+                                else if (value[index].status == '2')
+                                  const Row(
+                                    children: [
+                                      Text('Status: ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      Text('Concluída',
+                                          style: TextStyle(color: Colors.green))
+                                    ],
+                                  )
+                                else if (value[index].status == '3')
+                                  const Row(
+                                    children: [
+                                      Text('Status: ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      Text('Remarcada',
+                                          style:
+                                              TextStyle(color: Colors.orange))
+                                    ],
+                                  )
+                                else if (value[index].status == '4')
+                                  const Row(
+                                    children: [
+                                      Text('Status: ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      Text('Cancelada',
+                                          style: TextStyle(color: Colors.red)),
                                     ],
                                   ),
-                                ],
-                              ),
-                              trailing: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Flexible(
-                                    child: IconButton(
-                                      onPressed: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(builder: (ctx) {
-                                            return EditarAgendaCrm(
-                                              event: value[index],
-                                            );
-                                          }),
-                                        ).then(
-                                          (_) {
-                                            // Ações após o retorno
-                                            _loadVisitas();
-                                            setState(() {
-                                              _selectedEvents.value = [];
-                                              _selectedDay = null;
-                                              _representanteSelecionado =
-                                                  null; // Reseta o filtro
-                                            });
-                                          },
-                                        );
-                                      },
-                                      icon: const Icon(
-                                        Icons.edit,
-                                        color: Color.fromARGB(255, 255, 153, 0),
-                                      ),
-                                      //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Resp.: ',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                  ),
-                                  const SizedBox(width: 5),
-                                  IconButton(
-                                    onPressed: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(builder: (ctx) {
-                                          return FormularioVisitaCrm(
-                                            event: value[index],
-                                          );
-                                        }),
-                                      ).then((_) {
-                                        _loadVisitas();
-                                        setState(() {
-                                          //value[index].status = '2';
-                                          _selectedEvents = ValueNotifier(
-                                              _getEventsForDay(_selectedDay!));
-                                          
-                                        });
-                                      });
-                                    },
-                                    icon: const Icon(
-                                      Icons.file_open_sharp,
-                                      color: Color.fromARGB(255, 1, 49, 88),
+                                    Text(
+                                      value[index].nomeUsuario!,
+                                      style: const TextStyle(fontSize: 12),
                                     ),
-                                    //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
-                                  ),
-                                ],
-                              )),
+                                  ],
+                                ),
+                                const Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      '+Detalhes',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.red),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            // trailing: Row(
+                            //   mainAxisAlignment: MainAxisAlignment.end,
+                            //   mainAxisSize: MainAxisSize.min,
+                            //   children: [
+                            //     Flexible(
+                            //       child: IconButton(
+                            //         onPressed: () {
+                            //           Navigator.of(context).push(
+                            //             MaterialPageRoute(builder: (ctx) {
+                            //               return EditarAgendaCrm(
+                            //                 event: value[index],
+                            //               );
+                            //             }),
+                            //           ).then(
+                            //             (_) {
+                            //               // Ações após o retorno
+                            //               _loadVisitas();
+                            //               setState(() {
+                            //                 _selectedEvents.value = [];
+                            //                 _selectedDay = null;
+                            //                 _representanteSelecionado =
+                            //                     null; // Reseta o filtro
+                            //               });
+                            //             },
+                            //           );
+                            //         },
+                            //         icon: const Icon(
+                            //           Icons.edit,
+                            //           color: Color.fromARGB(255, 255, 153, 0),
+                            //         ),
+                            //         //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
+                            //       ),
+                            //     ),
+                            //     const SizedBox(width: 5),
+                            //     IconButton(
+                            //       onPressed: () {
+                            //         Navigator.of(context).push(
+                            //           MaterialPageRoute(builder: (ctx) {
+                            //             return FormularioVisitaCrm(
+                            //               event: value[index],
+                            //             );
+                            //           }),
+                            //         ).then((_) {
+                            //           _loadVisitas();
+                            //           setState(() {
+                            //             //value[index].status = '2';
+                            //             _selectedEvents = ValueNotifier(
+                            //                 _getEventsForDay(_selectedDay!));
+                            //           });
+                            //         });
+                            //       },
+                            //       icon: const Icon(
+                            //         Icons.file_open_sharp,
+                            //         color: Color.fromARGB(255, 1, 49, 88),
+                            //       ),
+                            //       //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
+                            //     ),
+                            //   ],
+                            // )),
+                          ),
                         );
                       },
                     );

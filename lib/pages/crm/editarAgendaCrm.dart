@@ -15,8 +15,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 class EditarAgendaCrm extends StatefulWidget {
   final Event event;
-  // final String local;
-  // final String status;
+  
   EditarAgendaCrm({
     Key? key,
     required this.event,

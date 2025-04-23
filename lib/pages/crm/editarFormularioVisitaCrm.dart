@@ -4,38 +4,52 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:pedidocompra/components/crm/utils.dart';
 import 'package:pedidocompra/models/crm/concorrentes.dart';
+import 'package:pedidocompra/models/crm/formularioVisita.dart';
 import 'package:pedidocompra/models/crm/hospitais.dart';
+import 'package:pedidocompra/models/crm/visitas.dart';
+import 'package:pedidocompra/pages/crm/editarAgendaCrm.dart';
+import 'package:pedidocompra/pages/crm/formularioVisitaCrm.dart';
 import 'package:pedidocompra/providers/crm/HospitaisLista.dart';
 import 'package:pedidocompra/providers/crm/concorrentesLista.dart';
 import 'package:pedidocompra/providers/crm/formularioVisitaProvider.dart';
+import 'package:pedidocompra/providers/crm/visitasLista.dart';
 import 'package:provider/provider.dart';
+import 'package:table_calendar/table_calendar.dart';
 
-class FormularioVisitaCrm extends StatefulWidget {
+class EditarFormularioVisitaCrm extends StatefulWidget {
   final Event event;
 
-  FormularioVisitaCrm({
+  EditarFormularioVisitaCrm({
     Key? key,
     required this.event,
   }) : super(key: key);
 
   @override
-  State<FormularioVisitaCrm> createState() => _FormularioVisitaCrmState();
+  State<EditarFormularioVisitaCrm> createState() =>
+      _EditarFormularioVisitaCrmState();
 }
 
-class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
-  late final _focoMedico = TextEditingController();
-  late final _proximosPassos = TextEditingController();
+class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
+  var _proximosPassos = TextEditingController();
   late String codigoMedicoSelecionado = "";
   late String codigoLocalDeEntregaSelecionado = "";
   final format = DateFormat("dd MMM yyyy HH:mm", "pt_BR");
-  String _selectedOption = 'Boa';
-  String _selectedOptionEspecialidade = '';
-  String _selectedOptionCliente = 'Sim';
+  String selectedOption = '';
+  String selectedOptionCliente = '';
+  String selectedOptionEspecialidade = '';
 
   DateTime? dataSelecionada = DateTime.now();
   TimeOfDay? horaSelecionada = TimeOfDay.fromDateTime(DateTime.now());
 
+  List<Visitas>? loadedVisitas;
+  List<Visitas>? loadedVisitaUnica;
+  String? _representanteSelecionado;
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+  late ValueNotifier<List<Event>> _selectedEvents;
+
   List<Concorrentes> concorrentes = [];
+  List<FormularioVisita> formulario = [];
   List<Hospitais> hospitais = [];
   List<String> filteredOptions = [];
   List<Hospitais> filteredHospitais = [];
@@ -61,6 +75,7 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
   @override
   void initState() {
     super.initState();
+    _loadFormulario(widget.event.codFormulario);
     _loadConcorrentes();
     _loadHospitais();
   }
@@ -78,6 +93,60 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
     hospitais = await provider.loadHospitais(provider);
     setState(() {
       filteredHospitais = hospitais;
+    });
+  }
+
+  Future<void> _loadFormulario(codigoFormulario) async {
+    final provider =
+        Provider.of<FormularioVisitaProvider>(context, listen: false);
+    formulario = await provider.getFormulario(provider, codigoFormulario);
+    setState(() {
+      // Atualiza data e hora selecionada
+
+      dataSelecionada = formulario.isNotEmpty ? formulario[0].dataVisita : null;
+      horaSelecionada = formulario.isNotEmpty
+          ? TimeOfDay.fromDateTime(
+              DateFormat("HH:mm").parse(formulario[0].horaVisita))
+          : null;
+
+      widget.event.horaRealizada =
+          formulario.isNotEmpty ? formulario[0].horaVisita : "";
+      // Atualizao a Parte da Avaliação
+      if (formulario[0].avaliacao == "1") {
+        selectedOption = "Excelente";
+      } else if (formulario[0].avaliacao == "2") {
+        selectedOption = "Boa";
+      } else if (formulario[0].avaliacao == "3") {
+        selectedOption = "Regular";
+      } else if (formulario[0].avaliacao == "4") {
+        selectedOption = "Ruim";
+      }
+
+      // Atualizao a Parte da lista de hospitais que o médico atende
+      selectedConcorrentes = formulario[0].listaConcorrentes.split(';');
+      selectedItemsController =
+          TextEditingController(text: formulario[0].listaHospitais);
+
+      // Atualiza se o médico já é cliente do  Grupo Abduch
+      if (formulario[0].clienteDoGrupo == "S") {
+        selectedOptionCliente = "Sim";
+      } else {
+        selectedOptionCliente = "Nao";
+      }
+
+      // Atualizao a Parte da lista de concorrentes que o médico utiliza
+      selectedHospitais = formulario[0].listaHospitais.split(';');
+      selectedItemsControllerConcorrentes =
+          TextEditingController(text: formulario[0].listaConcorrentes);
+
+      // Atualiza especialidade
+      selectedOptionEspecialidade = formulario[0].especialidade;
+
+      // Atualiza proximos passos:
+      if (formulario[0].proximosPassos.isNotEmpty) {
+        _proximosPassos =
+            TextEditingController(text: formulario[0].proximosPassos);
+      }
     });
   }
 
@@ -151,8 +220,54 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
     }
   }
 
-  Future<void> incluirFormulario(context) async {
+   
+
+
+  // Future<void> _loadVisitas() async {
+  //   var provider  = Provider.of<VisitasLista>(context, listen: false);   
+  //   loadedVisitas = await provider.loadVisitas(provider);
+   
+  //   _selectedDay = _focusedDay;
+  //   _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+
+    
+  // }
+
+  List<Event> _getEventsForDay(DateTime day) {
+    var visitasLista = Provider.of<VisitasLista>(context, listen: false);
+
+    if (loadedVisitas == null) return [];
+    //return loadedVisitas!
+    return visitasLista.visitas
+        .where((visita) =>
+            (isSameDay(visita.dataPrevista, day) ||
+                (visita.dataRealizada != null &&
+                    isSameDay(visita.dataRealizada, day))) &&
+            (visita.nomeRepresentante == _representanteSelecionado ||
+                _representanteSelecionado == null ||
+                _representanteSelecionado == "Todos"))
+        .map((visita) => Event(
+              codigo: visita.codigo,
+              codigoMedico: visita.codigoMedico,
+              nomeMedico: visita.nomeMedico,
+              codigoRepresentante: visita.codigoRepresentante,
+              nomeRepresentante: visita.nomeRepresentante,
+              codigoLocalDeEntrega: visita.codigoLocalDeEntrega,
+              local: visita.local,
+              status: visita.status,
+              dataPrevista: visita.dataPrevista,
+              dataRealizada: visita.dataRealizada,
+              horaPrevista: visita.horaPrevista,
+              horaRealizada: visita.horaRealizada,
+              nomeUsuario: visita.nomeUsuario,
+              codFormulario: visita.codFormulario,
+            ))
+        .toList();
+  }
+
+  Future<void> editarFormulario(context) async {
     final dadosFormulario = {
+      'codigoFormulario': widget.event.codFormulario,
       'codigoVisita': widget.event.codigo,
       'codigoMedico': widget.event.codigoMedico,
       'nomeMedico': widget.event.nomeMedico,
@@ -162,18 +277,21 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
       'horaVisita': horaSelecionada != null
           ? "${horaSelecionada!.hour.toString().padLeft(2, '0')}:${horaSelecionada!.minute.toString().padLeft(2, '0')}" // Para hora
           : null,
-      'avaliacao': _selectedOption,
+      'avaliacao': selectedOption,
       'listaHospitais': selectedItemsController.text,
-      'clienteDoGrupo': _selectedOptionCliente,
+      'clienteDoGrupo': selectedOptionCliente,
       'listaConcorrentes': selectedItemsControllerConcorrentes.text,
-      'especialidade': _selectedOptionEspecialidade,
+      'especialidade': selectedOptionEspecialidade,
       'proximosPassos': _proximosPassos.text,
     };
 
     await Provider.of<FormularioVisitaProvider>(
       context,
       listen: false,
-    ).incluirFormulario(context, dadosFormulario);
+    ).editarFormulario(context, dadosFormulario);
+
+    //_loadVisitas();
+    
   }
 
   @override
@@ -210,7 +328,7 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Colors.white,
         title: Text(
-          "Formulário Visita",
+          "Editar Formulário Visita",
           textAlign: TextAlign.left,
           style: TextStyle(
             color: Theme.of(context).secondaryHeaderColor,
@@ -319,12 +437,12 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
               ],
             ),
             const SizedBox(height: 20),
-
             Row(
               children: [
                 Expanded(
                   child: DateTimeFormField(
-                    initialValue: dataSelecionada,
+                    initialValue:
+                        formulario.isNotEmpty ? formulario[0].dataVisita : null,
                     decoration:
                         const InputDecoration(labelText: 'Data da Visita'),
                     mode: DateTimeFieldPickerMode.date,
@@ -342,13 +460,9 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: DateTimeFormField(
-                    initialValue: DateTime(
-                      0,
-                      1,
-                      1,
-                      horaSelecionada?.hour ?? 0,
-                      horaSelecionada?.minute ?? 0,
-                    ),
+                    initialValue: formulario.isNotEmpty
+                        ? DateFormat('HH:mm').parse(formulario[0].horaVisita)
+                        : null,
                     decoration: const InputDecoration(labelText: 'Hora'),
                     mode: DateTimeFieldPickerMode.time,
                     pickerPlatform: DateTimeFieldPickerPlatform.material,
@@ -434,10 +548,10 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
                                     ),
                                   ),
                                   value: 'Excelente',
-                                  groupValue: _selectedOption,
+                                  groupValue: selectedOption,
                                   onChanged: (value) {
                                     setState(() {
-                                      _selectedOption = value!;
+                                      selectedOption = value!;
                                     });
                                   },
                                 ),
@@ -453,10 +567,10 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
                                     ),
                                   ),
                                   value: 'Boa',
-                                  groupValue: _selectedOption,
+                                  groupValue: selectedOption,
                                   onChanged: (value) {
                                     setState(() {
-                                      _selectedOption = value!;
+                                      selectedOption = value!;
                                     });
                                   },
                                 ),
@@ -472,10 +586,10 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
                                     ),
                                   ),
                                   value: 'Regular',
-                                  groupValue: _selectedOption,
+                                  groupValue: selectedOption,
                                   onChanged: (value) {
                                     setState(() {
-                                      _selectedOption = value!;
+                                      selectedOption = value!;
                                     });
                                   },
                                 ),
@@ -491,31 +605,15 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
                                     ),
                                   ),
                                   value: 'Ruim',
-                                  groupValue: _selectedOption,
+                                  groupValue: selectedOption,
                                   onChanged: (value) {
                                     setState(() {
-                                      _selectedOption = value!;
+                                      selectedOption = value!;
                                     });
                                   },
                                 ),
                               ],
                             ),
-
-                            // child: TextFormField(
-                            //   decoration: const InputDecoration(
-                            //       //labelText: "Digite Aqui",
-                            //       hintText: "Digite aqui",
-                            //       border: OutlineInputBorder(),
-                            //       contentPadding: EdgeInsets.fromLTRB(
-                            //           10.0, 20.0, 10.0, 20.0)),
-                            //   maxLength: 254,
-                            //   maxLines: 5,
-                            //   controller: _comoFoiAvisita,
-                            //   style: TextStyle(
-                            //     color: Colors.black,
-                            //     fontSize: sizeText,
-                            //   ),
-                            // ),
                           ),
                           const SizedBox(height: 10),
                         ],
@@ -661,25 +759,6 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
                               maxLines: 5,
                             ),
                           ),
-
-                          // Padding(
-                          //   padding: const EdgeInsets.all(8.0),
-                          //   child: TextFormField(
-                          //     decoration: const InputDecoration(
-                          //         //labelText: "Digite Aqui",
-                          //         hintText: "Digite aqui",
-                          //         border: OutlineInputBorder(),
-                          //         contentPadding: EdgeInsets.fromLTRB(
-                          //             10.0, 20.0, 10.0, 20.0)),
-                          //     maxLength: 254,
-                          //     maxLines: 5,
-                          //     controller: _hospitaisOpera,
-                          //     style: TextStyle(
-                          //       color: Colors.black,
-                          //       fontSize: sizeText,
-                          //     ),
-                          //   ),
-                          // ),
                           const SizedBox(height: 10),
                         ],
                       ),
@@ -744,10 +823,10 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
                                     ),
                                   ),
                                   value: 'Sim',
-                                  groupValue: _selectedOptionCliente,
+                                  groupValue: selectedOptionCliente,
                                   onChanged: (value) {
                                     setState(() {
-                                      _selectedOptionCliente = value!;
+                                      selectedOptionCliente = value!;
                                     });
                                   },
                                 ),
@@ -763,34 +842,16 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
                                     ),
                                   ),
                                   value: 'Nao',
-                                  groupValue: _selectedOptionCliente,
+                                  groupValue: selectedOptionCliente,
                                   onChanged: (value) {
                                     setState(() {
-                                      _selectedOptionCliente = value!;
+                                      selectedOptionCliente = value!;
                                     });
                                   },
                                 ),
                               ],
                             ),
                           ),
-                          // Padding(
-                          //   padding: const EdgeInsets.all(8.0),
-                          //   child: TextFormField(
-                          //     decoration: const InputDecoration(
-                          //         //labelText: "Digite Aqui",
-                          //         hintText: "Digite aqui",
-                          //         border: OutlineInputBorder(),
-                          //         contentPadding: EdgeInsets.fromLTRB(
-                          //             10.0, 20.0, 10.0, 20.0)),
-                          //     maxLength: 254,
-                          //     maxLines: 5,
-                          //     controller: _jaEcliente,
-                          //     style: TextStyle(
-                          //       color: Colors.black,
-                          //       fontSize: sizeText,
-                          //     ),
-                          //   ),
-                          // ),
                           const SizedBox(height: 10),
                         ],
                       ),
@@ -839,24 +900,6 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
                                 fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 10),
-                          // Padding(
-                          //   padding: const EdgeInsets.all(8.0),
-                          //   child: TextFormField(
-                          //     decoration: const InputDecoration(
-                          //         //labelText: "Digite Aqui",
-                          //         hintText: "Digite aqui",
-                          //         border: OutlineInputBorder(),
-                          //         contentPadding: EdgeInsets.fromLTRB(
-                          //             10.0, 20.0, 10.0, 20.0)),
-                          //     maxLength: 254,
-                          //     maxLines: 5,
-                          //     controller: _empresasConcorrentes,
-                          //     style: TextStyle(
-                          //       color: Colors.black,
-                          //       fontSize: sizeText,
-                          //     ),
-                          //   ),
-                          // ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: TextField(
@@ -1020,10 +1063,10 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
                                     ),
                                   ),
                                   value: 'Urologia',
-                                  groupValue: _selectedOptionEspecialidade,
+                                  groupValue: selectedOptionEspecialidade,
                                   onChanged: (value) {
                                     setState(() {
-                                      _selectedOptionEspecialidade = value!;
+                                      selectedOptionEspecialidade = value!;
                                     });
                                   },
                                 ),
@@ -1039,10 +1082,10 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
                                     ),
                                   ),
                                   value: 'Urologia / Oncologia',
-                                  groupValue: _selectedOptionEspecialidade,
+                                  groupValue: selectedOptionEspecialidade,
                                   onChanged: (value) {
                                     setState(() {
-                                      _selectedOptionEspecialidade = value!;
+                                      selectedOptionEspecialidade = value!;
                                     });
                                   },
                                 ),
@@ -1058,10 +1101,10 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
                                     ),
                                   ),
                                   value: 'Urologia / Ginecologia',
-                                  groupValue: _selectedOptionEspecialidade,
+                                  groupValue: selectedOptionEspecialidade,
                                   onChanged: (value) {
                                     setState(() {
-                                      _selectedOptionEspecialidade = value!;
+                                      selectedOptionEspecialidade = value!;
                                     });
                                   },
                                 ),
@@ -1077,10 +1120,10 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
                                     ),
                                   ),
                                   value: 'Ginecologia',
-                                  groupValue: _selectedOptionEspecialidade,
+                                  groupValue: selectedOptionEspecialidade,
                                   onChanged: (value) {
                                     setState(() {
-                                      _selectedOptionEspecialidade = value!;
+                                      selectedOptionEspecialidade = value!;
                                     });
                                   },
                                 ),
@@ -1096,10 +1139,10 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
                                     ),
                                   ),
                                   value: 'Andrologia',
-                                  groupValue: _selectedOptionEspecialidade,
+                                  groupValue: selectedOptionEspecialidade,
                                   onChanged: (value) {
                                     setState(() {
-                                      _selectedOptionEspecialidade = value!;
+                                      selectedOptionEspecialidade = value!;
                                     });
                                   },
                                 ),
@@ -1115,10 +1158,10 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
                                     ),
                                   ),
                                   value: 'Histeroscopia',
-                                  groupValue: _selectedOptionEspecialidade,
+                                  groupValue: selectedOptionEspecialidade,
                                   onChanged: (value) {
                                     setState(() {
-                                      _selectedOptionEspecialidade = value!;
+                                      selectedOptionEspecialidade = value!;
                                     });
                                   },
                                 ),
@@ -1229,7 +1272,7 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
                                 minimumSize:
                                     WidgetStatePropertyAll(Size(200, 50))),
                             onPressed: () {
-                              incluirFormulario(context);
+                              editarFormulario(context);
                             },
                             child: const Text(
                               "Salvar",
@@ -1243,18 +1286,6 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
                 ],
               ),
             )
-            // Padding(
-            //   padding: const EdgeInsets.all(16.0),
-            //   child: FilledButton(
-            //     style: const ButtonStyle(
-            //       backgroundColor: WidgetStatePropertyAll(
-            //         Color.fromARGB(255, 0, 48, 87),
-            //       ),
-            //     ),
-            //     onPressed: () {},
-            //     child: const Text("Salvar"),
-            //   ),
-            // )
           ],
         ),
       ),

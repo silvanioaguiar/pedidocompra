@@ -1,22 +1,24 @@
 import 'dart:collection';
 
+import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 /// Example event class.
 class Event {
-  final String codigo;
-  final String local;
-  final String codigoLocalDeEntrega;
+  String codigo;
+  String local;
+  String codigoLocalDeEntrega;
   String status;
-  final String codigoRepresentante;
-  final String nomeRepresentante;
-  final String codigoMedico;
-  final String nomeMedico;
-  final DateTime dataPrevista;
-  final DateTime? dataRealizada;
-  final String horaPrevista;
-  final String? horaRealizada;
-  final String? nomeUsuario;
+  String codigoRepresentante;
+  String nomeRepresentante;
+  String codigoMedico;
+  String nomeMedico;
+  DateTime dataPrevista;
+  DateTime? dataRealizada;
+  String horaPrevista;
+  String? horaRealizada;
+  String? nomeUsuario;
+  String? codFormulario;
 
   Event({
     required this.codigo,
@@ -31,8 +33,9 @@ class Event {
     required this.dataRealizada,
     required this.horaPrevista,
     required this.horaRealizada,
-    required this.nomeUsuario
-});
+    required this.nomeUsuario,
+    required this.codFormulario,
+  });
 
   //get nomeUsuario => null;
 }

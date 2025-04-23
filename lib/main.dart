@@ -1,5 +1,6 @@
 import 'package:pedidocompra/components/crm/utils.dart';
 import 'package:pedidocompra/models/auth.dart';
+import 'package:pedidocompra/pages/crm/gerenciarVisitaCrm.dart';
 import 'package:pedidocompra/providers/crm/HospitaisLista.dart';
 import 'package:pedidocompra/providers/crm/concorrentesLista.dart';
 import 'package:pedidocompra/providers/crm/formularioVisitaProvider.dart';
@@ -212,7 +213,7 @@ class MyApp extends StatelessWidget {
             return ViaCepService(
               auth.token ?? '',
               previous?.endereco ?? [],
-              
+
               //auth.senha ?? '',
             );
           },
@@ -223,7 +224,7 @@ class MyApp extends StatelessWidget {
             return FormularioVisitaProvider(
               auth.token ?? '',
               previous?.formulario ?? [],
-              
+
               //auth.senha ?? '',
             );
           },
@@ -275,8 +276,10 @@ class MyApp extends StatelessWidget {
                 dateFim: DateTime.now(),
                 valorDiaFormatado: '',
               ),
-          AppRoutes.graficoRepresentante: (ctx) => const GraficoRepresentantePage(),
-          AppRoutes.graficoConvenio: (ctx) => const GraficoConvenio(empresa: ''),
+          AppRoutes.graficoRepresentante: (ctx) =>
+              const GraficoRepresentantePage(),
+          AppRoutes.graficoConvenio: (ctx) =>
+              const GraficoConvenio(empresa: ''),
           AppRoutes.fatGrafico: (ctx) => const LineChartWidget(),
           AppRoutes.menuCrm: (ctx) => const MenuCrm(),
           AppRoutes.clientesCrm: (ctx) => const ClientesCrm(),
@@ -286,6 +289,24 @@ class MyApp extends StatelessWidget {
           AppRoutes.formularioCrm: (ctx) => const FormularioCrm(),
           AppRoutes.incluirAgendaCrm: (ctx) => const IncluirAgendaCrm(),
           AppRoutes.incluirConcorrenteCrm: (ctx) => IncluirConcorrenteCrm(),
+          AppRoutes.gerenciarVisitaCrm: (ctx) => GerenciarVisitaCrm(
+                event: Event(
+                  codigo: "",
+                  codigoMedico: "",
+                  nomeMedico: "",
+                  codigoRepresentante: "",
+                  nomeRepresentante: "",
+                  codigoLocalDeEntrega: "",
+                  local: "",
+                  status: "",
+                  dataPrevista: DateTime.now(),
+                  dataRealizada: DateTime.now(),
+                  horaPrevista: "",
+                  horaRealizada: "",
+                  nomeUsuario: "",
+                  codFormulario: "",
+                ),
+              ),
           AppRoutes.editarAgendaCrm: (ctx) => EditarAgendaCrm(
                   event: Event(
                 codigo: "",
@@ -301,6 +322,7 @@ class MyApp extends StatelessWidget {
                 horaPrevista: "",
                 horaRealizada: "",
                 nomeUsuario: "",
+                codFormulario: "",
               )),
           AppRoutes.formularioVisitaCrm: (ctx) => FormularioVisitaCrm(
                 event: Event(
@@ -317,6 +339,26 @@ class MyApp extends StatelessWidget {
                   horaPrevista: "",
                   horaRealizada: "",
                   nomeUsuario: "",
+                  codFormulario: "",
+                ),
+              ),
+
+               AppRoutes.editarFormularioVisitaCrm: (ctx) => FormularioVisitaCrm(
+                event: Event(
+                  codigo: "",
+                  codigoMedico: "",
+                  nomeMedico: "",
+                  codigoRepresentante: "",
+                  nomeRepresentante: "",
+                  codigoLocalDeEntrega: "",
+                  local: "",
+                  status: "",
+                  dataPrevista: DateTime.now(),
+                  dataRealizada: DateTime.now(),
+                  horaPrevista: "",
+                  horaRealizada: "",
+                  nomeUsuario: "",
+                  codFormulario: "",
                 ),
               ),
         },

@@ -2,21 +2,23 @@ import 'package:flutter/material.dart';
 
 class FormularioVisita with ChangeNotifier {
 
-  final String codigoVisita;
-  final String codigoMedico;
-  final String nomeMedico;
-  final String codigoLocal;
-  final String nomeLocal;
-  final DateTime dataVisita;
-  final String horaVisita;
-  final String avaliacao;
-  final String listaHospitais;
-  final String clienteDoGrupo;
-  final String listaConcorrentes;
-  final String especialidade;
-  final String proximosPassos;
+  String codigoFormulario;
+  String codigoVisita;
+  String codigoMedico;
+  String nomeMedico;
+  String codigoLocal;
+  String nomeLocal;
+  DateTime dataVisita;
+  String horaVisita;
+  String avaliacao;
+  String listaHospitais;
+  String clienteDoGrupo;
+  String listaConcorrentes;
+  String especialidade;
+  String proximosPassos;
 
   FormularioVisita({
+    required this.codigoFormulario,
     required this.codigoVisita,
     required this.codigoMedico,
     required this.nomeMedico,
