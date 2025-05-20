@@ -5,6 +5,7 @@ import 'package:pedidocompra/pages/crm/clientesCrm.dart';
 import 'package:pedidocompra/pages/crm/concorrentesCrm.dart';
 import 'package:pedidocompra/pages/crm/faturamentoCrm.dart';
 import 'package:pedidocompra/pages/crm/formularioCrm.dart';
+import 'package:pedidocompra/pages/crm/medicosCrm.dart';
 import 'package:pedidocompra/pages/crm/prospectCrm.dart';
 
 class MenuCrm extends StatefulWidget {
@@ -30,7 +31,7 @@ class _MenuCrmState extends State<MenuCrm> {
       heightScreen = 300;
       sizeText = 18;
       sizeCrossAxisCount = 4;
-      sizeAspectRatio = 1.2;
+      sizeAspectRatio = 2.0;
     } else {
       widthScreen = size.width * 0.8;
       heightScreen = size.height * 0.6;
@@ -207,10 +208,82 @@ class _MenuCrmState extends State<MenuCrm> {
                 },
               ),
             ),
+            // Container(
+            //   decoration: BoxDecoration(
+            //     image: const DecorationImage(
+            //       image: AssetImage('assets/images/formularios.png'),
+            //     ),
+            //     //color: const Color.fromARGB(255, 165, 214, 255),
+            //     borderRadius: BorderRadius.circular(10),
+            //     border: Border.all(
+            //       color: const Color.fromARGB(255, 1, 30, 54),
+            //       width: 2,
+            //     ),
+            //   ),
+            //   child: TextButton(
+            //     child: const Padding(
+            //       padding: EdgeInsets.all(5),
+            //       child: Align(
+            //         alignment: Alignment.bottomCenter,
+            //         child: Text(
+            //           'Formulários',
+            //           style: TextStyle(
+            //             color: Colors.black,
+            //             fontSize: 16,
+            //             fontWeight: FontWeight.bold,
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //     onPressed: () {
+            //       Navigator.of(context).push(
+            //         MaterialPageRoute(builder: (ctx) {
+            //           return const FormularioCrm();
+            //         }),
+            //       );
+            //     },
+            //   ),
+            // ),
+            // Container(
+            //   decoration: BoxDecoration(
+            //     image: const DecorationImage(
+            //       image: AssetImage('assets/images/money.png'),
+            //     ),
+            //     //color: const Color.fromARGB(255, 165, 214, 255),
+            //     borderRadius: BorderRadius.circular(10),
+            //     border: Border.all(
+            //       color: const Color.fromARGB(255, 1, 30, 54),
+            //       width: 2,
+            //     ),
+            //   ),
+            //   child: TextButton(
+            //     child: const Padding(
+            //       padding: EdgeInsets.all(5),
+            //       child: Align(
+            //         alignment: Alignment.bottomCenter,
+            //         child: Text(
+            //           'Faturamento',
+            //           style: TextStyle(
+            //             color: Colors.black,
+            //             fontSize: 16,
+            //             fontWeight: FontWeight.bold,
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //     onPressed: () {
+            //       Navigator.of(context).push(
+            //         MaterialPageRoute(builder: (ctx) {
+            //           return const FaturamentoCrm();
+            //         }),
+            //       );
+            //     },
+            //   ),
+            // ),
             Container(
               decoration: BoxDecoration(
                 image: const DecorationImage(
-                  image: AssetImage('assets/images/formularios.png'),
+                  image: AssetImage('assets/images/customers.png'),
                 ),
                 //color: const Color.fromARGB(255, 165, 214, 255),
                 borderRadius: BorderRadius.circular(10),
@@ -225,7 +298,7 @@ class _MenuCrmState extends State<MenuCrm> {
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Text(
-                      'Formulários',
+                      'Médicos',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
@@ -237,43 +310,7 @@ class _MenuCrmState extends State<MenuCrm> {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (ctx) {
-                      return const FormularioCrm();
-                    }),
-                  );
-                },
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                image: const DecorationImage(
-                  image: AssetImage('assets/images/money.png'),
-                ),
-                //color: const Color.fromARGB(255, 165, 214, 255),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: const Color.fromARGB(255, 1, 30, 54),
-                  width: 2,
-                ),
-              ),
-              child: TextButton(
-                child: const Padding(
-                  padding: EdgeInsets.all(5),
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Text(
-                      'Faturamento',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (ctx) {
-                      return const FaturamentoCrm();
+                      return const MedicosCrm();
                     }),
                   );
                 },

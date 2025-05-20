@@ -38,7 +38,7 @@ class _IncluirAgendaCrmState extends State<IncluirAgendaCrm> {
   @override
   void initState() {
     super.initState();
-    _loadMedicos();
+     _loadMedicos(); 
     _loadLocaisDeEntrega();
   }
 
@@ -239,7 +239,7 @@ class _IncluirAgendaCrmState extends State<IncluirAgendaCrm> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                           content:
-                              Text('Local de Entrega Selecionado: $selection')),
+                              Text('Local da Visita Selecionado: $selection')),
                     );
                   },
                   fieldViewBuilder: (BuildContext context,
@@ -248,8 +248,8 @@ class _IncluirAgendaCrmState extends State<IncluirAgendaCrm> {
                       VoidCallback onFieldSubmitted) {
                     return TextFormField(
                       decoration: const InputDecoration(
-                          labelText: "Local de Entrega",
-                          hintText: "Selecione um Local de Entrega",
+                          labelText: "Local da Visita",
+                          hintText: "Selecione um Local para a visita.",
                           border: OutlineInputBorder()),
                       controller: fieldTextEditingController,
                       focusNode: focusNode,

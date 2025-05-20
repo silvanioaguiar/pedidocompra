@@ -52,7 +52,7 @@ class _MenuEmpresasState extends State<MenuModulos> {
                 ),
                 SingleChildScrollView(
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,                    
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Expanded(
                         child: Column(
@@ -80,40 +80,38 @@ class _MenuEmpresasState extends State<MenuModulos> {
                           ],
                         ),
                       ),
+
+                      // Expanded(
+                      //   child: Column(
+                      //     children: [
+                      //       IconButton(
+                      //         onPressed: () {
+                      //           Navigator.of(context).push(
+                      //             MaterialPageRoute(builder: (ctx) {
+                      //               //return const MenuEmpresasFat();
+                      //               return const FaturamentoEmpresasPage();
+                      //             }),
+                      //           );
+                      //         },
+                      //         icon: const Icon(Icons.attach_money_sharp),
+                      //         iconSize: 100,
+                      //         color: const Color.fromARGB(255, 5, 58, 36),
+                      //       ),
+                      //       const Text(
+                      //         "Faturamento",
+                      //         style: TextStyle(
+                      //           color: Color.fromARGB(255, 5, 58, 36),
+                      //           fontSize: 18,
+                      //           fontWeight: FontWeight.bold,
+                      //         ),
+                      //       )
+                      //     ],
+                      //   ),
+                      // ),
                       const SizedBox(
                         width: 10,
                       ),
                       Expanded(
-                        child: Column(
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(builder: (ctx) {
-                                    //return const MenuEmpresasFat();
-                                    return const FaturamentoEmpresasPage();
-                                  }),
-                                );
-                              },
-                              icon: const Icon(Icons.attach_money_sharp),
-                              iconSize: 100,
-                              color: const Color.fromARGB(255, 5, 58, 36),
-                            ),
-                            const Text(
-                              "Faturamento",
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 5, 58, 36),
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                       Expanded(
                         child: Column(
                           children: [
                             IconButton(

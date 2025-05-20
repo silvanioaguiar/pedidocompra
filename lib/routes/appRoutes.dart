@@ -27,7 +27,10 @@ class AppRoutes {
   static const prospectCrm = '/prospectCrm';
   static const incluirAgendaCrm = '/incluirAgendaCrm';
   static const incluirConcorrenteCrm = '/incluirConcorrenteCrm';
+  static const incluirMedicoCrm = '/incluirMedicoCrm';
+  static const incluirProspectCrm = '/incluirProspectCrm';
   static const editarAgendaCrm = '/editarAgendaCrm';
+  static const editarProspectCrm = '/editarProspectCrm';
   static const formularioVisitaCrm = '/formularioVisitaCrm';
   static const editarFormularioVisitaCrm = '/editarFormularioVisitaCrm';
    static const gerenciarVisitaCrm = '/gerenciarVisitaCrm';

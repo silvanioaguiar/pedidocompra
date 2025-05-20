@@ -339,4 +339,83 @@ class FormularioVisitaProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
+
+   Future<dynamic> enviarEmailFormulario(context, dadosFormulario, email) async {
+    final uri = Uri.parse(
+        'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/EnviarFormulario');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Accept-Charset': 'utf-8',
+      'tenantId': '02,01', // fixado como Biosat Matriz
+      'Authorization': 'Bearer $_token',
+    };
+
+    final body = jsonEncode({
+      'codigoFormulario': dadosFormulario['codigo'],
+      'email': email,
+     
+    });
+
+    final response = await http.post(uri, headers: headers, body: body);
+
+    if (response.statusCode == 500) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text(
+            'ATENÇÃO!',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          content: const Text(
+            //'Ocorreu um arro ao tentar aprovar o pedido.Por favor entrar em contato com o suporte do sistema',
+            'Não foi possivel  enviar o formulário. Contate o administrador do sistema',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                NavigatorService.instance.pop();
+              },
+              child: const Text("Fechar",
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 5, 0, 0))),
+            ),
+          ],
+        ),
+      );
+    } else if (response.statusCode >= 200 && response.statusCode <= 299) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text(
+            'ATENÇÃO!',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          content: const Text(
+            //'Ocorreu um arro ao tentar aprovar o pedido.Por favor entrar em contato com o suporte do sistema',
+            'Formulário enviado com sucesso',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Fecha o dialog
+                Navigator.of(context).pop(); // Fecha a tela principal
+              },
+              child: const Text("Fechar",
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 5, 0, 0))),
+            ),
+          ],
+        ),
+      );
+    }
+    notifyListeners();
+  }
 }

@@ -1,25 +1,24 @@
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pedidocompra/models/crm/concorrentes.dart';
-import 'package:pedidocompra/providers/crm/concorrentesLista.dart';
+import 'package:pedidocompra/models/crm/propects.dart';
+import 'package:pedidocompra/providers/crm/prospectsLista.dart';
 import 'package:pedidocompra/services/viacep_service.dart';
 import 'package:provider/provider.dart';
 
-class EditarConcorrenteCrm extends StatefulWidget {
-  final Concorrentes concorrente;
-  // final String local;
-  // final String status;
-  EditarConcorrenteCrm({
+class EditarProspectCrm extends StatefulWidget {
+  final Prospects prospect;
+
+  EditarProspectCrm({
     Key? key,
-    required this.concorrente,
+    required this.prospect,
   }) : super(key: key);
 
   @override
-  State<EditarConcorrenteCrm> createState() => _EditarConcorrenteCrmState();
+  State<EditarProspectCrm> createState() => _EditarProspectCrmState();
 }
 
-class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
+class _EditarProspectCrmState extends State<EditarProspectCrm> {
   late TextEditingController _razaoSocialController;
   late TextEditingController _nomeFantasiaController;
   late TextEditingController _enderecoController;
@@ -30,12 +29,13 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
   late TextEditingController _dddController;
   late TextEditingController _telefoneController;
   late TextEditingController _contatoController;
-  late TextEditingController _homePageController;
 
   final _formKey = GlobalKey<FormState>();
 
-  late String codigoConcorrenteSelecionado = "";
-  List<Concorrentes>? loadedConcorrentes;
+  late String codigoProspectSelecionado = "";
+  List<Prospects>? loadedProspects;
+  List<String> _tipo = ["Consumidor Final", "Revendedor"];
+  String? _selectedTipo;
 
   @override
   void initState() {
@@ -43,23 +43,26 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
 
     // Inicializa os controladores
     _razaoSocialController =
-        TextEditingController(text: widget.concorrente.razaoSocial);
+        TextEditingController(text: widget.prospect.razaoSocial);
     _nomeFantasiaController =
-        TextEditingController(text: widget.concorrente.nomeFantasia);
-    _enderecoController =
-        TextEditingController(text: widget.concorrente.endereco);
+        TextEditingController(text: widget.prospect.nomeFantasia);
+    _enderecoController = TextEditingController(text: widget.prospect.endereco);
     _municipioController =
-        TextEditingController(text: widget.concorrente.municipio);
-    _estadoController = TextEditingController(text: widget.concorrente.estado);
-    _bairroController = TextEditingController(text: widget.concorrente.bairro);
-    _cepController = TextEditingController(text: widget.concorrente.cep);
-    _dddController = TextEditingController(text: widget.concorrente.ddd);
-    _telefoneController =
-        TextEditingController(text: widget.concorrente.telefone);
-    _contatoController =
-        TextEditingController(text: widget.concorrente.contato);
-    _homePageController =
-        TextEditingController(text: widget.concorrente.homePage);
+        TextEditingController(text: widget.prospect.municipio);
+    _estadoController = TextEditingController(text: widget.prospect.estado);
+    _bairroController = TextEditingController(text: widget.prospect.bairro);
+    _cepController = TextEditingController(text: widget.prospect.cep);
+    _dddController = TextEditingController(text: widget.prospect.ddd);
+    _telefoneController = TextEditingController(text: widget.prospect.telefone);
+    _contatoController = TextEditingController(text: widget.prospect.contato);
+
+    _selectedTipo = widget.prospect.tipo;
+
+    if (_selectedTipo == 'F') {
+      _selectedTipo = 'Consumidor Final';
+    } else if (_selectedTipo == 'R') {
+      _selectedTipo = 'Revendedor';
+    }
   }
 
   @override
@@ -75,14 +78,13 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
     _dddController.dispose();
     _telefoneController.dispose();
     _contatoController.dispose();
-    _homePageController.dispose();
 
     super.dispose();
   }
 
-  Future<void> _editarConcorrentes(context) async {
-    final dadosConcorrente = {
-      'codigo': widget.concorrente.codigo,
+  Future<void> _editarProspects(context) async {
+    final dadosprospect = {
+      'codigo': widget.prospect.codigo,
       'razaoSocial': _razaoSocialController.text,
       'nomeFantasia': _nomeFantasiaController.text,
       'endereco': _enderecoController.text,
@@ -93,13 +95,13 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
       'ddd': _dddController.text,
       'telefone': _telefoneController.text,
       'contato': _contatoController.text,
-      'homePage': _homePageController.text,
+      'tipo': _selectedTipo,
     };
 
-    await Provider.of<ConcorrentesLista>(
+    await Provider.of<ProspectsLista>(
       context,
       listen: false,
-    ).editarConcorrente(context, dadosConcorrente);
+    ).editarProspects(context, dadosprospect);
   }
 
   Future<void> _loadEndereco(cep) async {
@@ -145,7 +147,7 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Colors.white,
         title: Text(
-          "Editar Concorrente",
+          "Editar Prospect",
           textAlign: TextAlign.left,
           style: TextStyle(
             color: Theme.of(context).secondaryHeaderColor,
@@ -168,49 +170,46 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
               children: [
                 Autocomplete<String>(
                   optionsBuilder: (TextEditingValue textEditingValue) {
-                    if (loadedConcorrentes == null ||
-                        loadedConcorrentes!.isEmpty) {
+                    if (loadedProspects == null || loadedProspects!.isEmpty) {
                       return const Iterable<String>.empty();
                     }
                     // Extrai somente os nomes dos médicos
-                    final nomesConcorrentes = loadedConcorrentes!
-                        .map((concorrente) => concorrente.nomeFantasia)
+                    final nomesprospects = loadedProspects!
+                        .map((prospect) => prospect.nomeFantasia)
                         .toList();
 
                     if (textEditingValue.text.isEmpty) {
-                      return nomesConcorrentes; // Retorna todos os nomes
+                      return nomesprospects; // Retorna todos os nomes
                     }
 
                     // Filtra os nomes com base no texto digitado
-                    return nomesConcorrentes.where((String nome) {
+                    return nomesprospects.where((String nome) {
                       return nome
                           .toLowerCase()
                           .contains(textEditingValue.text.toLowerCase());
                     });
                   },
                   onSelected: (String selection) {
-                    final concorrenteSelecionado = loadedConcorrentes!
-                        .firstWhere((concorrente) =>
-                            concorrente.nomeFantasia == selection);
+                    final prospectSelecionado = loadedProspects!.firstWhere(
+                        (prospect) => prospect.nomeFantasia == selection);
 
                     setState(() {
-                      codigoConcorrenteSelecionado =
-                          concorrenteSelecionado.codigo;
+                      codigoProspectSelecionado = prospectSelecionado.codigo;
                       _nomeFantasiaController.text = selection;
                     });
 
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                          content: Text('Concorrente Selecionado: $selection')),
+                          content: Text('Prospect Selecionado: $selection')),
                     );
                   },
                   fieldViewBuilder: (BuildContext context,
                       TextEditingController fieldTextEditingController,
                       FocusNode focusNode,
                       VoidCallback onFieldSubmitted) {
-                    if (codigoConcorrenteSelecionado.isEmpty) {
+                    if (codigoProspectSelecionado.isEmpty) {
                       fieldTextEditingController.text =
-                          widget.concorrente.nomeFantasia;
+                          widget.prospect.razaoSocial;
                     }
                     return TextFormField(
                       decoration: const InputDecoration(
@@ -236,12 +235,10 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    if (codigoConcorrenteSelecionado.isEmpty)
-                      Text(
-                          'Código do Concorrente: ${widget.concorrente.codigo}')
+                    if (codigoProspectSelecionado.isEmpty)
+                      Text('Código do prospect: ${widget.prospect.codigo}')
                     else
-                      Text(
-                          'Código do Concorrente: $codigoConcorrenteSelecionado')
+                      Text('Código do prospect: $codigoProspectSelecionado')
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -412,7 +409,6 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
                       child: TextFormField(
                         decoration: const InputDecoration(
                             labelText: "Telefone",
-                            //hintText: "Digite o bairro",
                             border: OutlineInputBorder()),
                         controller: _telefoneController,
                         style: TextStyle(
@@ -453,16 +449,23 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
                   },
                 ),
                 const SizedBox(height: 10),
-                TextFormField(
+                DropdownButtonFormField<String>(
                   decoration: const InputDecoration(
-                      labelText: "Home Page",
-                      //hintText: "Digite o nome do Contato",
-                      border: OutlineInputBorder()),
-                  controller: _homePageController,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: sizeText,
+                    labelText: "Tipo",
+                    border: OutlineInputBorder(),
                   ),
+                  value: _selectedTipo,
+                  items: _tipo.map((String tipo) {
+                    return DropdownMenuItem<String>(
+                      value: tipo,
+                      child: Text(tipo),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedTipo = newValue;
+                    });
+                  },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Campo Obrigatório";
@@ -484,13 +487,13 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
                         ),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            _editarConcorrentes(context);
+                            _editarProspects(context);
                           }
                         },
                         child: const Text("Salvar"),
                       ),
                     ),
-                     Padding(
+                    Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: FilledButton(
                         style: const ButtonStyle(
@@ -504,7 +507,6 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
                         child: const Text("Cancelar"),
                       ),
                     ),
-                    
                   ],
                 ),
               ],

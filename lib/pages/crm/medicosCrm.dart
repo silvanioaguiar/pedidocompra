@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/components/appDrawer.dart';
-import 'package:pedidocompra/models/crm/propects.dart';
-import 'package:pedidocompra/pages/crm/editarProspectCrm.dart';
-import 'package:pedidocompra/pages/crm/incluirProspectCrm.dart';
-import 'package:pedidocompra/providers/crm/prospectsLista.dart';
+import 'package:pedidocompra/models/crm/medicos.dart';
+import 'package:pedidocompra/pages/crm/editarMedicoCrm.dart';
+import 'package:pedidocompra/pages/crm/incluirMedico.dart';
+import 'package:pedidocompra/providers/crm/concorrentesLista.dart';
+import 'package:pedidocompra/pages/crm/editarConcorrenteCrm.dart';
+import 'package:pedidocompra/providers/crm/medicosLista.dart';
 import 'package:pedidocompra/services/navigator_service.dart';
 import 'package:provider/provider.dart';
 
-class ProspectCrm extends StatefulWidget {
-  const ProspectCrm({super.key});
+class MedicosCrm extends StatefulWidget {
+  const MedicosCrm({super.key});
 
   @override
-  State<ProspectCrm> createState() => _ProspectCrmState();
+  State<MedicosCrm> createState() => _MedicosCrmState();
 }
 
-class _ProspectCrmState extends State<ProspectCrm> {
-  List<Prospects> prospects = [];
+class _MedicosCrmState extends State<MedicosCrm> {
+  List<Medicos> medicos = [];
 
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => _loadProspects());
-
+    Future.microtask(() => _loadMedicos());
   }
 
   @override
@@ -29,10 +30,9 @@ class _ProspectCrmState extends State<ProspectCrm> {
     super.dispose();
   }
 
-  Future<void> _loadProspects() async {
-    final provider = Provider.of<ProspectsLista>(context, listen: false);
-    await provider.loadProspects(provider);
-   
+  Future<void> _loadMedicos() async {
+    final provider = Provider.of<MedicosLista>(context, listen: false);
+    await provider.loadMedicos(provider);
   }
 
   @override
@@ -64,7 +64,7 @@ class _ProspectCrmState extends State<ProspectCrm> {
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Colors.white,
         title: Text(
-          "Prospects",
+          "Médicos",
           textAlign: TextAlign.left,
           style: TextStyle(
             color: Theme.of(context).secondaryHeaderColor,
@@ -72,20 +72,20 @@ class _ProspectCrmState extends State<ProspectCrm> {
         ),
       ),
       drawer: AppDrawer(),
-      body: Consumer<ProspectsLista>(
-        builder: (context, prospectsLista, _) {
+      body: Consumer<MedicosLista>(
+        builder: (context, medicosLista, _) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
               child: Column(
                 children: [
                   Container(
-                    width: widthScreen,
+                    width: widthScreen ,
                     height: heightScreen,
                     child: ListView.builder(
-                      itemCount: prospectsLista.prospects.length,
+                      itemCount: medicosLista.medicos.length,
                       itemBuilder: (context, index) {
-                        final prospect = prospectsLista.prospects[index];
+                        final medico = medicosLista.medicos[index];
                         return Container(
                           margin: const EdgeInsets.symmetric(
                             horizontal: 12.0,
@@ -99,12 +99,12 @@ class _ProspectCrmState extends State<ProspectCrm> {
                               title: SizedBox(
                                 width: 100,
                                 child: Text(
-                                  prospect.nomeFantasia,
+                                  medico.nomeMedico,
                                   style: const TextStyle(
                                       fontSize: 12, fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              subtitle: Text(prospect.endereco!),
+                              subtitle: Text(medico.especialidade!),
                               trailing: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 mainAxisSize: MainAxisSize.min,
@@ -114,15 +114,14 @@ class _ProspectCrmState extends State<ProspectCrm> {
                                       onPressed: () {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(builder: (ctx) {
-                                            return EditarProspectCrm(
-                                              prospect: prospect,
+                                            return EditarMedicoCrm(
+                                              medico: medico,
                                             );
                                           }),
                                         ).then(
                                           (_) {
                                             // Ações após o retorno
-                                            _loadProspects();
-                                            
+                                            _loadMedicos();
                                           },
                                         );
                                       },
@@ -140,13 +139,13 @@ class _ProspectCrmState extends State<ProspectCrm> {
                                           context: context,
                                           builder: (ctx) => AlertDialog(
                                             title: const Text(
-                                              'BLOQUEAR PROSPECT',
+                                              'BLOQUEAR MÉDICO',
                                               style: TextStyle(
                                                   fontSize: 24,
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             content: const Text(
-                                              'Tem certeza que deseja bloquear esse prospect ? Uma vez bloqueado somente o administrador do sistema poderá desbloquear.',
+                                              'Tem certeza que deseja bloquear esse médico ? Uma vez bloqueado somente o administrador do sistema poderá desbloquear.',
                                               style: TextStyle(
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.bold),
@@ -167,16 +166,16 @@ class _ProspectCrmState extends State<ProspectCrm> {
                                               TextButton(
                                                 onPressed: () async {
                                                   NavigatorService.instance.pop();
-                                                  await Provider.of<ProspectsLista>(
+                                                  await Provider.of<MedicosLista>(
                                                     context,
                                                     listen: false,
                                                   )
-                                                      .bloquearProspect(
-                                                          context, prospect.codigo)
+                                                      .bloquearMedico(
+                                                          context, medico.codigo)
                                                       .then(
                                                     (_) {
                                                       // Ações após o retorno
-                                                      _loadProspects();
+                                                      _loadMedicos();
                                                     },
                                                   );
                                                   
@@ -216,7 +215,7 @@ class _ProspectCrmState extends State<ProspectCrm> {
                           onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(builder: (ctx) {
-                                return IncluirProspectCrm();
+                                return IncluirMedicoCrm();
                               }),
                             );
                           },

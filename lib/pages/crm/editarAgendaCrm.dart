@@ -15,7 +15,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 class EditarAgendaCrm extends StatefulWidget {
   final Event event;
-  
+
   EditarAgendaCrm({
     Key? key,
     required this.event,
@@ -136,8 +136,8 @@ class _EditarAgendaCrmState extends State<EditarAgendaCrm> {
     DateTimeFieldPickerPlatform dateTimePickerPlatform;
 
     if (size.width >= 600) {
-      widthScreen = 400;
-      heightScreen = 300;
+      widthScreen = size.width * 0.4;
+      heightScreen = size.width * 0.5;
       sizeText = 18;
       sizeCrossAxisCount = 4;
       sizeAspectRatio = 1.2;
@@ -226,7 +226,7 @@ class _EditarAgendaCrmState extends State<EditarAgendaCrm> {
                       VoidCallback onFieldSubmitted) {
                     if (codigoMedicoSelecionado.isEmpty) {
                       fieldTextEditingController.text = widget.event.nomeMedico;
-                    }                         
+                    }
                     return TextFormField(
                       decoration: const InputDecoration(
                           labelText: "Médico",
@@ -252,9 +252,9 @@ class _EditarAgendaCrmState extends State<EditarAgendaCrm> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    if (codigoMedicoSelecionado.isEmpty ) 
-                      Text('Código do Médico: ${widget.event.codigoMedico}')                      
-                    else                      
+                    if (codigoMedicoSelecionado.isEmpty)
+                      Text('Código do Médico: ${widget.event.codigoMedico}')
+                    else
                       Text('Código do Médico: $codigoMedicoSelecionado')
                   ],
                 ),
@@ -268,7 +268,8 @@ class _EditarAgendaCrmState extends State<EditarAgendaCrm> {
                     }
                     // Extrai somente os nomes dos médicos
                     final nomesLocaisDeEntrega = loadedLocaisDeEntrega!
-                        .map((locaisDeEntrega) => locaisDeEntrega.localDescricao)
+                        .map(
+                            (locaisDeEntrega) => locaisDeEntrega.localDescricao)
                         .toList();
 
                     if (textEditingLocaisDeEntrega.text.isEmpty) {
@@ -302,13 +303,13 @@ class _EditarAgendaCrmState extends State<EditarAgendaCrm> {
                       TextEditingController fieldTextEditingController,
                       FocusNode focusNode,
                       VoidCallback onFieldSubmitted) {
-                        if (codigoLocalDeEntregaSelecionado.isEmpty) {
+                    if (codigoLocalDeEntregaSelecionado.isEmpty) {
                       fieldTextEditingController.text = widget.event.local;
-                    }          
+                    }
                     return TextFormField(
                       decoration: const InputDecoration(
-                          labelText: "Local de Entrega",
-                          hintText: "Selecione um Local de Entrega",
+                          labelText: "Local",
+                          hintText: "Selecione o Local da Visita",
                           border: OutlineInputBorder()),
                       controller: fieldTextEditingController,
                       focusNode: focusNode,
@@ -324,131 +325,162 @@ class _EditarAgendaCrmState extends State<EditarAgendaCrm> {
                       },
                     );
                   },
-                ),                
-                 const SizedBox(height: 10),
+                ),
+                const SizedBox(height: 10),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    if (codigoLocalDeEntregaSelecionado.isEmpty ) 
-                      Text('Código Local: ${widget.event.codigoLocalDeEntrega}')                      
-                    else                      
-                      Text('Código Local: $codigoLocalDeEntregaSelecionado'),                   
+                    if (codigoLocalDeEntregaSelecionado.isEmpty)
+                      Text('Código Local: ${widget.event.codigoLocalDeEntrega}')
+                    else
+                      Text('Código Local: $codigoLocalDeEntregaSelecionado'),
                   ],
                 ),
-                // TextFormField(
-                //   //initialValue: widget.event.local,
-                //   decoration: const InputDecoration(
-                //       labelText: "Local",
-                //       hintText: "Digite o local do evento/reunião",
-                //       border: OutlineInputBorder()),
-                //   controller: _localController,
-                //   style: TextStyle(
-                //     color: Colors.black,
-                //     fontSize: sizeText,
-                //   ),
-                //   validator: (value) {
-                //     if (value == null || value.isEmpty) {
-                //       return "Campo Obrigatório";
-                //     }
-                //     return null;
-                //   },
-                // ),
                 const SizedBox(height: 30),
-                DropdownButton<String>(
-                  dropdownColor: const Color.fromARGB(255, 152, 204, 247),
-                  isExpanded: true,
-                  iconSize: 25,
-                  //hint: const Text('Selecione um representante'),
-                  value: statusSelecionado,
-                  items: _status.map((statusSelecionado) {
-                    return DropdownMenuItem<String>(
-                      value: statusSelecionado,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(statusSelecionado),
+                Container(
+                  width: widthScreen,
+                  height: heightScreen,
+                  child: Column(
+                    children: [
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Status:",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            
+                          ),
+                        ],
                       ),
-                    );
-                  }).toList(),
-                  onChanged: (String? valor) {
-                    setState(() {
-                      statusSelecionado = valor!;
-                    });
-                  },
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: DateTimeFormField(
-                        decoration: const InputDecoration(labelText: 'Data'),
-                        mode: DateTimeFieldPickerMode.date,
-                        pickerPlatform: DateTimeFieldPickerPlatform.material,
-                        materialDatePickerOptions:
-                            const MaterialDatePickerOptions(
-                                locale: Locale("pt", "BR")),
-                        dateFormat: DateFormat("dd MMM yyyy", 'pt_BR'),
-                        initialValue: dataSelecionada,
-                        onChanged: (DateTime? novaData) {
+                      DropdownButton<String>(
+                        dropdownColor: const Color.fromARGB(255, 152, 204, 247),
+                        isExpanded: true,
+                        iconSize: 25,
+                        //hint: const Text('Selecione um representante'),
+                        value: statusSelecionado,
+                        items: _status.map((statusSelecionado) {
+                          return DropdownMenuItem<String>(
+                            value: statusSelecionado,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(statusSelecionado),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String? valor) {
                           setState(() {
-                            dataSelecionada = novaData;
+                            statusSelecionado = valor!;
                           });
                         },
-                        validator: (value) {
-                          if (value == null) {
-                            return "Campo Obrigatório";
-                          }
-                          return null;
-                        },
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: DateTimeFormField(
-                        decoration: const InputDecoration(labelText: 'Hora'),
-                        mode: DateTimeFieldPickerMode.time,
-                        pickerPlatform: DateTimeFieldPickerPlatform.material,
-                        materialTimePickerOptions: MaterialTimePickerOptions(
-                            builder: (BuildContext context, Widget? child) {
-                              return MediaQuery(
-                                data: MediaQuery.of(context)
-                                    .copyWith(alwaysUse24HourFormat: true),
-                                child: child!,
-                              );
-                            },
-                            initialEntryMode: TimePickerEntryMode.inputOnly),
-                        dateFormat: DateFormat('HH:mm', 'pt_BR'),
-                        initialValue: DateFormat('HH:mm', 'pt_BR')
-                            .parse(widget.event.horaPrevista),
-                        onChanged: (DateTime? novaHora) {
-                          setState(() {
-                            horaSelecionada = TimeOfDay.fromDateTime(novaHora!);
-                          });
-                        },
-                        validator: (value) {
-                          if (value == null) {
-                            return "Campo Obrigatório";
-                          }
-                          return null;
-                        },
+                      Row(
+                        children: [
+                          Expanded(
+                            child: DateTimeFormField(
+                              decoration:
+                                  const InputDecoration(labelText: 'Data'),
+                              mode: DateTimeFieldPickerMode.date,
+                              pickerPlatform:
+                                  DateTimeFieldPickerPlatform.material,
+                              materialDatePickerOptions:
+                                  const MaterialDatePickerOptions(
+                                      locale: Locale("pt", "BR")),
+                              dateFormat: DateFormat("dd MMM yyyy", 'pt_BR'),
+                              initialValue: dataSelecionada,
+                              onChanged: (DateTime? novaData) {
+                                setState(() {
+                                  dataSelecionada = novaData;
+                                });
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return "Campo Obrigatório";
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: DateTimeFormField(
+                              decoration:
+                                  const InputDecoration(labelText: 'Hora'),
+                              mode: DateTimeFieldPickerMode.time,
+                              pickerPlatform:
+                                  DateTimeFieldPickerPlatform.material,
+                              materialTimePickerOptions:
+                                  MaterialTimePickerOptions(
+                                      builder: (BuildContext context,
+                                          Widget? child) {
+                                        return MediaQuery(
+                                          data: MediaQuery.of(context).copyWith(
+                                              alwaysUse24HourFormat: true),
+                                          child: child!,
+                                        );
+                                      },
+                                      initialEntryMode:
+                                          TimePickerEntryMode.inputOnly),
+                              dateFormat: DateFormat('HH:mm', 'pt_BR'),
+                              initialValue: DateFormat('HH:mm', 'pt_BR')
+                                  .parse(widget.event.horaPrevista),
+                              onChanged: (DateTime? novaHora) {
+                                setState(() {
+                                  horaSelecionada =
+                                      TimeOfDay.fromDateTime(novaHora!);
+                                });
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return "Campo Obrigatório";
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: FilledButton(
-                    style: const ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(
-                        Color.fromARGB(255, 0, 48, 87),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: FilledButton(
+                              style: const ButtonStyle(
+                                backgroundColor: WidgetStatePropertyAll(
+                                  Color.fromARGB(255, 0, 48, 87),
+                                ),
+                              ),
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  _editarVisitas(context);
+                                }
+                              },
+                              child: const Text("Salvar"),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: FilledButton(
+                              style: const ButtonStyle(
+                                backgroundColor: WidgetStatePropertyAll(
+                                  Color.fromARGB(255, 138, 9, 9),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text("Cancelar"),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _editarVisitas(context);
-                      }
-                    },
-                    child: const Text("Salvar"),
+                    ],
                   ),
                 ),
               ],

@@ -2,26 +2,26 @@ import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pedidocompra/models/crm/concorrentes.dart';
-import 'package:pedidocompra/providers/crm/concorrentesLista.dart';
+import 'package:pedidocompra/models/crm/medicos.dart';
+import 'package:pedidocompra/providers/crm/medicosLista.dart';
 import 'package:pedidocompra/services/viacep_service.dart';
 import 'package:provider/provider.dart';
 
-class EditarConcorrenteCrm extends StatefulWidget {
-  final Concorrentes concorrente;
-  // final String local;
-  // final String status;
-  EditarConcorrenteCrm({
+class EditarMedicoCrm extends StatefulWidget {
+  final Medicos medico;
+
+  EditarMedicoCrm({
     Key? key,
-    required this.concorrente,
+    required this.medico,
   }) : super(key: key);
 
   @override
-  State<EditarConcorrenteCrm> createState() => _EditarConcorrenteCrmState();
+  State<EditarMedicoCrm> createState() => _EditarMedicoCrmState();
 }
 
-class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
-  late TextEditingController _razaoSocialController;
-  late TextEditingController _nomeFantasiaController;
+class _EditarMedicoCrmState extends State<EditarMedicoCrm> {
+  late TextEditingController _nomeMedicoController;
+  late TextEditingController _especialidadeController;
   late TextEditingController _enderecoController;
   late TextEditingController _municipioController;
   late TextEditingController _estadoController;
@@ -30,43 +30,56 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
   late TextEditingController _dddController;
   late TextEditingController _telefoneController;
   late TextEditingController _contatoController;
-  late TextEditingController _homePageController;
+  late TextEditingController _emailController;
+  late TextEditingController _crmController;
+  late TextEditingController _nomeLocalController;
 
   final _formKey = GlobalKey<FormState>();
 
-  late String codigoConcorrenteSelecionado = "";
-  List<Concorrentes>? loadedConcorrentes;
+  late String codigoMedicoSelecionado = "";
+  List<Medicos>? loadedMedicos;
+
+  List<String> _tipoLocal = ["Consultório", "Clinica", "Hospital", "Outros"];
+  String? _selectedTipoLocal;
 
   @override
   void initState() {
     super.initState();
-
-    // Inicializa os controladores
-    _razaoSocialController =
-        TextEditingController(text: widget.concorrente.razaoSocial);
-    _nomeFantasiaController =
-        TextEditingController(text: widget.concorrente.nomeFantasia);
+    _nomeMedicoController =
+        TextEditingController(text: widget.medico.nomeMedico);
+    _especialidadeController =
+        TextEditingController(text: widget.medico.especialidade);
     _enderecoController =
-        TextEditingController(text: widget.concorrente.endereco);
-    _municipioController =
-        TextEditingController(text: widget.concorrente.municipio);
-    _estadoController = TextEditingController(text: widget.concorrente.estado);
-    _bairroController = TextEditingController(text: widget.concorrente.bairro);
-    _cepController = TextEditingController(text: widget.concorrente.cep);
-    _dddController = TextEditingController(text: widget.concorrente.ddd);
-    _telefoneController =
-        TextEditingController(text: widget.concorrente.telefone);
-    _contatoController =
-        TextEditingController(text: widget.concorrente.contato);
-    _homePageController =
-        TextEditingController(text: widget.concorrente.homePage);
+        TextEditingController(text: widget.medico.enderecoVisita);
+    _municipioController = TextEditingController(text: widget.medico.municipio);
+    _estadoController = TextEditingController(text: widget.medico.estado);
+    _bairroController = TextEditingController(text: widget.medico.bairro);
+    _cepController = TextEditingController(text: widget.medico.cep);
+    _dddController = TextEditingController(text: widget.medico.ddd);
+    _telefoneController = TextEditingController(text: widget.medico.telefone);
+    _contatoController = TextEditingController(text: widget.medico.contato);
+    _emailController = TextEditingController(text: widget.medico.email);
+    _crmController = TextEditingController(text: widget.medico.crm);
+    _nomeLocalController =
+        TextEditingController(text: widget.medico.localDeVisita);
+    _selectedTipoLocal = widget.medico.tipoLocal;
+
+    if (_selectedTipoLocal == 'S') {
+      _selectedTipoLocal = 'Consultório';
+    } else if (_selectedTipoLocal == 'C') {
+      _selectedTipoLocal = 'Clinica';
+    } else if (_selectedTipoLocal == 'H') {
+      _selectedTipoLocal = 'Hospital';
+    } else {
+      _selectedTipoLocal = 'Outros';
+    }
   }
 
   @override
   void dispose() {
     // Libera os recursos dos controladores
-    _razaoSocialController.dispose();
-    _nomeFantasiaController.dispose();
+    _nomeMedicoController.dispose();
+    _especialidadeController.dispose();
     _enderecoController.dispose();
     _municipioController.dispose();
     _estadoController.dispose();
@@ -75,17 +88,20 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
     _dddController.dispose();
     _telefoneController.dispose();
     _contatoController.dispose();
-    _homePageController.dispose();
+    _emailController.dispose();
+    _crmController.dispose();
+    _nomeLocalController.dispose();
 
     super.dispose();
   }
 
-  Future<void> _editarConcorrentes(context) async {
-    final dadosConcorrente = {
-      'codigo': widget.concorrente.codigo,
-      'razaoSocial': _razaoSocialController.text,
-      'nomeFantasia': _nomeFantasiaController.text,
+  Future<void> _editarMedico(context) async {
+    final dadosMedico = {
+      'codigo': widget.medico.codigo,
+      'nomeMedico': _nomeMedicoController.text,
+      'especialidade': _especialidadeController.text,
       'endereco': _enderecoController.text,
+      'crm': _crmController.text,
       'municipio': _municipioController.text,
       'estado': _estadoController.text,
       'bairro': _bairroController.text,
@@ -93,13 +109,15 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
       'ddd': _dddController.text,
       'telefone': _telefoneController.text,
       'contato': _contatoController.text,
-      'homePage': _homePageController.text,
+      'email': _emailController.text,
+      'tipoLocal': _selectedTipoLocal,
+      'nomeLocal': _nomeLocalController.text,
     };
 
-    await Provider.of<ConcorrentesLista>(
+    await Provider.of<MedicosLista>(
       context,
       listen: false,
-    ).editarConcorrente(context, dadosConcorrente);
+    ).editarMedico(context, dadosMedico);
   }
 
   Future<void> _loadEndereco(cep) async {
@@ -145,7 +163,7 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Colors.white,
         title: Text(
-          "Editar Concorrente",
+          "Editar Médico",
           textAlign: TextAlign.left,
           style: TextStyle(
             color: Theme.of(context).secondaryHeaderColor,
@@ -166,91 +184,109 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
             padding: const EdgeInsets.all(15.0),
             child: Column(
               children: [
-                Autocomplete<String>(
-                  optionsBuilder: (TextEditingValue textEditingValue) {
-                    if (loadedConcorrentes == null ||
-                        loadedConcorrentes!.isEmpty) {
-                      return const Iterable<String>.empty();
+                TextFormField(
+                  decoration: const InputDecoration(
+                      labelText: "Nome",
+                      hintText: "Digite o nome completo",
+                      border: OutlineInputBorder()),
+                  controller: _nomeMedicoController,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: sizeText,
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Campo Obrigatório";
                     }
-                    // Extrai somente os nomes dos médicos
-                    final nomesConcorrentes = loadedConcorrentes!
-                        .map((concorrente) => concorrente.nomeFantasia)
-                        .toList();
-
-                    if (textEditingValue.text.isEmpty) {
-                      return nomesConcorrentes; // Retorna todos os nomes
-                    }
-
-                    // Filtra os nomes com base no texto digitado
-                    return nomesConcorrentes.where((String nome) {
-                      return nome
-                          .toLowerCase()
-                          .contains(textEditingValue.text.toLowerCase());
-                    });
+                    return null;
                   },
-                  onSelected: (String selection) {
-                    final concorrenteSelecionado = loadedConcorrentes!
-                        .firstWhere((concorrente) =>
-                            concorrente.nomeFantasia == selection);
-
-                    setState(() {
-                      codigoConcorrenteSelecionado =
-                          concorrenteSelecionado.codigo;
-                      _nomeFantasiaController.text = selection;
-                    });
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text('Concorrente Selecionado: $selection')),
-                    );
-                  },
-                  fieldViewBuilder: (BuildContext context,
-                      TextEditingController fieldTextEditingController,
-                      FocusNode focusNode,
-                      VoidCallback onFieldSubmitted) {
-                    if (codigoConcorrenteSelecionado.isEmpty) {
-                      fieldTextEditingController.text =
-                          widget.concorrente.nomeFantasia;
-                    }
-                    return TextFormField(
-                      decoration: const InputDecoration(
-                          labelText: "Razão Social",
-                          hintText: "Digite a Razão Social",
-                          border: OutlineInputBorder()),
-                      controller: fieldTextEditingController,
-                      focusNode: focusNode,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: sizeText,
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Campo Obrigatório";
-                        }
-                        return null;
-                      },
-                    );
-                  },
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    if (codigoConcorrenteSelecionado.isEmpty)
-                      Text(
-                          'Código do Concorrente: ${widget.concorrente.codigo}')
-                    else
-                      Text(
-                          'Código do Concorrente: $codigoConcorrenteSelecionado')
-                  ],
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
                   decoration: const InputDecoration(
-                      labelText: "Nome Fantasia",
-                      hintText: "Digite o nome Fantasia",
+                      labelText: "Especialidade",
+                      hintText: "Digite a especialidade",
                       border: OutlineInputBorder()),
-                  controller: _nomeFantasiaController,
+                  controller: _especialidadeController,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: sizeText,
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Campo Obrigatório";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                            labelText: "CRM",
+                            hintText: "Digite o CRM",
+                            border: OutlineInputBorder()),
+                        controller: _crmController,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: sizeText,
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Campo Obrigatório";
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    FilledButton(
+                      style: const ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll(
+                          Color.fromARGB(255, 0, 48, 87),
+                        ),
+                      ),
+                      onPressed: () {
+                        _loadEndereco(_cepController.text);
+                      },
+                      child: const Text("Buscar CRM"),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                DropdownButtonFormField<String>(
+                  decoration: const InputDecoration(
+                    labelText: "Tipo de Local",
+                    border: OutlineInputBorder(),
+                  ),
+                  value: _selectedTipoLocal,
+                  items: _tipoLocal.map((String tipoLocal) {
+                    return DropdownMenuItem<String>(
+                      value: tipoLocal,
+                      child: Text(tipoLocal),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedTipoLocal = newValue;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Campo Obrigatório";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  decoration: const InputDecoration(
+                      labelText: "Nome do Local da Visita",
+                      hintText: "Digite o nome do local da visita",
+                      border: OutlineInputBorder()),
+                  controller: _nomeLocalController,
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: sizeText,
@@ -425,7 +461,7 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
                           }
                           return null;
                         },
-                        keyboardType: const TextInputType.numberWithOptions(),
+                         keyboardType: const TextInputType.numberWithOptions(),
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(9),
@@ -437,8 +473,8 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
                 const SizedBox(height: 10),
                 TextFormField(
                   decoration: const InputDecoration(
-                      labelText: "Contato",
-                      hintText: "Digite o nome do Contato",
+                      labelText: "Secretária / Contato",
+                      hintText: "Digite o nome do contato ",
                       border: OutlineInputBorder()),
                   controller: _contatoController,
                   style: TextStyle(
@@ -455,10 +491,10 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
                 const SizedBox(height: 10),
                 TextFormField(
                   decoration: const InputDecoration(
-                      labelText: "Home Page",
+                      labelText: "E-mail",
                       //hintText: "Digite o nome do Contato",
                       border: OutlineInputBorder()),
-                  controller: _homePageController,
+                  controller: _emailController,
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: sizeText,
@@ -484,13 +520,13 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
                         ),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            _editarConcorrentes(context);
+                            _editarMedico(context);
                           }
                         },
                         child: const Text("Salvar"),
                       ),
                     ),
-                     Padding(
+                    Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: FilledButton(
                         style: const ButtonStyle(
@@ -504,7 +540,6 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
                         child: const Text("Cancelar"),
                       ),
                     ),
-                    
                   ],
                 ),
               ],

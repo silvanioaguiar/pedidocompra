@@ -3,41 +3,40 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart ' as http;
-import 'package:pedidocompra/models/crm/medicos.dart';
+import 'package:pedidocompra/models/crm/propects.dart';
 import 'package:pedidocompra/services/navigator_service.dart';
-import 'package:provider/provider.dart';
 
-class MedicosLista with ChangeNotifier {
+
+class ProspectsLista with ChangeNotifier {
   final String _token;
 
-  List<Medicos> _medicos = [];
+  List<Prospects> _prospects = [];
   List<dynamic> data = [];
   Map<String, dynamic> data0 = {};
 
   int n = 0;
 
-  List<Medicos> get medicos => [..._medicos];
+  List<Prospects> get prospects => [..._prospects];
 
-  MedicosLista(this._token, this._medicos);
+  ProspectsLista(this._token, this._prospects);
 
-  int get visitasCount {
-    return _medicos.length;
+  int get prospectsCount {
+    return _prospects.length;
   }
 
-  // Carregar Medicos
-
-  Future<dynamic> loadMedicos(context) async {
+  // Carregar Prospects
+  Future<dynamic> loadProspects(context) async {
     String jsonString = '';
-    List<Medicos> medicos = [];
-    _medicos.clear();
-    medicos.clear();
+    List<Prospects> prospects = [];
+    _prospects.clear();
+    prospects.clear();
     //String empresaFilial = '';
     Map<String, dynamic> data0 = {};
     data = [];
 
     final response = await http.get(
         Uri.parse(
-            'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/ListaMedicos'),
+            'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/ListaProspects'),
         headers: {
           'Content-Type': 'application/json',
           "accept": "application/json",
@@ -58,9 +57,8 @@ class MedicosLista with ChangeNotifier {
               'ATENÇÃO!',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            content: const Text(
-              //'Ocorreu um arro ao tentar aprovar o pedido.Por favor entrar em contato com o suporte do sistema',
-              'Nenhum medico registrado.',
+            content: const Text(              
+              'Nenhum prospect cadastrado.',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             actions: [
@@ -84,39 +82,33 @@ class MedicosLista with ChangeNotifier {
       data = jsonDecode(jsonString);
       data.asMap();
       for (var data in data) {
-        medicos.add(
-          Medicos(
+        prospects.add(
+          Prospects(
             codigo: data['principal']['codigo'],
-            nomeMedico: data['principal']['nomeMedico'],
-            representante: data['principal']['representante'],
-            crm: data['principal']['crm'],
-            tipoLocal: data['principal']['tipoLocal'],
-            localDeVisita: data['principal']['localDeVisita'],
-            enderecoVisita: data['principal']['enderecoVisita'],
-            especialidade: data['principal']['especialidade'],
-            cep: data['principal']['cep'],
-            estado: data['principal']['estado'],
-            municipio: data['principal']['municipio'],
-            bairro: data['principal']['bairro'],
-            contato: data['principal']['contato'],
-            ddd: data['principal']['ddd'],
-            telefone: data['principal']['telefone'],
-            email: data['principal']['email'],
+            razaoSocial: data['principal']['razaoSocial'],
+            nomeFantasia: data['principal']['nomeFantasia'],
+            endereco: data['principal']['endereco'] ?? "",
+            municipio: data['principal']['municipio'] ?? "",
+            estado: data['principal']['estado'] ?? "",
+            bairro: data['principal']['bairro'] ?? "",
+            cep: data['principal']['cep'] ?? "",
+            ddd: data['principal']['ddd'] ?? "",
+            telefone: data['principal']['telefone'] ?? "",
+            contato: data['principal']['contato'] ?? "",
+            tipo: data['principal']['tipo'] ?? "",
           ),
         );
       }
     }
-
-    _medicos = medicos;
+    _prospects = prospects;
 
     notifyListeners();
-    return _medicos;
+    return _prospects;
   }
 
-
-  Future<dynamic> incluirMedico(context, dadosMedico) async {
+  Future<dynamic> editarProspects(context, dadosProspect) async {
     final uri = Uri.parse(
-        'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/IncluirMedico');
+        'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/EditarProspect');
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -125,111 +117,19 @@ class MedicosLista with ChangeNotifier {
       'Authorization': 'Bearer $_token',
     };
 
-    final body = jsonEncode({       
-      'nomeMedico': dadosMedico['nomeMedico'],
-      'especialidade': dadosMedico['especialidade'],
-      'endereco': dadosMedico['endereco'],
-      'municipio': dadosMedico['municipio'],
-      'estado': dadosMedico['estado'],
-      'bairro': dadosMedico['bairro'],
-      'cep': dadosMedico['cep'],
-      'ddd': dadosMedico['ddd'],
-      'telefone': dadosMedico['telefone'],
-      'contato': dadosMedico['contato'],
-      'email': dadosMedico['email'],
-      'crm': dadosMedico['crm'],
-      'tipoLocal': dadosMedico['tipoLocal'],
-      'nomeLocal': dadosMedico['nomeLocal'],
-    });
-
-    final response = await http.put(uri, headers: headers, body: body);
-
-    if (response.statusCode == 500) {
-      showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text(
-            'ATENÇÃO!',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          content: const Text(            
-            'Não foi possivel incluir o médico. Contate o administrador do sistema',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                NavigatorService.instance.pop();
-              },
-              child: const Text("Fechar",
-                  style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 5, 0, 0))),
-            ),
-          ],
-        ),
-      );
-    } else if (response.statusCode >= 200 && response.statusCode <= 299) {
-      showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text(
-            'ATENÇÃO!',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          content: const Text(
-            //'Ocorreu um arro ao tentar aprovar o pedido.Por favor entrar em contato com o suporte do sistema',
-            'Médico incluído com sucesso',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Fecha o dialog
-                Navigator.of(context).pop(); // Fecha a tela principal
-              },
-              child: const Text("Fechar",
-                  style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 5, 0, 0))),
-            ),
-          ],
-        ),
-      );
-    }
-    notifyListeners();
-    await loadMedicos(context);
-  }
-
-  Future<dynamic> editarMedico(context, dadosMedico) async {
-    final uri = Uri.parse(
-        'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/EditarMedico');
-    final headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Accept-Charset': 'utf-8',
-      'tenantId': '02,01', // fixado como Biosat Matriz
-      'Authorization': 'Bearer $_token',
-    };
-
-    final body = jsonEncode({    
-      'codigo': dadosMedico['codigo'],   
-      'nomeMedico': dadosMedico['nomeMedico'],
-      'especialidade': dadosMedico['especialidade'],
-      'endereco': dadosMedico['endereco'],
-      'municipio': dadosMedico['municipio'],
-      'estado': dadosMedico['estado'],
-      'bairro': dadosMedico['bairro'],
-      'cep': dadosMedico['cep'],
-      'ddd': dadosMedico['ddd'],
-      'telefone': dadosMedico['telefone'],
-      'contato': dadosMedico['contato'],
-      'email': dadosMedico['email'],
-      'crm': dadosMedico['crm'],
-      'tipoLocal': dadosMedico['tipoLocal'],
-      'nomeLocal': dadosMedico['nomeLocal'],
+    final body = jsonEncode({
+      'codigo': dadosProspect['codigo'],
+      'razaoSocial': dadosProspect['razaoSocial'],
+      'nomeFantasia': dadosProspect['nomeFantasia'],
+      'endereco': dadosProspect['endereco'],
+      'municipio': dadosProspect['municipio'],
+      'estado': dadosProspect['estado'],
+      'bairro': dadosProspect['bairro'],
+      'cep': dadosProspect['cep'],
+      'ddd': dadosProspect['ddd'],
+      'telefone': dadosProspect['telefone'],
+      'contato': dadosProspect['contato'],
+      'tipo': dadosProspect['tipo'],
     });
 
     final response = await http.post(uri, headers: headers, body: body);
@@ -243,7 +143,7 @@ class MedicosLista with ChangeNotifier {
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           content: const Text(            
-            'Não foi possivel editar o médico. Contate o administrador do sistema',
+            'Não foi possivel editar o prospect. Contate o administrador do sistema',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           actions: [
@@ -268,9 +168,8 @@ class MedicosLista with ChangeNotifier {
             'ATENÇÃO!',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
-          content: const Text(
-            //'Ocorreu um arro ao tentar aprovar o pedido.Por favor entrar em contato com o suporte do sistema',
-            'Médico alterado com sucesso',
+          content: const Text(            
+            'Prospect atualizado com sucesso',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           actions: [
@@ -290,13 +189,12 @@ class MedicosLista with ChangeNotifier {
       );
     }
     notifyListeners();
-    await loadMedicos(context);
+    await loadProspects(context);
   }
 
-
-  Future<dynamic> bloquearMedico(context, codigoMedico) async {
+  Future<dynamic> bloquearProspect(context, codigoProspect) async {
     final uri = Uri.parse(
-        'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/BloquearMedico');
+        'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/BloquearProspect');
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -305,8 +203,8 @@ class MedicosLista with ChangeNotifier {
       'Authorization': 'Bearer $_token',
     };
 
-    final body = jsonEncode({    
-      'codigo': codigoMedico,   
+    final body = jsonEncode({
+      'codigo': codigoProspect,
       
     });
 
@@ -321,7 +219,7 @@ class MedicosLista with ChangeNotifier {
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           content: const Text(            
-            'Não foi possivel bloquear o médico. Contate o administrador do sistema',
+            'Não foi possivel bloquear o prospect. Contate o administrador do sistema',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           actions: [
@@ -346,9 +244,8 @@ class MedicosLista with ChangeNotifier {
             'ATENÇÃO!',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
-          content: const Text(
-            //'Ocorreu um arro ao tentar aprovar o pedido.Por favor entrar em contato com o suporte do sistema',
-            'Médico bloqueado com sucesso',
+          content: const Text(            
+            'Prospect bloqueado com sucesso',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           actions: [
@@ -367,6 +264,91 @@ class MedicosLista with ChangeNotifier {
       );
     }
     notifyListeners();
-    await loadMedicos(context);
+    await loadProspects(context);
+  }
+
+  Future<dynamic> incluirProspect(context, dadosProspect) async {
+    final uri = Uri.parse(
+        'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/IncluirProspect');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Accept-Charset': 'utf-8',
+      'tenantId': '02,01', // fixado como Biosat Matriz
+      'Authorization': 'Bearer $_token',
+    };
+
+    final body = jsonEncode({       
+      'razaoSocial': dadosProspect['razaoSocial'],
+      'nomeFantasia': dadosProspect['nomeFantasia'],
+      'endereco': dadosProspect['endereco'],
+      'municipio': dadosProspect['municipio'],
+      'estado': dadosProspect['estado'],
+      'bairro': dadosProspect['bairro'],
+      'cep': dadosProspect['cep'],
+      'ddd': dadosProspect['ddd'],
+      'telefone': dadosProspect['telefone'],
+      'contato': dadosProspect['contato'],
+      'tipo': dadosProspect['tipo'],
+    });
+
+    final response = await http.put(uri, headers: headers, body: body);
+
+    if (response.statusCode == 500) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text(
+            'ATENÇÃO!',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          content: const Text(            
+            'Não foi possivel incluir o prospect. Contate o administrador do sistema',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                NavigatorService.instance.pop();
+              },
+              child: const Text("Fechar",
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 5, 0, 0))),
+            ),
+          ],
+        ),
+      );
+    } else if (response.statusCode >= 200 && response.statusCode <= 299) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text(
+            'ATENÇÃO!',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          content: const Text(            
+            'Prospect incluído com sucesso',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Fecha o dialog
+                Navigator.of(context).pop(); // Fecha a tela principal
+              },
+              child: const Text("Fechar",
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 5, 0, 0))),
+            ),
+          ],
+        ),
+      );
+    }
+    notifyListeners();
+    await loadProspects(context);
   }
 }

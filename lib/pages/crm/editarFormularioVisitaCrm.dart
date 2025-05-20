@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:pedidocompra/components/crm/utils.dart';
+import 'package:pedidocompra/main.dart';
 import 'package:pedidocompra/models/crm/concorrentes.dart';
 import 'package:pedidocompra/models/crm/formularioVisita.dart';
 import 'package:pedidocompra/models/crm/hospitais.dart';
@@ -34,6 +35,8 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
   late String codigoMedicoSelecionado = "";
   late String codigoLocalDeEntregaSelecionado = "";
   final format = DateFormat("dd MMM yyyy HH:mm", "pt_BR");
+  final PageController _pageController = PageController();
+
   String selectedOption = '';
   String selectedOptionCliente = '';
   String selectedOptionEspecialidade = '';
@@ -488,6 +491,10 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
             const SizedBox(height: 20),
             Expanded(
               child: PageView(
+                controller: _pageController,
+                scrollDirection: Axis.horizontal,
+                scrollBehavior: AppScrollBehavior(),
+                physics: const ClampingScrollPhysics(),
                 children: <Widget>[
                   SingleChildScrollView(
                     child: Container(

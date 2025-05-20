@@ -27,6 +27,7 @@ class LocaisDeEntregaLista with ChangeNotifier {
   // Carregar Visitas
 
   Future<dynamic> loadLocaisDeEntrega(context) async {
+    String jsonString = '';
     List<LocaisDeEntrega> locaisDeEntrega = [];
     _locaisDeEntrega.clear();
     locaisDeEntrega.clear();
@@ -77,8 +78,9 @@ class LocaisDeEntregaLista with ChangeNotifier {
         );
       }
     } else if (response.statusCode == 200) {
-      data = jsonDecode(response.body);
-      utf8.decode(response.bodyBytes);
+      //data = jsonDecode(response.body);
+      jsonString = utf8.decode(response.bodyBytes, allowMalformed: true);
+      data = jsonDecode(jsonString);
       data.asMap();
       for (var data in data) {
         locaisDeEntrega.add(

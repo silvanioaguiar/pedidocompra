@@ -32,6 +32,9 @@ class _AgendaCrmState extends State<AgendaCrm> {
   late List<Event> _todosEventos = [];
   List? _eventosFiltrados = [];
 
+  
+
+
   @override
   void initState() {
     super.initState();
@@ -182,22 +185,24 @@ class _AgendaCrmState extends State<AgendaCrm> {
   Widget build(BuildContext context) {
     //String formattedName = formatUserName("");
     var size = MediaQuery.of(context).size;
-    double? widthScreen = 0;
+    //double containerWidth = MediaQuery.of(context).size.width * 0.5;
+    //double containerHeight = MediaQuery.of(context).size.width * 0.3;
+    double? widthScreenListTile = 0;
 
-    double? heightScreen = 0;
+    double? heightScreenListTile = 0;
     double? sizeText = 0;
     double sizeAspectRatio = 0;
     int sizeCrossAxisCount = 0;
 
     if (size.width >= 600) {
-      widthScreen = 400;
-      heightScreen = 300;
+      widthScreenListTile = size.width * 0.5;
+      heightScreenListTile = size.width * 0.3;
       sizeText = 18;
       sizeCrossAxisCount = 4;
       sizeAspectRatio = 1.2;
     } else {
-      widthScreen = size.width * 0.8;
-      heightScreen = size.height * 0.6;
+      widthScreenListTile = size.width * 0.8;
+      heightScreenListTile = size.height * 0.3;
       sizeText = 14;
       sizeCrossAxisCount = 2;
       sizeAspectRatio = 1.05;
@@ -218,306 +223,312 @@ class _AgendaCrmState extends State<AgendaCrm> {
       drawer: AppDrawer(),
       body: Consumer<VisitasLista>(
         builder: (context, visitasLista, _) {
-          return Column(
-            children: [
-              TableCalendar<Event>(
-                locale: 'pt_Br',
-                firstDay: DateTime(2020, 01, 01),
-                lastDay: DateTime(2050, 01, 01),
-                focusedDay: _focusedDay,
-                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                rangeStartDay: _rangeStart,
-                rangeEndDay: _rangeEnd,
-                calendarFormat: _calendarFormat,
-                rangeSelectionMode: _rangeSelectionMode,
-                eventLoader: _getEventsForDay,
-                startingDayOfWeek: StartingDayOfWeek.sunday,
-                calendarStyle: const CalendarStyle(
-                    // Use `CalendarStyle` to customize the UI
-                    outsideDaysVisible: false,
-                    weekendDecoration: BoxDecoration(
-                        color: Color.fromARGB(255, 214, 215, 216))),
-                onDaySelected: _onDaySelected,
-                onRangeSelected: _onRangeSelected,
-                onFormatChanged: (format) {
-                  if (_calendarFormat != format) {
-                    setState(() {
-                      _calendarFormat = format;
-                    });
-                  }
-                },
-                onPageChanged: (focusedDay) {
-                  _focusedDay = focusedDay;
-                },
-                availableCalendarFormats: const {
-                  CalendarFormat.month: 'Mês Completo',
-                  CalendarFormat.twoWeeks: '2 Semanas',
-                  CalendarFormat.week: 'Semana',
-                },
-                headerStyle: HeaderStyle(
-                    formatButtonDecoration: BoxDecoration(
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                TableCalendar<Event>(
+                  locale: 'pt_Br',
+                  firstDay: DateTime(2020, 01, 01),
+                  lastDay: DateTime(2050, 01, 01),
+                  focusedDay: _focusedDay,
+                  selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                  rangeStartDay: _rangeStart,
+                  rangeEndDay: _rangeEnd,
+                  calendarFormat: _calendarFormat,
+                  rangeSelectionMode: _rangeSelectionMode,
+                  eventLoader: _getEventsForDay,
+                  startingDayOfWeek: StartingDayOfWeek.sunday,
+                  calendarStyle: const CalendarStyle(
+                      // Use `CalendarStyle` to customize the UI
+                      outsideDaysVisible: false,
+                      weekendDecoration: BoxDecoration(
+                          color: Color.fromARGB(255, 214, 215, 216))),
+                  onDaySelected: _onDaySelected,
+                  onRangeSelected: _onRangeSelected,
+                  onFormatChanged: (format) {
+                    if (_calendarFormat != format) {
+                      setState(() {
+                        _calendarFormat = format;
+                      });
+                    }
+                  },
+                  onPageChanged: (focusedDay) {
+                    _focusedDay = focusedDay;
+                  },
+                  availableCalendarFormats: const {
+                    CalendarFormat.month: 'Mês Completo',
+                    CalendarFormat.twoWeeks: '2 Semanas',
+                    CalendarFormat.week: 'Semana',
+                  },
+                  headerStyle: HeaderStyle(
+                      formatButtonDecoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 152, 204, 247),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      formatButtonTextStyle: const TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold)),
+                  onHeaderTapped: (focusedDay) async {
+                    final selectedDate = await showDatePicker(
+                      context: context,
+                      initialDate: focusedDay,
+                      firstDate: DateTime(2010),
+                      lastDate: DateTime(2030),
+                    );
+                    if (selectedDate != null) {
+                      setState(() {
+                        _focusedDay = selectedDate;
+                      });
+                    }
+                  },
+                ),
+                const SizedBox(height: 8.0),
+                SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      height: 40,
                       color: const Color.fromARGB(255, 152, 204, 247),
-                      borderRadius: BorderRadius.circular(10),
+                      child: DropdownButton<String>(
+                        dropdownColor: const Color.fromARGB(255, 152, 204, 247),
+                        isExpanded: true,
+                        iconSize: 25,
+                        hint: const Text('Selecione um representante'),
+                        value: _representanteSelecionado,
+                        items: loadedRepresentantes?.map((representante) {
+                          return DropdownMenuItem<String>(
+                            value: representante.nomeRepresentante,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(representante.nomeRepresentante),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (valor) {
+                          setState(() {
+                            _representanteSelecionado = valor;
+                          });
+                          _filtrarEventos();
+                        },
+                      ),
                     ),
-                    formatButtonTextStyle: const TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold)),
-                onHeaderTapped: (focusedDay) async {
-                  final selectedDate = await showDatePicker(
-                    context: context,
-                    initialDate: focusedDay,
-                    firstDate: DateTime(2010),
-                    lastDate: DateTime(2030),
-                  );
-                  if (selectedDate != null) {
-                    setState(() {
-                      _focusedDay = selectedDate;
-                    });
-                  }
-                },
-              ),
-              const SizedBox(height: 8.0),
-              SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  ),
+                ),
+                const SizedBox(height: 8.0),
+                SingleChildScrollView(
                   child: Container(
-                    height: 40,
-                    color: const Color.fromARGB(255, 152, 204, 247),
-                    child: DropdownButton<String>(
-                      dropdownColor: const Color.fromARGB(255, 152, 204, 247),
-                      isExpanded: true,
-                      iconSize: 25,
-                      hint: const Text('Selecione um representante'),
-                      value: _representanteSelecionado,
-                      items: loadedRepresentantes?.map((representante) {
-                        return DropdownMenuItem<String>(
-                          value: representante.nomeRepresentante,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(representante.nomeRepresentante),
-                          ),
+                    height: heightScreenListTile,
+                    width: widthScreenListTile ,
+                    child: ValueListenableBuilder<List<Event>>(
+                      valueListenable: _selectedEvents,
+                      builder: (context, value, _) {
+                        return ListView.builder(
+                          itemCount: value.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 12.0,
+                                vertical: 4.0,
+                              ),
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              child: ListTile(
+                                //onTap: () => print('${value[index]}'),
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (ctx) {
+                                        return GerenciarVisitaCrm(
+                                          event: value[index],
+                                        );
+                                      },
+                                    ),
+                                  ).then((value){
+                                    if (value == true) {
+                                      _loadVisitas();
+                                    }
+                                  });
+                                },
+                                title: SizedBox(
+                                  width: 100,
+                                  child: Text(
+                                    '${value[index].horaPrevista} - ${value[index].nomeMedico}',
+                                    style: const TextStyle(
+                                        fontSize: 12, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                subtitle: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      child: Text(
+                                        'Local: ${value[index].local}',
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    if (value[index].status == '1')
+                                      const Row(
+                                        children: [
+                                          Text('Status: ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold)),
+                                          Text('Pendente',
+                                              style: TextStyle(color: Colors.blue)),
+                                        ],
+                                      )
+                                    else if (value[index].status == '2')
+                                      const Row(
+                                        children: [
+                                          Text('Status: ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold)),
+                                          Text('Concluída',
+                                              style: TextStyle(color: Colors.green))
+                                        ],
+                                      )
+                                    else if (value[index].status == '3')
+                                      const Row(
+                                        children: [
+                                          Text('Status: ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold)),
+                                          Text('Remarcada',
+                                              style:
+                                                  TextStyle(color: Colors.orange))
+                                        ],
+                                      )
+                                    else if (value[index].status == '4')
+                                      const Row(
+                                        children: [
+                                          Text('Status: ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold)),
+                                          Text('Cancelada',
+                                              style: TextStyle(color: Colors.red)),
+                                        ],
+                                      ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'Resp.: ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          value[index].nomeUsuario!,
+                                          style: const TextStyle(fontSize: 12),
+                                        ),
+                                      ],
+                                    ),
+                                    const Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          '+Detalhes',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.red),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                // trailing: Row(
+                                //   mainAxisAlignment: MainAxisAlignment.end,
+                                //   mainAxisSize: MainAxisSize.min,
+                                //   children: [
+                                //     Flexible(
+                                //       child: IconButton(
+                                //         onPressed: () {
+                                //           Navigator.of(context).push(
+                                //             MaterialPageRoute(builder: (ctx) {
+                                //               return EditarAgendaCrm(
+                                //                 event: value[index],
+                                //               );
+                                //             }),
+                                //           ).then(
+                                //             (_) {
+                                //               // Ações após o retorno
+                                //               _loadVisitas();
+                                //               setState(() {
+                                //                 _selectedEvents.value = [];
+                                //                 _selectedDay = null;
+                                //                 _representanteSelecionado =
+                                //                     null; // Reseta o filtro
+                                //               });
+                                //             },
+                                //           );
+                                //         },
+                                //         icon: const Icon(
+                                //           Icons.edit,
+                                //           color: Color.fromARGB(255, 255, 153, 0),
+                                //         ),
+                                //         //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
+                                //       ),
+                                //     ),
+                                //     const SizedBox(width: 5),
+                                //     IconButton(
+                                //       onPressed: () {
+                                //         Navigator.of(context).push(
+                                //           MaterialPageRoute(builder: (ctx) {
+                                //             return FormularioVisitaCrm(
+                                //               event: value[index],
+                                //             );
+                                //           }),
+                                //         ).then((_) {
+                                //           _loadVisitas();
+                                //           setState(() {
+                                //             //value[index].status = '2';
+                                //             _selectedEvents = ValueNotifier(
+                                //                 _getEventsForDay(_selectedDay!));
+                                //           });
+                                //         });
+                                //       },
+                                //       icon: const Icon(
+                                //         Icons.file_open_sharp,
+                                //         color: Color.fromARGB(255, 1, 49, 88),
+                                //       ),
+                                //       //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
+                                //     ),
+                                //   ],
+                                // )),
+                              ),
+                            );
+                          },
                         );
-                      }).toList(),
-                      onChanged: (valor) {
-                        setState(() {
-                          _representanteSelecionado = valor;
-                        });
-                        _filtrarEventos();
                       },
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 8.0),
-              Expanded(
-                child: ValueListenableBuilder<List<Event>>(
-                  valueListenable: _selectedEvents,
-                  builder: (context, value, _) {
-                    return ListView.builder(
-                      itemCount: value.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 12.0,
-                            vertical: 4.0,
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border.all(),
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
-                          child: ListTile(
-                            //onTap: () => print('${value[index]}'),
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (ctx) {
-                                    return GerenciarVisitaCrm(
-                                      event: value[index],
-                                    );
-                                  },
-                                ),
-                              ).then((value){
-                                if (value == true) {
-                                  _loadVisitas();
-                                }
-                              });
-                            },
-                            title: SizedBox(
-                              width: 100,
-                              child: Text(
-                                '${value[index].horaPrevista} - ${value[index].nomeMedico}',
-                                style: const TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            subtitle: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  child: Text(
-                                    'Local: ${value[index].local}',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                if (value[index].status == '1')
-                                  const Row(
-                                    children: [
-                                      Text('Status: ',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold)),
-                                      Text('Pendente',
-                                          style: TextStyle(color: Colors.blue)),
-                                    ],
-                                  )
-                                else if (value[index].status == '2')
-                                  const Row(
-                                    children: [
-                                      Text('Status: ',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold)),
-                                      Text('Concluída',
-                                          style: TextStyle(color: Colors.green))
-                                    ],
-                                  )
-                                else if (value[index].status == '3')
-                                  const Row(
-                                    children: [
-                                      Text('Status: ',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold)),
-                                      Text('Remarcada',
-                                          style:
-                                              TextStyle(color: Colors.orange))
-                                    ],
-                                  )
-                                else if (value[index].status == '4')
-                                  const Row(
-                                    children: [
-                                      Text('Status: ',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold)),
-                                      Text('Cancelada',
-                                          style: TextStyle(color: Colors.red)),
-                                    ],
-                                  ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'Resp.: ',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      value[index].nomeUsuario!,
-                                      style: const TextStyle(fontSize: 12),
-                                    ),
-                                  ],
-                                ),
-                                const Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      '+Detalhes',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.red),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            // trailing: Row(
-                            //   mainAxisAlignment: MainAxisAlignment.end,
-                            //   mainAxisSize: MainAxisSize.min,
-                            //   children: [
-                            //     Flexible(
-                            //       child: IconButton(
-                            //         onPressed: () {
-                            //           Navigator.of(context).push(
-                            //             MaterialPageRoute(builder: (ctx) {
-                            //               return EditarAgendaCrm(
-                            //                 event: value[index],
-                            //               );
-                            //             }),
-                            //           ).then(
-                            //             (_) {
-                            //               // Ações após o retorno
-                            //               _loadVisitas();
-                            //               setState(() {
-                            //                 _selectedEvents.value = [];
-                            //                 _selectedDay = null;
-                            //                 _representanteSelecionado =
-                            //                     null; // Reseta o filtro
-                            //               });
-                            //             },
-                            //           );
-                            //         },
-                            //         icon: const Icon(
-                            //           Icons.edit,
-                            //           color: Color.fromARGB(255, 255, 153, 0),
-                            //         ),
-                            //         //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
-                            //       ),
-                            //     ),
-                            //     const SizedBox(width: 5),
-                            //     IconButton(
-                            //       onPressed: () {
-                            //         Navigator.of(context).push(
-                            //           MaterialPageRoute(builder: (ctx) {
-                            //             return FormularioVisitaCrm(
-                            //               event: value[index],
-                            //             );
-                            //           }),
-                            //         ).then((_) {
-                            //           _loadVisitas();
-                            //           setState(() {
-                            //             //value[index].status = '2';
-                            //             _selectedEvents = ValueNotifier(
-                            //                 _getEventsForDay(_selectedDay!));
-                            //           });
-                            //         });
-                            //       },
-                            //       icon: const Icon(
-                            //         Icons.file_open_sharp,
-                            //         color: Color.fromARGB(255, 1, 49, 88),
-                            //       ),
-                            //       //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
-                            //     ),
-                            //   ],
-                            // )),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    FloatingActionButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(builder: (ctx) {
-                            return const IncluirAgendaCrm();
-                          }),
-                        );
-                      },
-                      backgroundColor: const Color.fromARGB(255, 0, 40, 73),
-                      child: const Icon(
-                        Icons.add,
-                        color: Colors.white,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      FloatingActionButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (ctx) {
+                              return const IncluirAgendaCrm();
+                            }),
+                          );
+                        },
+                        backgroundColor: const Color.fromARGB(255, 0, 40, 73),
+                        child: const Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         },
       ),

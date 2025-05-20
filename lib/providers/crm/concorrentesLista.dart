@@ -28,6 +28,7 @@ class ConcorrentesLista with ChangeNotifier {
   // Carregar Concorrentes
 
   Future<dynamic> loadConcorrentes(context) async {
+    String jsonString = '';
     List<Concorrentes> concorrentes = [];
     _concorrentes.clear();
     concorrentes.clear();
@@ -79,8 +80,9 @@ class ConcorrentesLista with ChangeNotifier {
         );
       }
     } else if (response.statusCode == 200) {
-      data = jsonDecode(response.body);
-      utf8.decode(response.bodyBytes);
+      //data = jsonDecode(response.body);
+      jsonString = utf8.decode(response.bodyBytes, allowMalformed: true);
+      data = jsonDecode(jsonString);
       data.asMap();
       for (var data in data) {
         concorrentes.add(
@@ -180,6 +182,83 @@ class ConcorrentesLista with ChangeNotifier {
               onPressed: () {
                 Navigator.of(context).pop(); // Fecha o dialog
                 Navigator.of(context).pop(); // Fecha a tela principal
+              },
+              child: const Text("Fechar",
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 5, 0, 0))),
+            ),
+          ],
+        ),
+      );
+    }
+    notifyListeners();
+    await loadConcorrentes(context);
+  }
+
+  Future<dynamic> bloquearConcorrente(context, codigoConcorrente) async {
+    final uri = Uri.parse(
+        'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/BloquearConcorrente');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Accept-Charset': 'utf-8',
+      'tenantId': '02,01', // fixado como Biosat Matriz
+      'Authorization': 'Bearer $_token',
+    };
+
+    final body = jsonEncode({
+      'codigo': codigoConcorrente,
+      
+    });
+
+    final response = await http.post(uri, headers: headers, body: body);
+
+    if (response.statusCode == 500) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text(
+            'ATENÇÃO!',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          content: const Text(
+            //'Ocorreu um arro ao tentar aprovar o pedido.Por favor entrar em contato com o suporte do sistema',
+            'Não foi possivel bloquear o concorrente. Contate o administrador do sistema',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                NavigatorService.instance.pop();
+              },
+              child: const Text("Fechar",
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 5, 0, 0))),
+            ),
+          ],
+        ),
+      );
+    } else if (response.statusCode >= 200 && response.statusCode <= 299) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text(
+            'ATENÇÃO!',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          content: const Text(
+            //'Ocorreu um arro ao tentar aprovar o pedido.Por favor entrar em contato com o suporte do sistema',
+            'Concorrente bloqueado com sucesso',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Fecha o dialog                
               },
               child: const Text("Fechar",
                   style: TextStyle(

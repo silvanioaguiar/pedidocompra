@@ -1,5 +1,6 @@
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pedidocompra/models/crm/concorrentes.dart';
 import 'package:pedidocompra/providers/crm/concorrentesLista.dart';
 import 'package:pedidocompra/services/viacep_service.dart';
@@ -172,6 +173,11 @@ class _IncluirConcorrenteCrmState extends State<IncluirConcorrenteCrm> {
                           }
                           return null;
                         },
+                        keyboardType: const TextInputType.numberWithOptions(),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(8),
+                        ],
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -310,6 +316,11 @@ class _IncluirConcorrenteCrmState extends State<IncluirConcorrenteCrm> {
                           }
                           return null;
                         },
+                        keyboardType: const TextInputType.numberWithOptions(),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(9),
+                        ],
                       ),
                     ),
                   ],
@@ -351,21 +362,40 @@ class _IncluirConcorrenteCrmState extends State<IncluirConcorrenteCrm> {
                   },
                 ),
                 const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: FilledButton(
-                    style: const ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(
-                        Color.fromARGB(255, 170, 6, 6),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: FilledButton(
+                        style: const ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(
+                            Color.fromARGB(255, 0, 48, 87),
+                          ),
+                        ),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            _incluirConcorrente(context);
+                          }
+                        },
+                        child: const Text("Salvar"),
                       ),
                     ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _incluirConcorrente(context);
-                      }
-                    },
-                    child: const Text("Salvar"),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: FilledButton(
+                        style: const ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(
+                            Color.fromARGB(255, 138, 9, 9),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("Cancelar"),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

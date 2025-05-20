@@ -1,11 +1,16 @@
+import 'package:flutter/gestures.dart';
 import 'package:pedidocompra/components/crm/utils.dart';
 import 'package:pedidocompra/models/auth.dart';
+import 'package:pedidocompra/pages/crm/editarProspectCrm.dart';
 import 'package:pedidocompra/pages/crm/gerenciarVisitaCrm.dart';
+import 'package:pedidocompra/pages/crm/incluirMedico.dart';
+import 'package:pedidocompra/pages/crm/incluirProspectCrm.dart';
 import 'package:pedidocompra/providers/crm/HospitaisLista.dart';
 import 'package:pedidocompra/providers/crm/concorrentesLista.dart';
 import 'package:pedidocompra/providers/crm/formularioVisitaProvider.dart';
 import 'package:pedidocompra/providers/crm/locaisDeEntregaLista.dart';
 import 'package:pedidocompra/providers/crm/medicosLista.dart';
+import 'package:pedidocompra/providers/crm/prospectsLista.dart';
 import 'package:pedidocompra/providers/crm/representantesLista.dart';
 import 'package:pedidocompra/services/viacep_service.dart';
 import 'package:pedidocompra/providers/crm/visitasLista.dart';
@@ -48,7 +53,19 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'providers/faturamento/fat_empresaLista.dart';
 
+class AppScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.trackpad,
+  };
+}
+
+
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -229,8 +246,19 @@ class MyApp extends StatelessWidget {
             );
           },
         ),
+        ChangeNotifierProxyProvider<Auth, ProspectsLista>(
+          create: (_) => ProspectsLista('', []),
+          update: (ctx, auth, previous) {
+            return ProspectsLista(
+              auth.token ?? '',
+              previous?.prospects ?? [],
+              //auth.senha ?? '',
+            );
+          },
+        ),
       ],
       child: MaterialApp(
+        scrollBehavior: AppScrollBehavior(),
         locale: const Locale('pt', 'BR'),
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
@@ -289,6 +317,8 @@ class MyApp extends StatelessWidget {
           AppRoutes.formularioCrm: (ctx) => const FormularioCrm(),
           AppRoutes.incluirAgendaCrm: (ctx) => const IncluirAgendaCrm(),
           AppRoutes.incluirConcorrenteCrm: (ctx) => IncluirConcorrenteCrm(),
+          AppRoutes.incluirProspectCrm: (ctx) => IncluirProspectCrm(),
+          AppRoutes.incluirMedicoCrm: (ctx) => IncluirMedicoCrm(),
           AppRoutes.gerenciarVisitaCrm: (ctx) => GerenciarVisitaCrm(
                 event: Event(
                   codigo: "",
@@ -342,8 +372,7 @@ class MyApp extends StatelessWidget {
                   codFormulario: "",
                 ),
               ),
-
-               AppRoutes.editarFormularioVisitaCrm: (ctx) => FormularioVisitaCrm(
+          AppRoutes.editarFormularioVisitaCrm: (ctx) => FormularioVisitaCrm(
                 event: Event(
                   codigo: "",
                   codigoMedico: "",
