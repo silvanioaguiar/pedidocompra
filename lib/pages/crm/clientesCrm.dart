@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/components/appDrawer.dart';
+import 'package:pedidocompra/main.dart';
 
 
 class ClientesCrm extends StatefulWidget {
@@ -37,7 +38,7 @@ class _ClientesCrmState extends State<ClientesCrm> {
 
      return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: azulRoyalTopo,
         foregroundColor: Colors.white,
         title: Text(
           "Clientes",

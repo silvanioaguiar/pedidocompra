@@ -21,19 +21,24 @@ class AppRoutes {
   static const agendaCrm = '/agendaCrm';
   static const clientesCrm = '/clientesCrm';
   static const concorrentesCrm = '/concorrentesCrm';
+  static const contatosCrm = '/contatosCrm';
   static const faturamentoCrm = '/faturamentoCrm';
   static const menuCrm = '/menuCrm';
   static const formularioCrm = '/formularioCrm';
   static const prospectCrm = '/prospectCrm';
   static const incluirAgendaCrm = '/incluirAgendaCrm';
   static const incluirConcorrenteCrm = '/incluirConcorrenteCrm';
+  static const incluirContatoCrm = '/incluirContatoCrm';
   static const incluirMedicoCrm = '/incluirMedicoCrm';
   static const incluirProspectCrm = '/incluirProspectCrm';
   static const editarAgendaCrm = '/editarAgendaCrm';
   static const editarProspectCrm = '/editarProspectCrm';
+  static const editarContatotCrm = '/editarContatoCrm';
+  static const editarConcorrenteCrm = '/editarConcorrenteCrm';
   static const formularioVisitaCrm = '/formularioVisitaCrm';
   static const editarFormularioVisitaCrm = '/editarFormularioVisitaCrm';
-   static const gerenciarVisitaCrm = '/gerenciarVisitaCrm';
+  static const gerenciarVisitaCrm = '/gerenciarVisitaCrm';
+  static const relatorioVisitasCrm = '/relatorioVisitasCrm';
 
 }
 

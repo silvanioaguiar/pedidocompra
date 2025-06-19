@@ -9,12 +9,9 @@ import 'package:provider/provider.dart';
 
 class ViaCepService with ChangeNotifier {
   final String _token;
- 
-  
 
   List<ViaCep> _endereco = [];
   Map<String, dynamic> data = {};
-  Map<String, dynamic> data0 = {};
 
   int n = 0;
 
@@ -33,7 +30,7 @@ class ViaCepService with ChangeNotifier {
     _endereco.clear();
     endereco.clear();
     //String empresaFilial = '';
-    Map<String, dynamic> data0 = {};
+
     Map<String, dynamic> data = {};
 
     final response = await http
@@ -44,10 +41,9 @@ class ViaCepService with ChangeNotifier {
     });
 
     if (response.statusCode == 500) {
-      data0 = jsonDecode(response.body);
+      data = jsonDecode(response.body);
 
-      if (data0['errorMessage'] ==
-          'Não existem dados para serem apresentados') {
+      if (data['erro'] == 'Não existem dados para serem apresentados') {
         showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
@@ -76,24 +72,50 @@ class ViaCepService with ChangeNotifier {
       }
     } else if (response.statusCode == 200) {
       data = jsonDecode(response.body);
-
-      endereco.add(
-        ViaCep(
-          cep: data['cep'],
-          logradouro: data['logradouro'],
-          complemento: data['complemento'],
-          unidade: data['unidade'],
-          bairro: data['bairro'],
-          localidade: data['localidade'],
-          uf: data['uf'],
-          estado: data['estado'],
-          regiao: data['regiao'],
-          ddd: data['ddd'],
-        ),
-      );
+      if (data['erro'] == 'true') {
+        showDialog(          
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text(
+              'ATENÇÃO!',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            content: const Text(
+              'Cep não localizado.',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  NavigatorService.instance.pop();
+                },
+                child: const Text("Fechar",
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 5, 0, 0))),
+              ),
+            ],
+          ),
+        );
+      } else {
+        endereco.add(
+          ViaCep(
+            cep: data['cep'],
+            logradouro: data['logradouro'],
+            complemento: data['complemento'],
+            unidade: data['unidade'],
+            bairro: data['bairro'],
+            localidade: data['localidade'],
+            uf: data['uf'],
+            estado: data['estado'],
+            regiao: data['regiao'],
+            ddd: data['ddd'],
+          ),
+        );
+      }
     }
 
-    
     return endereco;
   }
 }

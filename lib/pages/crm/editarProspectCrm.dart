@@ -1,6 +1,7 @@
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pedidocompra/main.dart';
 import 'package:pedidocompra/models/crm/propects.dart';
 import 'package:pedidocompra/providers/crm/prospectsLista.dart';
 import 'package:pedidocompra/services/viacep_service.dart';
@@ -144,7 +145,7 @@ class _EditarProspectCrmState extends State<EditarProspectCrm> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: azulRoyalTopo,
         foregroundColor: Colors.white,
         title: Text(
           "Editar Prospect",

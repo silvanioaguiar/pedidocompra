@@ -8,8 +8,6 @@ import 'package:pedidocompra/models/crm/concorrentes.dart';
 import 'package:pedidocompra/models/crm/formularioVisita.dart';
 import 'package:pedidocompra/models/crm/hospitais.dart';
 import 'package:pedidocompra/models/crm/visitas.dart';
-import 'package:pedidocompra/pages/crm/editarAgendaCrm.dart';
-import 'package:pedidocompra/pages/crm/formularioVisitaCrm.dart';
 import 'package:pedidocompra/providers/crm/HospitaisLista.dart';
 import 'package:pedidocompra/providers/crm/concorrentesLista.dart';
 import 'package:pedidocompra/providers/crm/formularioVisitaProvider.dart';
@@ -32,6 +30,7 @@ class EditarFormularioVisitaCrm extends StatefulWidget {
 
 class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
   var _proximosPassos = TextEditingController();
+  var _assuntosAbordados = TextEditingController();
   late String codigoMedicoSelecionado = "";
   late String codigoLocalDeEntregaSelecionado = "";
   final format = DateFormat("dd MMM yyyy HH:mm", "pt_BR");
@@ -79,8 +78,9 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
   void initState() {
     super.initState();
     _loadFormulario(widget.event.codFormulario);
-    _loadConcorrentes();
     _loadHospitais();
+    _loadConcorrentes();
+    
   }
 
   Future<void> _loadConcorrentes() async {
@@ -92,8 +92,8 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
   }
 
   Future<void> _loadHospitais() async {
-    final provider = Provider.of<HospitaisLista>(context, listen: false);
-    hospitais = await provider.loadHospitais(provider);
+    final providerHospitais = Provider.of<HospitaisLista>(context, listen: false);
+    hospitais = await providerHospitais.loadHospitais(providerHospitais);
     setState(() {
       filteredHospitais = hospitais;
     });
@@ -149,6 +149,12 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
       if (formulario[0].proximosPassos.isNotEmpty) {
         _proximosPassos =
             TextEditingController(text: formulario[0].proximosPassos);
+      }
+
+       // Atualiza assuntos abordados:
+      if (formulario[0].assuntosAbordados.isNotEmpty) {
+        _assuntosAbordados =
+            TextEditingController(text: formulario[0].assuntosAbordados);
       }
     });
   }
@@ -223,17 +229,13 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
     }
   }
 
-   
-
-
   // Future<void> _loadVisitas() async {
-  //   var provider  = Provider.of<VisitasLista>(context, listen: false);   
+  //   var provider  = Provider.of<VisitasLista>(context, listen: false);
   //   loadedVisitas = await provider.loadVisitas(provider);
-   
+
   //   _selectedDay = _focusedDay;
   //   _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
 
-    
   // }
 
   List<Event> _getEventsForDay(DateTime day) {
@@ -257,6 +259,8 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
               nomeRepresentante: visita.nomeRepresentante,
               codigoLocalDeEntrega: visita.codigoLocalDeEntrega,
               local: visita.local,
+              objetivo: visita.objetivo,
+              cancelarMotivo: visita.cancelarMotivo ?? "",
               status: visita.status,
               dataPrevista: visita.dataPrevista,
               dataRealizada: visita.dataRealizada,
@@ -286,6 +290,7 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
       'listaConcorrentes': selectedItemsControllerConcorrentes.text,
       'especialidade': selectedOptionEspecialidade,
       'proximosPassos': _proximosPassos.text,
+      'assuntosAbordados': _assuntosAbordados.text,
     };
 
     await Provider.of<FormularioVisitaProvider>(
@@ -294,7 +299,6 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
     ).editarFormulario(context, dadosFormulario);
 
     //_loadVisitas();
-    
   }
 
   @override
@@ -305,6 +309,8 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
       Color.fromARGB(255, 219, 238, 253),
     ];
     double alturaMaxima = MediaQuery.of(context).size.height;
+    double larguraMaxima = MediaQuery.of(context).size.width;
+    double metadeLargura = larguraMaxima / 2;
     double? widthScreen = 0;
     double? heightScreen = 0;
     double? sizeText = 0;
@@ -313,14 +319,14 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
     DateTimeFieldPickerPlatform dateTimePickerPlatform;
 
     if (size.width >= 600) {
-      widthScreen = 400;
-      heightScreen = 300;
+      widthScreen = size.width * 0.4;
+      heightScreen = size.width * 0.085;
       sizeText = 18;
       sizeCrossAxisCount = 4;
       sizeAspectRatio = 1.2;
     } else {
-      widthScreen = size.width * 0.8;
-      heightScreen = size.height * 0.6;
+      widthScreen = size.width * 0.9;
+      heightScreen = size.height * 0.085;
       sizeText = 14;
       sizeCrossAxisCount = 2;
       sizeAspectRatio = 1.05;
@@ -328,7 +334,7 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: azulRoyalTopo,
         foregroundColor: Colors.white,
         title: Text(
           "Editar Formulário Visita",
@@ -439,54 +445,60 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: DateTimeFormField(
-                    initialValue:
-                        formulario.isNotEmpty ? formulario[0].dataVisita : null,
-                    decoration:
-                        const InputDecoration(labelText: 'Data da Visita'),
-                    mode: DateTimeFieldPickerMode.date,
-                    pickerPlatform: DateTimeFieldPickerPlatform.material,
-                    materialDatePickerOptions: const MaterialDatePickerOptions(
-                        locale: Locale("pt", "BR")),
-                    dateFormat: DateFormat("dd MMM yyyy", 'pt_BR'),
-                    onChanged: (DateTime? novaData) {
-                      setState(() {
-                        dataSelecionada = novaData;
-                      });
-                    },
+            const SizedBox(height: 10),
+            Container(
+              width: widthScreen,
+              height: heightScreen,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: DateTimeFormField(
+                      initialValue: formulario.isNotEmpty
+                          ? formulario[0].dataVisita
+                          : null,
+                      decoration:
+                          const InputDecoration(labelText: 'Data da Visita'),
+                      mode: DateTimeFieldPickerMode.date,
+                      pickerPlatform: DateTimeFieldPickerPlatform.material,
+                      materialDatePickerOptions:
+                          const MaterialDatePickerOptions(
+                              locale: Locale("pt", "BR")),
+                      dateFormat: DateFormat("dd MMM yyyy", 'pt_BR'),
+                      onChanged: (DateTime? novaData) {
+                        setState(() {
+                          dataSelecionada = novaData;
+                        });
+                      },
+                    ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: DateTimeFormField(
-                    initialValue: formulario.isNotEmpty
-                        ? DateFormat('HH:mm').parse(formulario[0].horaVisita)
-                        : null,
-                    decoration: const InputDecoration(labelText: 'Hora'),
-                    mode: DateTimeFieldPickerMode.time,
-                    pickerPlatform: DateTimeFieldPickerPlatform.material,
-                    materialTimePickerOptions: MaterialTimePickerOptions(
-                        builder: (BuildContext context, Widget? child) {
-                          return MediaQuery(
-                            data: MediaQuery.of(context)
-                                .copyWith(alwaysUse24HourFormat: true),
-                            child: child!,
-                          );
-                        },
-                        initialEntryMode: TimePickerEntryMode.inputOnly),
-                    dateFormat: DateFormat('HH:mm', 'pt_BR'),
-                    onChanged: (DateTime? novaHora) {
-                      setState(() {
-                        horaSelecionada = TimeOfDay.fromDateTime(novaHora!);
-                      });
-                    },
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: DateTimeFormField(
+                      initialValue: formulario.isNotEmpty
+                          ? DateFormat('HH:mm').parse(formulario[0].horaVisita)
+                          : null,
+                      decoration: const InputDecoration(labelText: 'Hora'),
+                      mode: DateTimeFieldPickerMode.time,
+                      pickerPlatform: DateTimeFieldPickerPlatform.material,
+                      materialTimePickerOptions: MaterialTimePickerOptions(
+                          builder: (BuildContext context, Widget? child) {
+                            return MediaQuery(
+                              data: MediaQuery.of(context)
+                                  .copyWith(alwaysUse24HourFormat: true),
+                              child: child!,
+                            );
+                          },
+                          initialEntryMode: TimePickerEntryMode.inputOnly),
+                      dateFormat: DateFormat('HH:mm', 'pt_BR'),
+                      onChanged: (DateTime? novaHora) {
+                        setState(() {
+                          horaSelecionada = TimeOfDay.fromDateTime(novaHora!);
+                        });
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             const SizedBox(height: 20),
             Expanded(
@@ -516,20 +528,23 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
                                   height: 30,
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 20),
-                                child: Icon(
-                                  FontAwesomeIcons.handPointLeft,
-                                  size: 50,
-                                  color: Color.fromARGB(255, 0, 52, 95),
-                                ),
-                              ),
                             ],
                           ),
-                          Container(
-                              alignment: Alignment.topRight,
-                              child:
-                                  Text("Arraste para o Lado", style: arraste)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons.handPointLeft,
+                                size: 50,
+                                color: Color.fromARGB(255, 0, 52, 95),
+                              ),
+                              SizedBox(width: 5),
+                              Container(
+                                  alignment: Alignment.topRight,
+                                  child: Text("Arraste para o Lado",
+                                      style: arraste)),
+                            ],
+                          ),
                           const SizedBox(height: 20),
                           const Text(
                             'Como foi a visita?',
@@ -540,85 +555,15 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
                           ),
                           const SizedBox(height: 10),
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding:
+                                EdgeInsets.only(left: metadeLargura * 0.85),
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                RadioListTile<String>(
-                                  fillColor:
-                                      WidgetStatePropertyAll(Colors.black),
-                                  title: Text(
-                                    'Excelente',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  value: 'Excelente',
-                                  groupValue: selectedOption,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedOption = value!;
-                                    });
-                                  },
-                                ),
-                                RadioListTile<String>(
-                                  fillColor:
-                                      WidgetStatePropertyAll(Colors.black),
-                                  title: Text(
-                                    'Boa',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  value: 'Boa',
-                                  groupValue: selectedOption,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedOption = value!;
-                                    });
-                                  },
-                                ),
-                                RadioListTile<String>(
-                                  fillColor:
-                                      WidgetStatePropertyAll(Colors.black),
-                                  title: Text(
-                                    'Regular',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  value: 'Regular',
-                                  groupValue: selectedOption,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedOption = value!;
-                                    });
-                                  },
-                                ),
-                                RadioListTile<String>(
-                                  fillColor:
-                                      WidgetStatePropertyAll(Colors.black),
-                                  title: Text(
-                                    'Ruim',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  value: 'Ruim',
-                                  groupValue: selectedOption,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedOption = value!;
-                                    });
-                                  },
-                                ),
+                                _buildRadioOption('Excelente'),
+                                _buildRadioOption('Boa'),
+                                _buildRadioOption('Regular'),
+                                _buildRadioOption('Ruim'),
                               ],
                             ),
                           ),
@@ -647,20 +592,23 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
                                   height: 30,
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 20),
-                                child: Icon(
-                                  FontAwesomeIcons.handPointLeft,
-                                  size: 50,
-                                  color: Color.fromARGB(255, 0, 52, 95),
-                                ),
-                              ),
                             ],
                           ),
-                          Container(
-                              alignment: Alignment.topRight,
-                              child:
-                                  Text("Arraste para o Lado", style: arraste)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons.handPointLeft,
+                                size: 50,
+                                color: Color.fromARGB(255, 0, 52, 95),
+                              ),
+                              SizedBox(width: 5),
+                              Container(
+                                  alignment: Alignment.topRight,
+                                  child: Text("Arraste para o Lado",
+                                      style: arraste)),
+                            ],
+                          ),
                           const SizedBox(height: 10),
                           const Text(
                             'Quais hospitais que o médico opera ?',
@@ -791,20 +739,23 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
                                   height: 30,
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 20),
-                                child: Icon(
-                                  FontAwesomeIcons.handPointLeft,
-                                  size: 50,
-                                  color: Color.fromARGB(255, 0, 52, 95),
-                                ),
-                              ),
                             ],
                           ),
-                          Container(
-                              alignment: Alignment.topRight,
-                              child:
-                                  Text("Arraste para o Lado", style: arraste)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons.handPointLeft,
+                                size: 50,
+                                color: Color.fromARGB(255, 0, 52, 95),
+                              ),
+                              SizedBox(width: 5),
+                              Container(
+                                  alignment: Alignment.topRight,
+                                  child: Text("Arraste para o Lado",
+                                      style: arraste)),
+                            ],
+                          ),
                           const SizedBox(height: 10),
                           const Text(
                             'Já é cliente do Grupo Abduch ?',
@@ -815,47 +766,12 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
                           ),
                           const SizedBox(height: 10),
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.only(left: metadeLargura * 0.8),
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                RadioListTile<String>(
-                                  fillColor:
-                                      WidgetStatePropertyAll(Colors.black),
-                                  title: Text(
-                                    'Sim',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  value: 'Sim',
-                                  groupValue: selectedOptionCliente,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedOptionCliente = value!;
-                                    });
-                                  },
-                                ),
-                                RadioListTile<String>(
-                                  fillColor:
-                                      WidgetStatePropertyAll(Colors.black),
-                                  title: Text(
-                                    'Não',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  value: 'Nao',
-                                  groupValue: selectedOptionCliente,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedOptionCliente = value!;
-                                    });
-                                  },
-                                ),
+                                _buildRadioOptionCliente('Sim'),
+                                _buildRadioOptionCliente('Não'),
                               ],
                             ),
                           ),
@@ -884,20 +800,23 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
                                   height: 30,
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 20),
-                                child: Icon(
-                                  FontAwesomeIcons.handPointLeft,
-                                  size: 50,
-                                  color: Color.fromARGB(255, 0, 52, 95),
-                                ),
-                              ),
                             ],
                           ),
-                          Container(
-                              alignment: Alignment.topRight,
-                              child:
-                                  Text("Arraste para o Lado", style: arraste)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons.handPointLeft,
+                                size: 50,
+                                color: Color.fromARGB(255, 0, 52, 95),
+                              ),
+                              SizedBox(width: 5),
+                              Container(
+                                  alignment: Alignment.topRight,
+                                  child: Text("Arraste para o Lado",
+                                      style: arraste)),
+                            ],
+                          ),
                           const SizedBox(height: 10),
                           const Text(
                             'Empresas concorrentes:',
@@ -1031,20 +950,23 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
                                   height: 30,
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 20),
-                                child: Icon(
-                                  FontAwesomeIcons.handPointLeft,
-                                  size: 50,
-                                  color: Color.fromARGB(255, 0, 52, 95),
-                                ),
-                              ),
                             ],
                           ),
-                          Container(
-                              alignment: Alignment.topRight,
-                              child:
-                                  Text("Arraste para o Lado", style: arraste)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons.handPointLeft,
+                                size: 50,
+                                color: Color.fromARGB(255, 0, 52, 95),
+                              ),
+                              SizedBox(width: 5),
+                              Container(
+                                  alignment: Alignment.topRight,
+                                  child: Text("Arraste para o Lado",
+                                      style: arraste)),
+                            ],
+                          ),
                           const SizedBox(height: 10),
                           const Text(
                             'Qual o foco do médico dentro da especialidade ?',
@@ -1055,123 +977,17 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
                           ),
                           const SizedBox(height: 10),
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.only(left: metadeLargura * 0.6),
                             child: Column(
                               children: [
-                                RadioListTile<String>(
-                                  fillColor:
-                                      WidgetStatePropertyAll(Colors.black),
-                                  title: Text(
-                                    'Urologia',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  value: 'Urologia',
-                                  groupValue: selectedOptionEspecialidade,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedOptionEspecialidade = value!;
-                                    });
-                                  },
-                                ),
-                                RadioListTile<String>(
-                                  fillColor:
-                                      WidgetStatePropertyAll(Colors.black),
-                                  title: Text(
-                                    'Urologia / Oncologia',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  value: 'Urologia / Oncologia',
-                                  groupValue: selectedOptionEspecialidade,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedOptionEspecialidade = value!;
-                                    });
-                                  },
-                                ),
-                                RadioListTile<String>(
-                                  fillColor:
-                                      WidgetStatePropertyAll(Colors.black),
-                                  title: Text(
-                                    'Urologia / Ginecologia',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  value: 'Urologia / Ginecologia',
-                                  groupValue: selectedOptionEspecialidade,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedOptionEspecialidade = value!;
-                                    });
-                                  },
-                                ),
-                                RadioListTile<String>(
-                                  fillColor:
-                                      WidgetStatePropertyAll(Colors.black),
-                                  title: Text(
-                                    'Ginecologia',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  value: 'Ginecologia',
-                                  groupValue: selectedOptionEspecialidade,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedOptionEspecialidade = value!;
-                                    });
-                                  },
-                                ),
-                                RadioListTile<String>(
-                                  fillColor:
-                                      WidgetStatePropertyAll(Colors.black),
-                                  title: Text(
-                                    'Andrologia',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  value: 'Andrologia',
-                                  groupValue: selectedOptionEspecialidade,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedOptionEspecialidade = value!;
-                                    });
-                                  },
-                                ),
-                                RadioListTile<String>(
-                                  fillColor:
-                                      WidgetStatePropertyAll(Colors.black),
-                                  title: Text(
-                                    'Histeroscopia',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  value: 'Histeroscopia',
-                                  groupValue: selectedOptionEspecialidade,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedOptionEspecialidade = value!;
-                                    });
-                                  },
-                                ),
+                                _buildRadioOptionEspecialidade("Urologia"),
+                                _buildRadioOptionEspecialidade(
+                                    "Urologia / Oncologia"),
+                                _buildRadioOptionEspecialidade(
+                                    "Urologia / Ginecologia"),
+                                _buildRadioOptionEspecialidade("Ginecologia"),
+                                _buildRadioOptionEspecialidade("Andrologia"),
+                                _buildRadioOptionEspecialidade("Histeroscopia"),
                               ],
                             ),
                           ),
@@ -1199,20 +1015,91 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
                                   height: 30,
                                 ),
                               ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons.handPointLeft,
+                                size: 50,
+                                color: Color.fromARGB(255, 0, 52, 95),
+                              ),
+                              SizedBox(width: 5),
+                              Container(
+                                  alignment: Alignment.topRight,
+                                  child: Text("Arraste para o Lado",
+                                      style: arraste)),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          const Text(
+                            'Assuntos Abordados:',
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 0, 52, 95),
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                  //labelText: "Digite Aqui",
+                                  hintText: "Digite aqui",
+                                  border: OutlineInputBorder(),
+                                  contentPadding: EdgeInsets.fromLTRB(
+                                      10.0, 20.0, 10.0, 20.0)),
+                              maxLength: 254,
+                              maxLines: 5,
+                              controller: _assuntosAbordados,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: sizeText,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SingleChildScrollView(
+                    child: Container(
+                      height: alturaMaxima,
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                        colors: gradientCoresForm,
+                      )),
+                      //color: const Color.fromARGB(255, 213, 232, 248),
+                      child: Column(
+                        children: [
+                          const Row(
+                            children: [
                               Padding(
-                                padding: EdgeInsets.only(left: 20),
-                                child: Icon(
-                                  FontAwesomeIcons.handPointLeft,
-                                  size: 50,
-                                  color: Color.fromARGB(255, 0, 52, 95),
+                                padding: EdgeInsets.fromLTRB(0, 5, 120, 5),
+                                child: Image(
+                                  image: AssetImage(
+                                      'assets/images/grupo_abduch.png'),
+                                  height: 30,
                                 ),
                               ),
                             ],
                           ),
-                          Container(
-                              alignment: Alignment.topRight,
-                              child:
-                                  Text("Arraste para o Lado", style: arraste)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons.handPointLeft,
+                                size: 50,
+                                color: Color.fromARGB(255, 0, 52, 95),
+                              ),
+                              SizedBox(width: 5),
+                              Container(
+                                  alignment: Alignment.topRight,
+                                  child: Text("Arraste para o Lado",
+                                      style: arraste)),
+                            ],
+                          ),
                           const SizedBox(height: 10),
                           const Text(
                             'Próximos Passos:',
@@ -1254,13 +1141,17 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
                       //color: const Color.fromARGB(255, 213, 232, 248),
                       child: Column(
                         children: [
-                          const Padding(
-                            padding: EdgeInsets.fromLTRB(0, 5, 200, 5),
-                            child: Image(
-                              image:
-                                  AssetImage('assets/images/grupo_abduch.png'),
-                              height: 30,
-                            ),
+                          const Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(0, 5, 120, 5),
+                                child: Image(
+                                  image: AssetImage(
+                                      'assets/images/grupo_abduch.png'),
+                                  height: 30,
+                                ),
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 100),
                           const Text(
@@ -1296,6 +1187,78 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildRadioOption(String label) {
+    return Row(
+      children: [
+        Radio(
+          value: label,
+          groupValue: selectedOption,
+          onChanged: (value) {
+            setState(() {
+              selectedOption = value.toString();
+            });
+          },
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).primaryColor,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRadioOptionCliente(String label) {
+    return Row(
+      children: [
+        Radio(
+          value: label,
+          groupValue: selectedOptionCliente,
+          onChanged: (value) {
+            setState(() {
+              selectedOptionCliente = value.toString();
+            });
+          },
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).primaryColor,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRadioOptionEspecialidade(String label) {
+    return Row(
+      children: [
+        Radio(
+          value: label,
+          groupValue: selectedOptionEspecialidade,
+          onChanged: (value) {
+            setState(() {
+              selectedOptionEspecialidade = value.toString();
+            });
+          },
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).primaryColor,
+          ),
+        ),
+      ],
     );
   }
 }

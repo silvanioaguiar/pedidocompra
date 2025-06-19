@@ -15,6 +15,7 @@ class FormularioVisita with ChangeNotifier {
   String clienteDoGrupo;
   String listaConcorrentes;
   String especialidade;
+  String assuntosAbordados;
   String proximosPassos;
 
   FormularioVisita({
@@ -31,6 +32,7 @@ class FormularioVisita with ChangeNotifier {
     required this.clienteDoGrupo,
     required this.listaConcorrentes,
     required this.especialidade,
+    required this.assuntosAbordados,
     required this.proximosPassos,
   });
 }

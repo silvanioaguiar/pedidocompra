@@ -1,6 +1,7 @@
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pedidocompra/main.dart';
 import 'package:pedidocompra/models/crm/concorrentes.dart';
 import 'package:pedidocompra/providers/crm/concorrentesLista.dart';
 import 'package:pedidocompra/services/viacep_service.dart';
@@ -94,7 +95,7 @@ class _IncluirConcorrenteCrmState extends State<IncluirConcorrenteCrm> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: azulRoyalTopo,
         foregroundColor: Colors.white,
         title: Text(
           "Incluir Concorrente",

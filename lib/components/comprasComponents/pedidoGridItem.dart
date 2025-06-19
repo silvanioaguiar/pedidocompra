@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pedidocompra/main.dart';
 import 'package:pedidocompra/models/moduloComprasModels/pedidos.dart';
 import 'package:pedidocompra/providers/compras/pedidosLista.dart';
 import 'package:provider/provider.dart';
-
 
 class PedidoGridItem extends StatelessWidget {
   const PedidoGridItem({Key? key}) : super(key: key);
@@ -34,7 +34,7 @@ class PedidoGridItem extends StatelessWidget {
       sizeCrossAxisCount = 4;
       sizeAspectRatio = 1.2;
     } else {
-      widthScreen = size.width * 0.8;
+      widthScreen = size.width * 0.9;
       heightScreen = size.height * 0.6;
       sizeText = 14;
       sizeCrossAxisCount = 2;
@@ -42,21 +42,23 @@ class PedidoGridItem extends StatelessWidget {
     }
 
     if (empresa == 'Big Assistencia Tecnica' || empresa == 'Big Locacao') {
-      logo = 'assets/images/logo_big.png';
+      logo = 'assets/images/logos/Icone_Big_03.png';
     } else if (empresa == 'Biosat Matriz Fabrica' ||
         empresa == 'Biosat Filial') {
-      logo = 'assets/images/logo_biosat2.png';
+      logo = 'assets/images/logos/Icone_Biosat_03.png';
     } else if (empresa == 'Libertad') {
-      logo = 'assets/images/logo_libertad.png';
+      logo = 'assets/images/logos/Icone_Liberttad_03.png';
     } else if (empresa == 'E-med') {
-      logo = 'assets/images/logo_emed.png';
+      logo = 'assets/images/logos/Icone_EMed_03.png';
     } else if (empresa == 'Brumed') {
-      logo = 'assets/images/logo_Brumed.png';
+      logo = 'assets/images/logos/Icone_Brumed_03.png';
     }
 
     if (status == "Aguardando Aprovacao") {
-      color1Card = const Color.fromARGB(255, 5, 34, 58);
-      color2Card = const Color.fromARGB(255, 85, 170, 250);
+      //color1Card = const Color.fromARGB(255, 5, 34, 58);
+      //color2Card = const Color.fromARGB(255, 85, 170, 250);
+      color1Card = const Color.fromARGB(255, 255, 255, 255);
+      color2Card = const Color.fromARGB(255, 255, 255, 255);
     } else if (status == "Pendente de Entrega") {
       color1Card = const Color.fromARGB(255, 58, 5, 5);
       color2Card = const Color.fromARGB(255, 162, 230, 255);
@@ -82,6 +84,15 @@ class PedidoGridItem extends StatelessWidget {
           image: DecorationImage(
             image: AssetImage(logo),
             alignment: Alignment.topRight,
+            
+          ),
+          border: const Border(
+            bottom: BorderSide(
+              color: Colors.blue,
+            ),
+            right: BorderSide(
+              color: Colors.blue,
+            ),
           ),
         ),
         height: 200,
@@ -90,7 +101,7 @@ class PedidoGridItem extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 5),
               child: SizedBox(
-                width: 320,
+                width: widthScreen,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,9 +112,9 @@ class PedidoGridItem extends StatelessWidget {
                       style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 0, 102, 245)),
+                          color: azulRoyalTopo),
                     ),
-                    const SizedBox(),
+                    const SizedBox(height: 10),
                     Text(
                       pedido.fornecedor.length > 25
                           ? 'Fornecedor: ${pedido.fornecedor.substring(0, 25)}'
@@ -112,7 +123,7 @@ class PedidoGridItem extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: azulRoyalTopo,
                       ),
                     ),
                     const SizedBox(),
@@ -122,7 +133,7 @@ class PedidoGridItem extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: azulRoyalTopo,
                       ),
                     ),
                     const SizedBox(),
@@ -133,7 +144,7 @@ class PedidoGridItem extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: azulRoyalTopo,
                       ),
                     ),
                     Text(
@@ -142,7 +153,7 @@ class PedidoGridItem extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: azulRoyalTopo,
                       ),
                     ),
                     if (status == "Pendente de Entrega")
@@ -152,7 +163,7 @@ class PedidoGridItem extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: azulRoyalTopo,
                         ),
                       ),
                     if (status == "Pendente de Entrega")
@@ -162,52 +173,101 @@ class PedidoGridItem extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: azulRoyalTopo,
                         ),
                       ),
-                    const SizedBox(height: 10, width: 100),
+                    const SizedBox(height: 30),
                     if (status == "Aguardando Aprovacao")
                       SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
                         child: Row(
                           children: [
-                            const SizedBox(width: 60),
-                            IconButton(
-                              onPressed: () {
+                            const SizedBox(width: 30),
+                            GestureDetector(
+                              onTap: () {
                                 Provider.of<PedidosLista>(
                                   context,
                                   listen: false,
                                 ).aprovarPedido(context, pedido);
                               },
-                              icon: const Icon(Icons.beenhere_sharp,
-                                  color: Color.fromARGB(255, 34, 185, 39)),
-                              iconSize: 30,
-                              tooltip: "Aprovar",
+                              child: SizedBox(
+                                //width: 75,
+                                //height: 75,
+                                child: Image.asset(
+                                  'assets/images/botoes/aprovar_tipo2.png',
+                                  scale: 2.3,
+                                ),
+                              ),
                             ),
-                            const SizedBox(width: 40),
-                            IconButton(
-                              onPressed: () {
+                            // IconButton(
+                            //   onPressed: () {
+                            //     Provider.of<PedidosLista>(
+                            //       context,
+                            //       listen: false,
+                            //     ).aprovarPedido(context, pedido);
+                            //   },
+                            //   icon: const Icon(Icons.beenhere_sharp,
+                            //       color: Color.fromARGB(255, 34, 185, 39)),
+                            //   iconSize: 30,
+                            //   tooltip: "Aprovar",
+                            // ),
+                            const SizedBox(width: 25),
+                            GestureDetector(
+                              onTap: () {
                                 Provider.of<PedidosLista>(
                                   context,
                                   listen: false,
                                 ).reprovarPedido(context, pedido);
                               },
-                              icon: const Icon(Icons.cancel,
-                                  color: Color.fromARGB(255, 155, 27, 27)),
-                              iconSize: 30,
-                              tooltip: "Reprovar",
+                              child: SizedBox(
+                                //width: 75,
+                                // height: 75,
+                                child: Image.asset(
+                                  'assets/images/botoes/reprovar_tipo2.png',
+                                  scale: 2.3,
+                                ),
+                              ),
                             ),
-                            const SizedBox(width: 40),
-                            IconButton(
-                              onPressed: () {
+                            // IconButton(
+                            //   onPressed: () {
+                            //     Provider.of<PedidosLista>(
+                            //       context,
+                            //       listen: false,
+                            //     ).reprovarPedido(context, pedido);
+                            //   },
+                            //   icon: const Icon(Icons.cancel,
+                            //       color: Color.fromARGB(255, 155, 27, 27)),
+                            //   iconSize: 30,
+                            //   tooltip: "Reprovar",
+                            // ),
+                            const SizedBox(width: 25),
+                            // IconButton(
+                            //   onPressed: () {
+                            //     Provider.of<PedidosLista>(
+                            //       context,
+                            //       listen: false,
+                            //     ).loadItensPedidos(context, pedido);
+                            //   },
+                            //   icon: const Icon(Icons.list_alt),
+                            //   color: Colors.white,
+                            //   iconSize: 30,
+                            //   tooltip: 'Vizualizar Pedido',
+                            // ),
+                            GestureDetector(
+                              onTap: () {
                                 Provider.of<PedidosLista>(
                                   context,
                                   listen: false,
                                 ).loadItensPedidos(context, pedido);
                               },
-                              icon: const Icon(Icons.list_alt),
-                              color: Colors.white,
-                              iconSize: 30,
-                              tooltip: 'Vizualizar Pedido',
+                              child: SizedBox(
+                                // width: 75,
+                                //height: 75,
+                                child: Image.asset(
+                                  'assets/images/botoes/visualizar_tipo2.png',
+                                  scale: 2.3,
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -243,32 +303,32 @@ class PedidoGridItem extends StatelessWidget {
                           ),
                         ],
                       ),
-                    if (status == "Aguardando Aprovacao")
-                      const Row(
-                        children: [
-                          SizedBox(width: 50),
-                          Text(
-                            'Aprovar',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 34, 185, 39),
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(width: 35),
-                          Text(
-                            'Reprovar',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 155, 21, 21),
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(width: 20),
-                          Text(
-                            'Visualizar',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
+                    // if (status == "Aguardando Aprovacao")
+                    //   const Row(
+                    //     children: [
+                    //       SizedBox(width: 50),
+                    //       Text(
+                    //         'Aprovar',
+                    //         style: TextStyle(
+                    //             color: Color.fromARGB(255, 34, 185, 39),
+                    //             fontWeight: FontWeight.bold),
+                    //       ),
+                    //       SizedBox(width: 35),
+                    //       Text(
+                    //         'Reprovar',
+                    //         style: TextStyle(
+                    //             color: Color.fromARGB(255, 155, 21, 21),
+                    //             fontWeight: FontWeight.bold),
+                    //       ),
+                    //       SizedBox(width: 20),
+                    //       Text(
+                    //         'Visualizar',
+                    //         style: TextStyle(
+                    //             color: Colors.white,
+                    //             fontWeight: FontWeight.bold),
+                    //       ),
+                    //     ],
+                    //   ),
                     if (status == "Pendente de Entrega")
                       const Row(
                         children: [

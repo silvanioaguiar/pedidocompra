@@ -1,17 +1,15 @@
 import 'package:date_field/date_field.dart';
-import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:pedidocompra/components/appDrawer.dart';
 import 'package:pedidocompra/components/crm/utils.dart';
+import 'package:pedidocompra/main.dart';
 import 'package:pedidocompra/models/crm/locaisDeEntrega.dart';
 import 'package:pedidocompra/providers/crm/locaisDeEntregaLista.dart';
 import 'package:pedidocompra/models/crm/medicos.dart';
 import 'package:pedidocompra/providers/crm/medicosLista.dart';
 import 'package:pedidocompra/providers/crm/visitasLista.dart';
-import 'package:pedidocompra/services/navigator_service.dart';
 import 'package:provider/provider.dart';
-import 'package:table_calendar/table_calendar.dart';
+
 
 class EditarAgendaCrm extends StatefulWidget {
   final Event event;
@@ -28,6 +26,10 @@ class EditarAgendaCrm extends StatefulWidget {
 class _EditarAgendaCrmState extends State<EditarAgendaCrm> {
   late TextEditingController _medicoController;
   late TextEditingController _localController;
+  //late TextEditingController _objetivoController;
+  var _objetivoController = TextEditingController();
+  var _cancelarController = TextEditingController();
+  //final _objetivoController = TextEditingController();
 
   final format = DateFormat("dd MMM yyyy HH:mm", "pt_BR");
   final _formKey = GlobalKey<FormState>();
@@ -57,6 +59,8 @@ class _EditarAgendaCrmState extends State<EditarAgendaCrm> {
     // Inicializa os controladores com os valores do evento
     _medicoController = TextEditingController(text: widget.event.nomeMedico);
     _localController = TextEditingController(text: widget.event.local);
+    _objetivoController = TextEditingController(text: widget.event.objetivo);
+    _cancelarController = TextEditingController(text: widget.event.cancelarMotivo);
 
     // Inicializa o status selecionado
     if (widget.event.status == '1') {
@@ -81,6 +85,7 @@ class _EditarAgendaCrmState extends State<EditarAgendaCrm> {
     // Libera os recursos dos controladores
     _medicoController.dispose();
     _localController.dispose();
+    _objetivoController.dispose();
     super.dispose();
   }
 
@@ -111,11 +116,13 @@ class _EditarAgendaCrmState extends State<EditarAgendaCrm> {
       'codigoMedico': codigoMedicoSelecionado,
       'codigoLocalDeEntrega': codigoLocalDeEntregaSelecionado,
       'local': _localController.text,
+      'objetivo': _objetivoController.text,
       'status': statusSelecionado,
       'dataPrevista': dataSelecionada?.toIso8601String(),
       'horaPrevista': horaSelecionada != null
           ? "${horaSelecionada!.hour.toString().padLeft(2, '0')}:${horaSelecionada!.minute.toString().padLeft(2, '0')}" // Para hora
           : null,
+      'cancelarMotivo':_cancelarController.text,
     };
 
     await Provider.of<VisitasLista>(
@@ -162,7 +169,7 @@ class _EditarAgendaCrmState extends State<EditarAgendaCrm> {
     }
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: azulRoyalTopo,
         foregroundColor: Colors.white,
         title: Text(
           "Editar Visita",
@@ -326,7 +333,7 @@ class _EditarAgendaCrmState extends State<EditarAgendaCrm> {
                     );
                   },
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 05),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -336,6 +343,28 @@ class _EditarAgendaCrmState extends State<EditarAgendaCrm> {
                     else
                       Text('Código Local: $codigoLocalDeEntregaSelecionado'),
                   ],
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: "Objetivo",
+                    hintText: "Objetivo da Visita",
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 20.0),
+                  ),
+                  maxLength: 254,
+                  maxLines: 5,
+                  controller: _objetivoController,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: sizeText,
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Campo Obrigatório";
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 30),
                 Container(
@@ -353,7 +382,6 @@ class _EditarAgendaCrmState extends State<EditarAgendaCrm> {
                               fontSize: 17,
                               fontWeight: FontWeight.bold,
                             ),
-                            
                           ),
                         ],
                       ),
@@ -378,6 +406,27 @@ class _EditarAgendaCrmState extends State<EditarAgendaCrm> {
                           });
                         },
                       ),
+                      if (statusSelecionado == '4-Cancelada')
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                              labelText: 'Motivo do Cancelamento',
+                              border: OutlineInputBorder(),
+                            ),
+                            controller: _cancelarController,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: sizeText,
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Campo Obrigatório";
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
                       Row(
                         children: [
                           Expanded(

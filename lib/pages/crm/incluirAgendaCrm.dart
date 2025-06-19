@@ -1,13 +1,13 @@
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pedidocompra/main.dart';
 import 'package:pedidocompra/models/crm/locaisDeEntrega.dart';
 import 'package:pedidocompra/providers/crm/locaisDeEntregaLista.dart';
 import 'package:pedidocompra/models/crm/medicos.dart';
 import 'package:pedidocompra/providers/crm/medicosLista.dart';
 import 'package:pedidocompra/providers/crm/visitasLista.dart';
 import 'package:provider/provider.dart';
-
 
 class IncluirAgendaCrm extends StatefulWidget {
   const IncluirAgendaCrm({super.key});
@@ -20,6 +20,7 @@ class _IncluirAgendaCrmState extends State<IncluirAgendaCrm> {
   final _formKey = GlobalKey<FormState>();
   late final _medicoController = TextEditingController();
   late final _localController = TextEditingController();
+  final _objetivoController = TextEditingController();
   final format = DateFormat("dd MMM yyyy HH:mm", "pt_BR");
   List<Medicos>? loadedMedicos;
   List<LocaisDeEntrega>? loadedLocaisDeEntrega;
@@ -38,7 +39,7 @@ class _IncluirAgendaCrmState extends State<IncluirAgendaCrm> {
   @override
   void initState() {
     super.initState();
-     _loadMedicos(); 
+    _loadMedicos();
     _loadLocaisDeEntrega();
   }
 
@@ -75,6 +76,7 @@ class _IncluirAgendaCrmState extends State<IncluirAgendaCrm> {
       'medico': _medicoController.text,
       'codigoLocalDeEntrega': codigoLocalDeEntregaSelecionado,
       'localDescricao': _localController.text,
+      'objetivo': _objetivoController.text,
       'dataPrevista': dataSelecionada?.toIso8601String(),
       'horaPrevista': horaSelecionada != null
           ? "${horaSelecionada!.hour.toString().padLeft(2, '0')}:${horaSelecionada!.minute.toString().padLeft(2, '0')}" // Para hora
@@ -114,7 +116,7 @@ class _IncluirAgendaCrmState extends State<IncluirAgendaCrm> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: azulRoyalTopo,
         foregroundColor: Colors.white,
         title: Text(
           "Incluir Visita",
@@ -199,7 +201,7 @@ class _IncluirAgendaCrmState extends State<IncluirAgendaCrm> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text('Código do Médico: $codigoMedicoSelecionado'),                   
+                    Text('Código do Médico: $codigoMedicoSelecionado'),
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -212,7 +214,8 @@ class _IncluirAgendaCrmState extends State<IncluirAgendaCrm> {
                     }
                     // Extrai somente os nomes dos médicos
                     final nomesLocaisDeEntrega = loadedLocaisDeEntrega!
-                        .map((locaisDeEntrega) => locaisDeEntrega.localDescricao)
+                        .map(
+                            (locaisDeEntrega) => locaisDeEntrega.localDescricao)
                         .toList();
 
                     if (textEditingLocaisDeEntrega.text.isEmpty) {
@@ -265,18 +268,38 @@ class _IncluirAgendaCrmState extends State<IncluirAgendaCrm> {
                       },
                     );
                   },
-                ),                
-                 const SizedBox(height: 10),
+                ),
+                const SizedBox(height: 10),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text('Código do Local: $codigoLocalDeEntregaSelecionado'),                   
+                    Text('Código do Local: $codigoLocalDeEntregaSelecionado'),
                   ],
                 ),
-
                 const SizedBox(height: 30),
-
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: "Objetivo",
+                    hintText: "Objetivo da Visita",
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 20.0),
+                  ),
+                  maxLength: 254,
+                  maxLines: 5,
+                  controller: _objetivoController,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: sizeText,
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Campo Obrigatório";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 30),
                 Row(
                   children: [
                     Expanded(

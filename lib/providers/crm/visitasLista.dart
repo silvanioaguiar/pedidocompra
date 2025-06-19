@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart ' as http;
 import 'package:pedidocompra/models/crm/visitas.dart';
 import 'package:pedidocompra/services/navigator_service.dart';
-import 'package:provider/provider.dart';
 
 class VisitasLista with ChangeNotifier {
   final String _token;
@@ -118,25 +117,26 @@ class VisitasLista with ChangeNotifier {
       for (var data in data) {
         visitas.add(
           Visitas(
-            codigo: data['principal']['codigo'],
-            status: data['principal']['status'],
-            codigoRepresentante: data['principal']['codigoRepresentante'],
-            nomeRepresentante: data['principal']['nomeRepresentante'],
-            codigoMedico: data['principal']['codigoMedico'],
-            nomeMedico: data['principal']['nomeMedico'],
-            codigoLocalDeEntrega: data['principal']['codigoLocalDeEntrega']?? "",
-            local: data['principal']['local'],
-            dataPrevista: DateTime.parse(data['principal']['dataPrevista']),
-            horaPrevista: data['principal']['horaPrevista'],
-            dataRealizada: data['principal']['dataRealizada'] != null &&
-                    data['principal']['dataRealizada'].trim().isNotEmpty
-                ? DateTime.parse(data['principal']['dataRealizada'].trim())
-                : null,
-            horaRealizada: data['principal']['horaRealizada'] ?? "00:00",
-            nomeUsuario:   data['principal']['nomeUsuario']  ?? "" ,    
-            codFormulario: data['principal']['codFormulario']  ?? ""      
-            
-          ),
+              codigo: data['principal']['codigo'],
+              status: data['principal']['status'],
+              codigoRepresentante: data['principal']['codigoRepresentante'],
+              nomeRepresentante: data['principal']['nomeRepresentante'],
+              codigoMedico: data['principal']['codigoMedico'],
+              nomeMedico: data['principal']['nomeMedico'],
+              codigoLocalDeEntrega:
+                  data['principal']['codigoLocalDeEntrega'] ?? "",
+              local: data['principal']['local'],
+              objetivo: data['principal']['objetivo'],
+              cancelarMotivo: data['principal']['cancelarMotivo'] ?? "",
+              dataPrevista: DateTime.parse(data['principal']['dataPrevista']),
+              horaPrevista: data['principal']['horaPrevista'],
+              dataRealizada: data['principal']['dataRealizada'] != null &&
+                      data['principal']['dataRealizada'].trim().isNotEmpty
+                  ? DateTime.parse(data['principal']['dataRealizada'].trim())
+                  : null,
+              horaRealizada: data['principal']['horaRealizada'] ?? "00:00",
+              nomeUsuario: data['principal']['nomeUsuario'] ?? "",
+              codFormulario: data['principal']['codFormulario'] ?? ""),
         );
       }
     }
@@ -147,8 +147,7 @@ class VisitasLista with ChangeNotifier {
     return visitas;
   }
 
-
-  Future<dynamic> loadVisitaUnica(context,codigoVisita) async {
+  Future<dynamic> loadVisitaUnica(context, codigoVisita) async {
     List<Visitas> visitas = [];
     _visitas.clear();
     visitas.clear();
@@ -239,30 +238,29 @@ class VisitasLista with ChangeNotifier {
       for (var data in data) {
         visitas.add(
           Visitas(
-            codigo: data['principal']['codigo'],
-            status: data['principal']['status'],
-            codigoRepresentante: data['principal']['codigoRepresentante'],
-            nomeRepresentante: data['principal']['nomeRepresentante'],
-            codigoMedico: data['principal']['codigoMedico'],
-            nomeMedico: data['principal']['nomeMedico'],
-            codigoLocalDeEntrega: data['principal']['codigoLocalDeEntrega']?? "",
-            local: data['principal']['local'],
-            dataPrevista: DateTime.parse(data['principal']['dataPrevista']),
-            horaPrevista: data['principal']['horaPrevista'],
-            dataRealizada: data['principal']['dataRealizada'] != null &&
-                    data['principal']['dataRealizada'].trim().isNotEmpty
-                ? DateTime.parse(data['principal']['dataRealizada'].trim())
-                : null,
-            horaRealizada: data['principal']['horaRealizada'] ?? "00:00",
-            nomeUsuario:   data['principal']['nomeUsuario']  ?? "" ,    
-            codFormulario: data['principal']['codFormulario']  ?? ""      
-            
-          ),
+              codigo: data['principal']['codigo'],
+              status: data['principal']['status'],
+              codigoRepresentante: data['principal']['codigoRepresentante'],
+              nomeRepresentante: data['principal']['nomeRepresentante'],
+              codigoMedico: data['principal']['codigoMedico'],
+              nomeMedico: data['principal']['nomeMedico'],
+              codigoLocalDeEntrega:
+                  data['principal']['codigoLocalDeEntrega'] ?? "",
+              local: data['principal']['local'],
+              objetivo: data['principal']['objetivo'],
+              cancelarMotivo: data['principal']['cancelarMotivo'] ?? "",
+              dataPrevista: DateTime.parse(data['principal']['dataPrevista']),
+              horaPrevista: data['principal']['horaPrevista'],
+              dataRealizada: data['principal']['dataRealizada'] != null &&
+                      data['principal']['dataRealizada'].trim().isNotEmpty
+                  ? DateTime.parse(data['principal']['dataRealizada'].trim())
+                  : null,
+              horaRealizada: data['principal']['horaRealizada'] ?? "00:00",
+              nomeUsuario: data['principal']['nomeUsuario'] ?? "",
+              codFormulario: data['principal']['codFormulario'] ?? ""),
         );
       }
     }
-
-    
 
     notifyListeners();
     return visitas;
@@ -284,9 +282,11 @@ class VisitasLista with ChangeNotifier {
       'medico': dadosVisita['medico'],
       'codigoMedico': dadosVisita['codigoMedico'],
       'localVisita': dadosVisita['local'],
+      'objetivo': dadosVisita['objetivo'],
       'dataVisita': dadosVisita['dataPrevista'],
       'horaVisita': dadosVisita['horaPrevista'],
       'statusVisita': dadosVisita['status'],
+      'cancelarMotivo':dadosVisita['cancelarMotivo'],
     });
 
     final response = await http.post(uri, headers: headers, body: body);
@@ -349,6 +349,7 @@ class VisitasLista with ChangeNotifier {
     }
     notifyListeners();
     await loadVisitas(context);
+    await loadVisitaUnica(context, dadosVisita['codigo']);
   }
 
   Future<dynamic> incluirVisitas(context, dadosVisita) async {
@@ -367,6 +368,7 @@ class VisitasLista with ChangeNotifier {
       'medico': dadosVisita['medico'],
       'codigoLocalDeEntrega': dadosVisita['codigoLocalDeEntrega'],
       'localVisita': dadosVisita['localDescricao'],
+      'objetivo': dadosVisita['objetivo'],
       'dataVisita': dadosVisita['dataPrevista'],
       'horaVisita': dadosVisita['horaPrevista'],
     });
@@ -523,5 +525,161 @@ class VisitasLista with ChangeNotifier {
     }
     notifyListeners();
     await loadVisitas(context);
+  }
+
+  Future<dynamic> enviarEmailRelatorio(context, dadosRelatorio) async {
+    final uri = Uri.parse(
+        'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/EnviarRelatorioVisitas');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Accept-Charset': 'utf-8',
+      'tenantId': '02,01', // fixado como Biosat Matriz
+      'Authorization': 'Bearer $_token',
+    };
+    List listaRelatorio = dadosRelatorio.toList();
+
+    final body = jsonEncode({
+      'tipoRelatorio': listaRelatorio[0],
+      'email': listaRelatorio[1],
+      'dataInicio': (listaRelatorio[2] as DateTime).toIso8601String(),
+      'dataFim': (listaRelatorio[3] as DateTime).toIso8601String(),
+    });
+
+    final response = await http.post(uri, headers: headers, body: body);
+
+    if (response.statusCode == 500) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text(
+            'ATENÇÃO!',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          content: const Text(
+            'Não foi possivel  enviar o relatório. Contate o administrador do sistema',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                NavigatorService.instance.pop();
+              },
+              child: const Text("Fechar",
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 5, 0, 0))),
+            ),
+          ],
+        ),
+      );
+    } else if (response.statusCode >= 200 && response.statusCode <= 299) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text(
+            'ATENÇÃO!',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          content: const Text(
+            'Relatório enviado com sucesso',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Fecha o dialog
+                Navigator.of(context).pop(); // Fecha a tela principal
+              },
+              child: const Text("Fechar",
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 5, 0, 0))),
+            ),
+          ],
+        ),
+      );
+    }
+    notifyListeners();
+  }
+
+  Future<dynamic> enviarWhatsappRelatorio(context, dadosRelatorio) async {
+    final uri = Uri.parse(
+        'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/EnviarWhatsappRelatorioVisitas');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Accept-Charset': 'utf-8',
+      'tenantId': '02,01', // fixado como Biosat Matriz
+      'Authorization': 'Bearer $_token',
+    };
+    List listaRelatorio = dadosRelatorio.toList();
+
+    final body = jsonEncode({
+      'tipoRelatorio': listaRelatorio[0],
+      'celular': listaRelatorio[1],
+      'dataInicio': (listaRelatorio[2] as DateTime).toIso8601String(),
+      'dataFim': (listaRelatorio[3] as DateTime).toIso8601String(),      
+    });
+
+    final response = await http.post(uri, headers: headers, body: body);
+
+    if (response.statusCode == 500) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text(
+            'ATENÇÃO!',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          content: const Text(
+            'Não foi possivel  enviar o relatório. Contate o administrador do sistema',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                NavigatorService.instance.pop();
+              },
+              child: const Text("Fechar",
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 5, 0, 0))),
+            ),
+          ],
+        ),
+      );
+    } else if (response.statusCode >= 200 && response.statusCode <= 299) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text(
+            'ATENÇÃO!',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          content: const Text(
+            'Relatório enviado com sucesso',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Fecha o dialog
+                Navigator.of(context).pop(); // Fecha a tela principal
+              },
+              child: const Text("Fechar",
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 5, 0, 0))),
+            ),
+          ],
+        ),
+      );
+    }
+    notifyListeners();
   }
 }

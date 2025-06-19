@@ -3,8 +3,11 @@ import 'package:pedidocompra/components/crm/utils.dart';
 import 'package:pedidocompra/models/auth.dart';
 import 'package:pedidocompra/pages/crm/editarProspectCrm.dart';
 import 'package:pedidocompra/pages/crm/gerenciarVisitaCrm.dart';
+import 'package:pedidocompra/pages/crm/incluirContatoCrm.dart';
 import 'package:pedidocompra/pages/crm/incluirMedico.dart';
 import 'package:pedidocompra/pages/crm/incluirProspectCrm.dart';
+import 'package:pedidocompra/pages/crm/relatorioVisitasCrm.dart';
+import 'package:pedidocompra/providers/crm/ContatosLista.dart';
 import 'package:pedidocompra/providers/crm/HospitaisLista.dart';
 import 'package:pedidocompra/providers/crm/concorrentesLista.dart';
 import 'package:pedidocompra/providers/crm/formularioVisitaProvider.dart';
@@ -12,6 +15,7 @@ import 'package:pedidocompra/providers/crm/locaisDeEntregaLista.dart';
 import 'package:pedidocompra/providers/crm/medicosLista.dart';
 import 'package:pedidocompra/providers/crm/prospectsLista.dart';
 import 'package:pedidocompra/providers/crm/representantesLista.dart';
+import 'package:pedidocompra/services/connectzap_service.dart';
 import 'package:pedidocompra/services/viacep_service.dart';
 import 'package:pedidocompra/providers/crm/visitasLista.dart';
 import 'package:pedidocompra/providers/faturamento/fat_convenioLista.dart';
@@ -62,6 +66,8 @@ class AppScrollBehavior extends MaterialScrollBehavior {
   };
 }
 
+const Color azulRoyalTopo = Color(0xFF0D0B4C);
+const Color vermelhoLetra = Color(0xFFC3222A);
 
 
 void main() {
@@ -214,6 +220,16 @@ class MyApp extends StatelessWidget {
             );
           },
         ),
+        ChangeNotifierProxyProvider<Auth, ContatosLista>(
+          create: (_) => ContatosLista('', []),
+          update: (ctx, auth, previous) {
+            return ContatosLista(
+              auth.token ?? '',
+              previous?.contatos ?? [],
+              //auth.senha ?? '',
+            );
+          },
+        ),
         ChangeNotifierProxyProvider<Auth, HospitaisLista>(
           create: (_) => HospitaisLista('', []),
           update: (ctx, auth, previous) {
@@ -230,6 +246,17 @@ class MyApp extends StatelessWidget {
             return ViaCepService(
               auth.token ?? '',
               previous?.endereco ?? [],
+
+              //auth.senha ?? '',
+            );
+          },
+        ),
+         ChangeNotifierProxyProvider<Auth, ConnectZapService>(
+          create: (_) => ConnectZapService(''),
+          update: (ctx, auth, previous) {
+            return ConnectZapService(
+              auth.token ?? '',
+              
 
               //auth.senha ?? '',
             );
@@ -317,8 +344,10 @@ class MyApp extends StatelessWidget {
           AppRoutes.formularioCrm: (ctx) => const FormularioCrm(),
           AppRoutes.incluirAgendaCrm: (ctx) => const IncluirAgendaCrm(),
           AppRoutes.incluirConcorrenteCrm: (ctx) => IncluirConcorrenteCrm(),
+          AppRoutes.incluirContatoCrm: (ctx) => IncluirContatoCrm(),
           AppRoutes.incluirProspectCrm: (ctx) => IncluirProspectCrm(),
           AppRoutes.incluirMedicoCrm: (ctx) => IncluirMedicoCrm(),
+          AppRoutes.relatorioVisitasCrm: (ctx) => const RelatorioVisitasCrm(),
           AppRoutes.gerenciarVisitaCrm: (ctx) => GerenciarVisitaCrm(
                 event: Event(
                   codigo: "",
@@ -328,6 +357,8 @@ class MyApp extends StatelessWidget {
                   nomeRepresentante: "",
                   codigoLocalDeEntrega: "",
                   local: "",
+                  objetivo: "",
+                  cancelarMotivo: "",
                   status: "",
                   dataPrevista: DateTime.now(),
                   dataRealizada: DateTime.now(),
@@ -346,6 +377,8 @@ class MyApp extends StatelessWidget {
                 nomeRepresentante: "",
                 codigoLocalDeEntrega: "",
                 local: "",
+                objetivo: "",
+                cancelarMotivo: "",
                 status: "",
                 dataPrevista: DateTime.now(),
                 dataRealizada: DateTime.now(),
@@ -363,6 +396,8 @@ class MyApp extends StatelessWidget {
                   nomeRepresentante: "",
                   codigoLocalDeEntrega: "",
                   local: "",
+                  objetivo: "",
+                  cancelarMotivo: "",
                   status: "",
                   dataPrevista: DateTime.now(),
                   dataRealizada: DateTime.now(),
@@ -381,6 +416,8 @@ class MyApp extends StatelessWidget {
                   nomeRepresentante: "",
                   codigoLocalDeEntrega: "",
                   local: "",
+                  objetivo: "",
+                  cancelarMotivo: "",
                   status: "",
                   dataPrevista: DateTime.now(),
                   dataRealizada: DateTime.now(),

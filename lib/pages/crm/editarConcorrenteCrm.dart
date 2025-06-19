@@ -1,6 +1,7 @@
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pedidocompra/main.dart';
 import 'package:pedidocompra/models/crm/concorrentes.dart';
 import 'package:pedidocompra/providers/crm/concorrentesLista.dart';
 import 'package:pedidocompra/services/viacep_service.dart';
@@ -80,7 +81,7 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
     super.dispose();
   }
 
-  Future<void> _editarConcorrentes(context) async {
+  Future<void> _editarConcorrente(context) async {
     final dadosConcorrente = {
       'codigo': widget.concorrente.codigo,
       'razaoSocial': _razaoSocialController.text,
@@ -142,7 +143,7 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: azulRoyalTopo,
         foregroundColor: Colors.white,
         title: Text(
           "Editar Concorrente",
@@ -484,7 +485,7 @@ class _EditarConcorrenteCrmState extends State<EditarConcorrenteCrm> {
                         ),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            _editarConcorrentes(context);
+                            _editarConcorrente(context);
                           }
                         },
                         child: const Text("Salvar"),

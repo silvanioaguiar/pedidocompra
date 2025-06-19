@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/components/appDrawer.dart';
+import 'package:pedidocompra/main.dart';
 import 'package:pedidocompra/models/crm/propects.dart';
 import 'package:pedidocompra/pages/crm/editarProspectCrm.dart';
 import 'package:pedidocompra/pages/crm/incluirProspectCrm.dart';
@@ -21,7 +22,6 @@ class _ProspectCrmState extends State<ProspectCrm> {
   void initState() {
     super.initState();
     Future.microtask(() => _loadProspects());
-
   }
 
   @override
@@ -32,7 +32,6 @@ class _ProspectCrmState extends State<ProspectCrm> {
   Future<void> _loadProspects() async {
     final provider = Provider.of<ProspectsLista>(context, listen: false);
     await provider.loadProspects(provider);
-   
   }
 
   @override
@@ -61,7 +60,7 @@ class _ProspectCrmState extends State<ProspectCrm> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: azulRoyalTopo,
         foregroundColor: Colors.white,
         title: Text(
           "Prospects",
@@ -72,168 +71,186 @@ class _ProspectCrmState extends State<ProspectCrm> {
         ),
       ),
       drawer: AppDrawer(),
-      body: Consumer<ProspectsLista>(
-        builder: (context, prospectsLista, _) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    width: widthScreen,
-                    height: heightScreen,
-                    child: ListView.builder(
-                      itemCount: prospectsLista.prospects.length,
-                      itemBuilder: (context, index) {
-                        final prospect = prospectsLista.prospects[index];
-                        return Container(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 12.0,
-                            vertical: 4.0,
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border.all(),
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
-                          child: ListTile(
-                              title: SizedBox(
-                                width: 100,
-                                child: Text(
-                                  prospect.nomeFantasia,
-                                  style: const TextStyle(
-                                      fontSize: 12, fontWeight: FontWeight.bold),
+      body: Container(
+        alignment: Alignment.center,
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/fundos/FUNDO_BIOSAT_APP_02_640.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Consumer<ProspectsLista>(
+          builder: (context, prospectsLista, _) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      width: widthScreen,
+                      height: heightScreen,
+                      child: ListView.builder(
+                        itemCount: prospectsLista.prospects.length,
+                        itemBuilder: (context, index) {
+                          final prospect = prospectsLista.prospects[index];
+                          return Container(
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 12.0,
+                              vertical: 4.0,
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border.all(),
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            child: ListTile(
+                                title: SizedBox(
+                                  width: 100,
+                                  child: Text(
+                                    prospect.nomeFantasia,
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
-                              ),
-                              subtitle: Text(prospect.endereco!),
-                              trailing: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Flexible(
-                                    child: IconButton(
-                                      onPressed: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(builder: (ctx) {
-                                            return EditarProspectCrm(
-                                              prospect: prospect,
-                                            );
-                                          }),
-                                        ).then(
-                                          (_) {
-                                            // Ações após o retorno
-                                            _loadProspects();
-                                            
-                                          },
-                                        );
-                                      },
-                                      icon: const Icon(
-                                        Icons.edit,
-                                        color: Color.fromARGB(255, 255, 153, 0),
+                                subtitle: Text(prospect.endereco!),
+                                trailing: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Flexible(
+                                      child: IconButton(
+                                        onPressed: () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(builder: (ctx) {
+                                              return EditarProspectCrm(
+                                                prospect: prospect,
+                                              );
+                                            }),
+                                          ).then(
+                                            (_) {
+                                              // Ações após o retorno
+                                              _loadProspects();
+                                            },
+                                          );
+                                        },
+                                        icon: const Icon(
+                                          Icons.edit,
+                                          color:
+                                              Color.fromARGB(255, 255, 153, 0),
+                                        ),
+                                        //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
                                       ),
-                                      //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
                                     ),
-                                  ),
-                                  Flexible(
-                                    child: IconButton(
-                                      onPressed: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (ctx) => AlertDialog(
-                                            title: const Text(
-                                              'BLOQUEAR PROSPECT',
-                                              style: TextStyle(
-                                                  fontSize: 24,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            content: const Text(
-                                              'Tem certeza que deseja bloquear esse prospect ? Uma vez bloqueado somente o administrador do sistema poderá desbloquear.',
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  NavigatorService.instance.pop();
-                                                },
-                                                child: const Text("Cancelar",
-                                                    style: TextStyle(
-                                                        fontSize: 24,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Color.fromARGB(
-                                                            255, 5, 0, 0))),
+                                    Flexible(
+                                      child: IconButton(
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (ctx) => AlertDialog(
+                                              title: const Text(
+                                                'BLOQUEAR PROSPECT',
+                                                style: TextStyle(
+                                                    fontSize: 24,
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
-                                              TextButton(
-                                                onPressed: () async {
-                                                  NavigatorService.instance.pop();
-                                                  await Provider.of<ProspectsLista>(
-                                                    context,
-                                                    listen: false,
-                                                  )
-                                                      .bloquearProspect(
-                                                          context, prospect.codigo)
-                                                      .then(
-                                                    (_) {
-                                                      // Ações após o retorno
-                                                      _loadProspects();
-                                                    },
-                                                  );
-                                                  
-                                                },
-                                                child: const Text("Bloquear",
-                                                    style: TextStyle(
-                                                        fontSize: 24,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Color.fromARGB(
-                                                            255, 5, 0, 0))),
+                                              content: const Text(
+                                                'Tem certeza que deseja bloquear esse prospect ? Uma vez bloqueado somente o administrador do sistema poderá desbloquear.',
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
-                                            ],
-                                          ),
-                                        );                                   
-                                      },
-                                      icon: const Icon(
-                                        Icons.block,
-                                        color: Color.fromARGB(255, 255, 0, 0),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    NavigatorService.instance
+                                                        .pop();
+                                                  },
+                                                  child: const Text("Cancelar",
+                                                      style: TextStyle(
+                                                          fontSize: 24,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Color.fromARGB(
+                                                              255, 5, 0, 0))),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () async {
+                                                    NavigatorService.instance
+                                                        .pop();
+                                                    await Provider.of<
+                                                            ProspectsLista>(
+                                                      context,
+                                                      listen: false,
+                                                    )
+                                                        .bloquearProspect(
+                                                            context,
+                                                            prospect.codigo)
+                                                        .then(
+                                                      (_) {
+                                                        // Ações após o retorno
+                                                        _loadProspects();
+                                                      },
+                                                    );
+                                                  },
+                                                  child: const Text("Bloquear",
+                                                      style: TextStyle(
+                                                          fontSize: 24,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Color.fromARGB(
+                                                              255, 5, 0, 0))),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                        icon: const Icon(
+                                          Icons.block,
+                                          color: Color.fromARGB(255, 255, 0, 0),
+                                        ),
+                                        //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
                                       ),
-                                      //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
                                     ),
-                                  ),
-                                ],
-                              )),
-                        );
-                      },
+                                  ],
+                                )),
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        FloatingActionButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(builder: (ctx) {
-                                return IncluirProspectCrm();
-                              }),
-                            );
-                          },
-                          backgroundColor: const Color.fromARGB(255, 0, 40, 73),
-                          child: const Icon(
-                            Icons.add,
-                            color: Colors.white,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          FloatingActionButton(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(builder: (ctx) {
+                                  return IncluirProspectCrm();
+                                }),
+                              );
+                            },
+                            backgroundColor:
+                                const Color.fromARGB(255, 0, 40, 73),
+                            child: const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

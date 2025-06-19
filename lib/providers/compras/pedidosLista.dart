@@ -171,6 +171,7 @@ class PedidosLista with ChangeNotifier {
   Future<void> loadItensPedidos(context, Pedidos) async {
     String pedido = Pedidos.pedido;
     String empresa = Pedidos.empresa;
+    var jsonString = '';
 
     List<ItensPedidos> itensDoPedido = [];
     _itensDoPedido.clear();
@@ -190,8 +191,12 @@ class PedidosLista with ChangeNotifier {
 
     //data = jsonDecode(response.body);
 
-    data2 = jsonDecode(response.body);
-    utf8.decode(response.bodyBytes);
+    jsonString = utf8.decode(response.bodyBytes,allowMalformed: true);
+    data2 = jsonDecode(jsonString);
+
+
+    //data2 = jsonDecode(response.body);
+    //utf8.decode(response.bodyBytes);
     data2.asMap();
     for (var data2 in data2) {
       itensDoPedido.add(

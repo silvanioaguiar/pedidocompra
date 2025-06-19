@@ -13,6 +13,8 @@ class Event {
   String nomeRepresentante;
   String codigoMedico;
   String nomeMedico;
+  String objetivo;
+  String cancelarMotivo;
   DateTime dataPrevista;
   DateTime? dataRealizada;
   String horaPrevista;
@@ -29,6 +31,8 @@ class Event {
     required this.nomeRepresentante,
     required this.codigoMedico,
     required this.nomeMedico,
+    required this.objetivo,
+    required this.cancelarMotivo,
     required this.dataPrevista,
     required this.dataRealizada,
     required this.horaPrevista,

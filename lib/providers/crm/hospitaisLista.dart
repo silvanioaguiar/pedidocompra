@@ -6,7 +6,6 @@ import 'package:http/http.dart ' as http;
 import 'package:pedidocompra/models/crm/hospitais.dart';
 import 'package:pedidocompra/services/navigator_service.dart';
 
-
 class HospitaisLista with ChangeNotifier {
   final String _token;
 
@@ -29,9 +28,10 @@ class HospitaisLista with ChangeNotifier {
   Future<dynamic> loadHospitais(context) async {
     List<Hospitais> hospitais = [];
     _hospitais.clear();
-    hospitais.clear();    
+    hospitais.clear();
     Map<String, dynamic> data0 = {};
     data = [];
+    var decodedBody;
 
     final response = await http.get(
         Uri.parse(
@@ -56,7 +56,7 @@ class HospitaisLista with ChangeNotifier {
               'ATENÇÃO!',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            content: const Text(              
+            content: const Text(
               'Nenhum hospitais encontrado',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
@@ -77,7 +77,7 @@ class HospitaisLista with ChangeNotifier {
       }
     } else if (response.statusCode == 200) {
       data = jsonDecode(response.body);
-      utf8.decode(response.bodyBytes);
+      utf8.decode(response.bodyBytes);      
       data.asMap();
       for (var data in data) {
         hospitais.add(

@@ -48,6 +48,7 @@ class FormularioVisitaProvider with ChangeNotifier {
       'clienteDoGrupo': dadosFormulario['clienteDoGrupo'],
       'listaConcorrentes': dadosFormulario['listaConcorrentes'],
       'especialidade': dadosFormulario['especialidade'],
+      'assuntosAbordados': dadosFormulario['assuntosAbordados'],
       'proximosPassos': dadosFormulario['proximosPassos'],
     });
 
@@ -151,6 +152,7 @@ class FormularioVisitaProvider with ChangeNotifier {
          listaHospitais: data2[ 'principal' ][ 'listaHospitais' ],
          nomeLocal: data2[ 'principal' ][ 'nomeLocal' ],
          nomeMedico: data2[ 'principal' ][ 'nomeMedico' ],
+         assuntosAbordados: data2[ 'principal' ][ 'assuntosAbordados' ],
          proximosPassos: data2[ 'principal' ][ 'proximosPassos' ],
         ),
       );
@@ -186,6 +188,7 @@ class FormularioVisitaProvider with ChangeNotifier {
       'clienteDoGrupo': dadosFormulario['clienteDoGrupo'],
       'listaConcorrentes': dadosFormulario['listaConcorrentes'],
       'especialidade': dadosFormulario['especialidade'],
+      'assuntosAbordados': dadosFormulario['assuntosAbordados'],
       'proximosPassos': dadosFormulario['proximosPassos'],
     });
 

@@ -1,6 +1,7 @@
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pedidocompra/main.dart';
 import 'package:pedidocompra/models/crm/concorrentes.dart';
 import 'package:pedidocompra/providers/crm/medicosLista.dart';
 import 'package:pedidocompra/services/viacep_service.dart';
@@ -63,9 +64,9 @@ class _IncluirMedicoCrmState extends State<IncluirMedicoCrm> {
     ).incluirMedico(context, dadosMedico);
   }
 
-  Future<void> _loadEndereco(cep) async {
+  Future<void> _loadEndereco(context,cep) async {
     final provider = Provider.of<ViaCepService>(context, listen: false);
-    final enderecoViaCep = await provider.loadEndereco(provider, cep);
+    final enderecoViaCep = await provider.loadEndereco(context, cep);
 
     setState(() {
       _enderecoController.text = enderecoViaCep[0].logradouro;
@@ -103,7 +104,7 @@ class _IncluirMedicoCrmState extends State<IncluirMedicoCrm> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: azulRoyalTopo,
         foregroundColor: Colors.white,
         title: Text(
           "Incluir Médico",
@@ -192,7 +193,7 @@ class _IncluirMedicoCrmState extends State<IncluirMedicoCrm> {
                         ),
                       ),
                       onPressed: () {
-                        _loadEndereco(_cepController.text);
+                        _loadEndereco(context,_cepController.text);
                       },
                       child: const Text("Buscar CRM"),
                     ),
@@ -276,7 +277,7 @@ class _IncluirMedicoCrmState extends State<IncluirMedicoCrm> {
                         ),
                       ),
                       onPressed: () {
-                        _loadEndereco(_cepController.text);
+                        _loadEndereco(context,_cepController.text);
                       },
                       child: const Text("Buscar Endereço"),
                     ),

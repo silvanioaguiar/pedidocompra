@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart ' as http;
 import 'package:pedidocompra/models/crm/concorrentes.dart';
-import 'package:pedidocompra/models/crm/medicos.dart';
 import 'package:pedidocompra/services/navigator_service.dart';
 
 

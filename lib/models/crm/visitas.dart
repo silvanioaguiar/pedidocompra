@@ -15,6 +15,8 @@ class Visitas with ChangeNotifier {
   String? horaRealizada;
   String nomeUsuario;
   String? codFormulario;
+  String objetivo;
+  String? cancelarMotivo;
 
   Visitas({
     required this.codigo,
@@ -31,5 +33,7 @@ class Visitas with ChangeNotifier {
     this.horaRealizada,
     required this.nomeUsuario,
     this.codFormulario,
+    required this.objetivo,
+    this.cancelarMotivo,
   });
 }

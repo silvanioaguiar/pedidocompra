@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pedidocompra/main.dart';
 import '../components/authForm.dart';
 import '../models/authFormData.dart';
 
@@ -29,7 +30,7 @@ class _AuthPageState extends State<AuthPage> {
   
     return Scaffold(      
       appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: azulRoyalTopo,
         foregroundColor: Colors.white,
         title: Text(
           "Login",
@@ -49,7 +50,7 @@ class _AuthPageState extends State<AuthPage> {
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image:
-                      AssetImage('assets/images/fundoTelaPrincipalBiosat3.png'),
+                      AssetImage('assets/images/FUNDO_BIOSAT_APP_640.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
