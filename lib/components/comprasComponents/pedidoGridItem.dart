@@ -19,6 +19,7 @@ class PedidoGridItem extends StatelessWidget {
     var status = pedido.status;
     var color1Card;
     var color2Card;
+    var colorBorder;
 
     var size = MediaQuery.of(context).size;
     double? widthScreen = 0;
@@ -59,9 +60,11 @@ class PedidoGridItem extends StatelessWidget {
       //color2Card = const Color.fromARGB(255, 85, 170, 250);
       color1Card = const Color.fromARGB(255, 255, 255, 255);
       color2Card = const Color.fromARGB(255, 255, 255, 255);
+      colorBorder = Colors.blue;
     } else if (status == "Pendente de Entrega") {
-      color1Card = const Color.fromARGB(255, 58, 5, 5);
+      color1Card = const Color.fromARGB(255, 255, 255, 255);
       color2Card = const Color.fromARGB(255, 162, 230, 255);
+      colorBorder = Colors.red;
     }
     return Padding(
       padding: const EdgeInsets.all(2),
@@ -84,14 +87,13 @@ class PedidoGridItem extends StatelessWidget {
           image: DecorationImage(
             image: AssetImage(logo),
             alignment: Alignment.topRight,
-            
           ),
-          border: const Border(
+          border: Border(
             bottom: BorderSide(
-              color: Colors.blue,
+              color: colorBorder,
             ),
             right: BorderSide(
-              color: Colors.blue,
+              color: colorBorder,
             ),
           ),
         ),
@@ -115,17 +117,42 @@ class PedidoGridItem extends StatelessWidget {
                           color: azulRoyalTopo),
                     ),
                     const SizedBox(height: 10),
-                    Text(
-                      pedido.fornecedor.length > 25
-                          ? 'Fornecedor: ${pedido.fornecedor.substring(0, 25)}'
-                          : 'Fornecedor: ${pedido.fornecedor}',
-                      textAlign: TextAlign.start,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: azulRoyalTopo,
+                    if (pedido.fornecedor.length > 15)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Fornecedor: ${pedido.fornecedor.substring(0, 15)}',
+                            textAlign: TextAlign.start,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: azulRoyalTopo,
+                            ),
+                          ),
+                          Text(
+                            pedido.fornecedor
+                                .substring(15, pedido.fornecedor.length),
+                            textAlign: TextAlign.start,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: azulRoyalTopo,
+                            ),
+                          ),
+                        ],
+                      )
+                    else
+                      Text(
+                        'Fornecedor: ${pedido.fornecedor}',
+                        textAlign: TextAlign.start,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: azulRoyalTopo,
+                        ),
                       ),
-                    ),
+
                     const SizedBox(),
                     Text(
                       'Pedido: ${pedido.pedido}',
@@ -156,6 +183,8 @@ class PedidoGridItem extends StatelessWidget {
                         color: azulRoyalTopo,
                       ),
                     ),
+                    if (status == "Aguardando Aprovacao")
+                      const SizedBox(height: 15),
                     if (status == "Pendente de Entrega")
                       Text(
                         'Comprador: ${pedido.comprador}',
@@ -176,8 +205,9 @@ class PedidoGridItem extends StatelessWidget {
                           color: azulRoyalTopo,
                         ),
                       ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 10),
                     if (status == "Aguardando Aprovacao")
+                      //const SizedBox(height: 15),
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
@@ -284,7 +314,7 @@ class PedidoGridItem extends StatelessWidget {
                               ).loadItensPendentesEntrega(context, pedido);
                             },
                             icon: const Icon(Icons.list_alt),
-                            color: Colors.white,
+                            color: Colors.blue,
                             iconSize: 30,
                             tooltip: 'Vizualizar Pedido',
                           ),
@@ -336,7 +366,7 @@ class PedidoGridItem extends StatelessWidget {
                           Text(
                             'Vizualizar',
                             style: TextStyle(
-                                color: Color.fromARGB(255, 34, 185, 39),
+                                color: azulRoyalTopo,
                                 fontWeight: FontWeight.bold),
                           ),
                           SizedBox(width: 35),

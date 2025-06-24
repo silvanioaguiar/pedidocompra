@@ -52,20 +52,21 @@ class _ItensPedidoState extends State<ItensPedido> {
     var colorText2;
     var colorTextProduct;
     var colorTextTitle;
+    var colorBorder;
 
     String empresa = itensDoPedido[0].empresa;
 
     if (empresa == 'Big Assistencia Tecnica' || empresa == 'Big Locacao') {
-      logo = 'assets/images/logo_big.png';
+      logo = 'assets/images/logos/Icone_Big_03.png';
     } else if (empresa == 'Biosat Matriz Fabrica' ||
         empresa == 'Biosat Filial') {
-      logo = 'assets/images/logo_biosat2.png';
+      logo = 'assets/images/logos/Icone_Biosat_03.png';
     } else if (empresa == 'Libertad') {
-      logo = 'assets/images/logo_libertad.png';
+      logo = 'assets/images/logos/Icone_Liberttad_03.png';
     } else if (empresa == 'E-med') {
-      logo = 'assets/images/logo_emed.png';
+      logo = 'assets/images/logos/Icone_EMed_03.png';
     } else if (empresa == 'Brumed') {
-      logo = 'assets/images/logo_Brumed.png';
+      logo = 'assets/images/logos/Icone_Brumed_03.png';
     }
 
     if (itensDoPedido[0].status == "Aguardando Aprovacao") {
@@ -75,13 +76,15 @@ class _ItensPedidoState extends State<ItensPedido> {
       colorText2 = Color.fromARGB(255, 0, 102, 245);
       colorTextProduct = Color.fromARGB(255, 95, 5, 5);
       colorTextTitle = Color.fromARGB(255, 1, 44, 78);
+      colorBorder = Colors.blue;
     } else if (itensDoPedido[0].status == "Pendente de Entrega") {
-      color1 = Color.fromARGB(255, 58, 5, 5);
+      color1 = Color.fromARGB(255, 255, 255, 255);
       color2 = Color.fromARGB(255, 162, 230, 255);
-      colorText1 = Colors.white;
+      colorText1 = Colors.black;
       colorText2 = Color.fromARGB(255, 1, 81, 255);
-      colorTextProduct = Colors.white;
-      colorTextTitle = Color.fromARGB(255, 1, 81, 255);
+      colorTextProduct = Colors.black;
+      colorTextTitle = azulRoyalTopo;
+      colorBorder = Colors.red;
     }
 
     return Scaffold(
@@ -128,6 +131,14 @@ class _ItensPedidoState extends State<ItensPedido> {
                 image: DecorationImage(
                   image: AssetImage(logo),
                   alignment: Alignment.topRight,
+                ),
+                border: Border(
+                  bottom: BorderSide(
+                    color: colorBorder,
+                  ),
+                  right: BorderSide(
+                    color: colorBorder,
+                  ),
                 ),
               ),
               height: double.infinity,
@@ -478,8 +489,8 @@ class _ItensPedidoState extends State<ItensPedido> {
                               Row(
                                 children: [
                                   const SizedBox(width: 120),
-                                  IconButton(
-                                    onPressed: () {
+                                  GestureDetector(
+                                    onTap: () {
                                       Provider.of<PedidosLista>(
                                         context,
                                         listen: false,
@@ -488,15 +499,34 @@ class _ItensPedidoState extends State<ItensPedido> {
                                           itensDoPedido[0].pedido,
                                           itensDoPedido[0].empresa);
                                     },
-                                    icon: const Icon(Icons.beenhere_sharp,
-                                        color:
-                                            Color.fromARGB(255, 34, 185, 39)),
-                                    iconSize: 30,
-                                    tooltip: "Aprovar",
+                                    child: SizedBox(
+                                      //width: 75,
+                                      //height: 75,
+                                      child: Image.asset(
+                                        'assets/images/botoes/aprovar_tipo2.png',
+                                        scale: 2.3,
+                                      ),
+                                    ),
                                   ),
+                                  // IconButton(
+                                  //   onPressed: () {
+                                  //     Provider.of<PedidosLista>(
+                                  //       context,
+                                  //       listen: false,
+                                  //     ).aprovarPedidoemVisualizar(
+                                  //         context,
+                                  //         itensDoPedido[0].pedido,
+                                  //         itensDoPedido[0].empresa);
+                                  //   },
+                                  //   icon: const Icon(Icons.beenhere_sharp,
+                                  //       color:
+                                  //           Color.fromARGB(255, 34, 185, 39)),
+                                  //   iconSize: 30,
+                                  //   tooltip: "Aprovar",
+                                  // ),
                                   const SizedBox(width: 60),
-                                  IconButton(
-                                    onPressed: () {
+                                  GestureDetector(
+                                    onTap: () {
                                       Provider.of<PedidosLista>(
                                         context,
                                         listen: false,
@@ -505,34 +535,53 @@ class _ItensPedidoState extends State<ItensPedido> {
                                           itensDoPedido[0].pedido,
                                           itensDoPedido[0].empresa);
                                     },
-                                    icon: const Icon(Icons.cancel,
-                                        color:
-                                            Color.fromARGB(255, 155, 27, 27)),
-                                    iconSize: 30,
-                                    tooltip: "Reprovar",
+                                    child: SizedBox(
+                                      //width: 75,
+                                      //height: 75,
+                                      child: Image.asset(
+                                        'assets/images/botoes/reprovar_tipo2.png',
+                                        scale: 2.3,
+                                      ),
+                                    ),
                                   ),
+                                  // IconButton(
+                                  //   onPressed: () {
+                                  //     Provider.of<PedidosLista>(
+                                  //       context,
+                                  //       listen: false,
+                                  //     ).reprovarPedidoemVisualizar(
+                                  //         context,
+                                  //         itensDoPedido[0].pedido,
+                                  //         itensDoPedido[0].empresa);
+                                  //   },
+                                  //   icon: const Icon(Icons.cancel,
+                                  //       color:
+                                  //           Color.fromARGB(255, 155, 27, 27)),
+                                  //   iconSize: 30,
+                                  //   tooltip: "Reprovar",
+                                  // ),
                                 ],
                               ),
-                            if (itensDoPedido[0].status ==
-                                "Aguardando Aprovacao")
-                              const Row(
-                                children: [
-                                  SizedBox(width: 120),
-                                  Text(
-                                    'Aprovar',
-                                    style: TextStyle(
-                                        color: Color.fromARGB(255, 34, 185, 39),
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(width: 50),
-                                  Text(
-                                    'Reprovar',
-                                    style: TextStyle(
-                                        color: Color.fromARGB(255, 155, 21, 21),
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              )
+                            // if (itensDoPedido[0].status ==
+                            //     "Aguardando Aprovacao")
+                            //   const Row(
+                            //     children: [
+                            //       SizedBox(width: 120),
+                            //       Text(
+                            //         'Aprovar',
+                            //         style: TextStyle(
+                            //             color: Color.fromARGB(255, 34, 185, 39),
+                            //             fontWeight: FontWeight.bold),
+                            //       ),
+                            //       SizedBox(width: 50),
+                            //       Text(
+                            //         'Reprovar',
+                            //         style: TextStyle(
+                            //             color: Color.fromARGB(255, 155, 21, 21),
+                            //             fontWeight: FontWeight.bold),
+                            //       ),
+                            //     ],
+                            //   )
                           ],
                         ),
                       ),

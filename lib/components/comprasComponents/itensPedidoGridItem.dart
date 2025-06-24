@@ -19,28 +19,29 @@ class ItensPedidoGridItem extends StatelessWidget {
             .format(itensPedido.precoTotal);
     String empresa = itensPedido.empresa;
 
-    String logo;
+    var logo;
 
     if (empresa == 'Big Assistencia Tecnica' || empresa == 'Big Locacao') {
-      logo = 'assets/images/logo_big.png';
+      logo = 'assets/images/logos/Icone_Big_03.png';
     } else if (empresa == 'Biosat Matriz Fabrica' ||
         empresa == 'Biosat Filial') {
-      logo = 'assets/images/logo_biosat2.png';
+      logo = 'assets/images/logos/Icone_Biosat_03.png';
     } else if (empresa == 'Libertad') {
-      logo = 'assets/images/logo_libertad.png';
+      logo = 'assets/images/logos/Icone_Liberttad_03.png';
     } else if (empresa == 'E-med') {
-      logo = 'assets/images/logo_emed.png';
+      logo = 'assets/images/logos/Icone_EMed_03.png';
     } else if (empresa == 'Brumed') {
-      logo = 'assets/images/logo_Brumed.png';
+      logo = 'assets/images/logos/Icone_Brumed_03.png';
     }
+
 
     return ClipRect(
         child: Padding(
           padding: const EdgeInsets.all(4.0),
           child: Container(
             margin: const EdgeInsets.all(4),
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
+            decoration:  BoxDecoration(
+              gradient: const LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: <Color>[
@@ -50,9 +51,9 @@ class ItensPedidoGridItem extends StatelessWidget {
                   Color.fromARGB(255, 85, 170, 250),
                 ],
               ),
-              borderRadius: BorderRadius.all(Radius.circular(15)),
+              borderRadius: const BorderRadius.all(Radius.circular(15)),
               image: DecorationImage(
-                image: AssetImage('assets/images/logo_biosat2.png'),
+                image: AssetImage(logo),
                 alignment: Alignment.topRight,
               ),
             ),

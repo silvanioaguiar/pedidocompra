@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pedidocompra/components/appDrawer.dart';
 import 'package:pedidocompra/main.dart';
 import 'package:pedidocompra/models/crm/propects.dart';
 import 'package:pedidocompra/pages/crm/editarProspectCrm.dart';
@@ -70,7 +69,7 @@ class _ProspectCrmState extends State<ProspectCrm> {
           ),
         ),
       ),
-      drawer: AppDrawer(),
+      //drawer: AppDrawer(),
       body: Container(
         alignment: Alignment.center,
         width: double.infinity,

@@ -70,7 +70,7 @@ class _ConcorrentesCrmState extends State<ConcorrentesCrm> {
           ),
         ),
       ),
-      drawer: AppDrawer(),
+      //drawer: AppDrawer(),
       body: Container(
         alignment: Alignment.center,
         width: double.infinity,

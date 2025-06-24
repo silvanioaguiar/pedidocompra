@@ -72,7 +72,7 @@ class _MedicosCrmState extends State<MedicosCrm> {
           ),
         ),
       ),
-      drawer: AppDrawer(),
+      //drawer: AppDrawer(),
       body: Container(
         alignment: Alignment.center,
         width: double.infinity,

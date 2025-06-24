@@ -80,49 +80,7 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  assets:
-    - assets/images/logo_Biosat.png
-    - assets/images/fundoTelaPrincipalBiosat.png
-    - assets/images/fundoTelaPrincipalBiosat3.png
-    - assets/images/logo_biosat2.png
-    - assets/images/Logo_Brumed.png
-    - assets/images/logo_big.png
-    - assets/images/logo_libertad.png
-    - assets/images/logo_emed.png
-    - assets/images/agenda.png
-    - assets/images/customers.png
-    - assets/images/formularios.png
-    - assets/images/teamwork.png
-    - assets/images/money.png
-    - assets/images/grupo_abduch.png
-    - assets/images/FUNDO_BIOSAT_APP_640.jpg
-    - assets/images/icone_Compras.png
-    - assets/images/icone_Compras_02.png
-    - assets/images/icone_Compras_03.png
-    - assets/images/icone_Crm.png
-    - assets/images/icone_Crm_02.png
-    - assets/images/icone_Crm_03.png
-    - assets/images/Modulo_Compras_Liberttad.png
-    - assets/images/Modulo_Compras_Liberttad_02.png
-    - assets/images/Modulo_Compras_Liberttad_03.png
-    - assets/images/Modulo_Compras_Biosat_Fabrica.png
-    - assets/images/Modulo_Compras_Biosat_Fabrica_02.png
-    - assets/images/Modulo_Compras_Biosat_Fabrica_03.png
-    - assets/images/Modulo_Compras_Biosat_Adm.png
-    - assets/images/Modulo_Compras_Biosat_Adm_02.png
-    - assets/images/Modulo_Compras_Biosat_Adm_03.png
-    - assets/images/Modulo_Compras_Big_Assistencia.png
-    - assets/images/Modulo_Compras_Big_Assistencia_02.png
-    - assets/images/Modulo_Compras_Big_Assistencia_03.png
-    - assets/images/Modulo_Compras_Big_Locacao.png
-    - assets/images/Modulo_Compras_Big_Locacao_02.png
-    - assets/images/Modulo_Compras_Big_Locacao_03.png
-    - assets/images/Modulo_Compras_Emed.png
-    - assets/images/Modulo_Compras_Emed_02.png
-    - assets/images/Modulo_Compras_Emed_03.png
-    - assets/images/Modulo_Compras_Brumed.png
-    - assets/images/Modulo_Compras_Brumed_02.png
-    - assets/images/Modulo_Compras_Brumed_03.png
+  assets: 
     - assets/images/iconesCrm/Agenda.png
     - assets/images/iconesCrm/Agenda_2.png
     - assets/images/iconesCrm/Agenda_3.png
@@ -210,6 +168,15 @@ flutter:
     - assets/images/botoes/botao_Entrega.png
     - assets/images/botoes/botao_Entrega_02.png    
     - assets/images/botoes/botao_Entrega_03.png    
+    - assets/images/botoes/botao_Salvar.png 
+    - assets/images/botoes/botao_Salvar_02.png 
+    - assets/images/botoes/botao_Salvar_03.png 
+    - assets/images/botoes/icone_Compras.png 
+    - assets/images/botoes/icone_Compras_02.png 
+    - assets/images/botoes/icone_Compras_03.png 
+    - assets/images/botoes/icone_Crm.png 
+    - assets/images/botoes/icone_Crm_02.png 
+    - assets/images/botoes/icone_Crm_03.png 
     - assets/images/menuEmpresas/Modulo_Compras_Big_Assistencia_tipo2.png 
     - assets/images/menuEmpresas/Modulo_Compras_Big_Assistencia_02_tipo2.png   
     - assets/images/menuEmpresas/Modulo_Compras_Big_Assistencia_03_tipo2.png  
@@ -230,7 +197,10 @@ flutter:
     - assets/images/menuEmpresas/Modulo_Compras_Emed_03_tipo2.png  
     - assets/images/menuEmpresas/Modulo_Compras_Liberttad_tipo2.png
     - assets/images/menuEmpresas/Modulo_Compras_Liberttad_02_tipo2.png  
-    - assets/images/menuEmpresas/Modulo_Compras_Liberttad_03_tipo2.png                                                 
+    - assets/images/menuEmpresas/Modulo_Compras_Liberttad_03_tipo2.png 
+    - assets/images/palavras/Obrigado.png  
+    - assets/images/palavras/Obrigado_02.png 
+    - assets/images/palavras/Obrigado_03.png                                                
     - assets/fonts/Arial_Regular.ttf
 
 

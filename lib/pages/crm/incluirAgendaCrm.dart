@@ -101,13 +101,13 @@ class _IncluirAgendaCrmState extends State<IncluirAgendaCrm> {
     DateTimeFieldPickerPlatform dateTimePickerPlatform;
 
     if (size.width >= 600) {
-      widthScreen = 400;
-      heightScreen = 300;
+      widthScreen = size.width * 0.5;
+      heightScreen = size.height * 0.8;
       sizeText = 18;
       sizeCrossAxisCount = 4;
       sizeAspectRatio = 1.2;
     } else {
-      widthScreen = size.width * 0.8;
+      widthScreen = size.width * 0.9;
       heightScreen = size.height * 0.6;
       sizeText = 14;
       sizeCrossAxisCount = 2;
@@ -128,134 +128,169 @@ class _IncluirAgendaCrmState extends State<IncluirAgendaCrm> {
       ),
       //drawer: AppDrawer(),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                isLoading
-                    ? const CircularProgressIndicator()
-                    : Autocomplete<String>(
-                        optionsBuilder: (TextEditingValue textEditingValue) {
-                          if (loadedMedicos == null || loadedMedicos!.isEmpty) {
-                            return const Iterable<String>.empty();
-                          }
-                          // Extrai somente os nomes dos médicos
-                          final nomesMedicos = loadedMedicos!
-                              .map((medico) => medico.nomeMedico)
-                              .toList();
-
-                          if (textEditingValue.text.isEmpty) {
-                            return nomesMedicos; // Retorna todos os nomes
-                          }
-
-                          // Filtra os nomes com base no texto digitado
-                          return nomesMedicos.where((String nome) {
-                            return nome
-                                .toLowerCase()
-                                .contains(textEditingValue.text.toLowerCase());
-                          });
-                        },
-                        onSelected: (String selection) {
-                          final medicoSelecionado = loadedMedicos!.firstWhere(
-                              (medico) => medico.nomeMedico == selection);
-
-                          setState(() {
-                            codigoMedicoSelecionado = medicoSelecionado.codigo;
-                            _medicoController.text = selection;
-                          });
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content:
-                                    Text('Médico Selecionado: $selection')),
-                          );
-                        },
-                        fieldViewBuilder: (BuildContext context,
-                            TextEditingController fieldTextEditingController,
-                            FocusNode focusNode,
-                            VoidCallback onFieldSubmitted) {
-                          return TextFormField(
-                            decoration: const InputDecoration(
-                                labelText: "Médico",
-                                hintText: "Digite o nome do médico",
-                                border: OutlineInputBorder()),
-                            controller: fieldTextEditingController,
-                            focusNode: focusNode,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: sizeText,
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Campo Obrigatório";
-                              }
-                              return null;
-                            },
-                          );
-                        },
-                      ),
-                const SizedBox(height: 10),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Form(
+              key: _formKey,
+              child: SizedBox(
+                width: widthScreen,
+                child: Column(
                   children: [
-                    Text('Código do Médico: $codigoMedicoSelecionado'),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Autocomplete<String>(
-                  optionsBuilder:
-                      (TextEditingValue textEditingLocaisDeEntrega) {
-                    if (loadedLocaisDeEntrega == null ||
-                        loadedLocaisDeEntrega!.isEmpty) {
-                      return const Iterable<String>.empty();
-                    }
-                    // Extrai somente os nomes dos médicos
-                    final nomesLocaisDeEntrega = loadedLocaisDeEntrega!
-                        .map(
-                            (locaisDeEntrega) => locaisDeEntrega.localDescricao)
-                        .toList();
-
-                    if (textEditingLocaisDeEntrega.text.isEmpty) {
-                      return nomesLocaisDeEntrega; // Retorna todos os nomes
-                    }
-
-                    // Filtra os nomes com base no texto digitado
-                    return nomesLocaisDeEntrega.where((String nome) {
-                      return nome.toLowerCase().contains(
-                          textEditingLocaisDeEntrega.text.toLowerCase());
-                    });
-                  },
-                  onSelected: (String selection) {
-                    final localDeEntregaSelecionado = loadedLocaisDeEntrega!
-                        .firstWhere(
-                            (local) => local.localDescricao == selection);
-
-                    setState(() {
-                      codigoLocalDeEntregaSelecionado =
-                          localDeEntregaSelecionado.codigo;
-                      _localController.text = selection;
-                    });
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content:
-                              Text('Local da Visita Selecionado: $selection')),
-                    );
-                  },
-                  fieldViewBuilder: (BuildContext context,
-                      TextEditingController fieldTextEditingController,
-                      FocusNode focusNode,
-                      VoidCallback onFieldSubmitted) {
-                    return TextFormField(
+                    isLoading
+                        ? const CircularProgressIndicator()
+                        : Autocomplete<String>(
+                            optionsBuilder: (TextEditingValue textEditingValue) {
+                              if (loadedMedicos == null || loadedMedicos!.isEmpty) {
+                                return const Iterable<String>.empty();
+                              }
+                              // Extrai somente os nomes dos médicos
+                              final nomesMedicos = loadedMedicos!
+                                  .map((medico) => medico.nomeMedico)
+                                  .toList();
+                          
+                              if (textEditingValue.text.isEmpty) {
+                                return nomesMedicos; // Retorna todos os nomes
+                              }
+                          
+                              // Filtra os nomes com base no texto digitado
+                              return nomesMedicos.where((String nome) {
+                                return nome
+                                    .toLowerCase()
+                                    .contains(textEditingValue.text.toLowerCase());
+                              });
+                            },
+                            onSelected: (String selection) {
+                              final medicoSelecionado = loadedMedicos!.firstWhere(
+                                  (medico) => medico.nomeMedico == selection);
+                          
+                              setState(() {
+                                codigoMedicoSelecionado = medicoSelecionado.codigo;
+                                _medicoController.text = selection;
+                              });
+                          
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content:
+                                        Text('Médico Selecionado: $selection')),
+                              );
+                            },
+                            fieldViewBuilder: (BuildContext context,
+                                TextEditingController fieldTextEditingController,
+                                FocusNode focusNode,
+                                VoidCallback onFieldSubmitted) {
+                              return TextFormField(
+                                decoration: const InputDecoration(
+                                    labelText: "Médico",
+                                    hintText: "Digite o nome do médico",
+                                    border: OutlineInputBorder()),
+                                controller: fieldTextEditingController,
+                                focusNode: focusNode,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: sizeText,
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Campo Obrigatório";
+                                  }
+                                  return null;
+                                },
+                              );
+                            },
+                          ),
+                    const SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('Código do Médico: $codigoMedicoSelecionado'),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Autocomplete<String>(
+                      optionsBuilder:
+                          (TextEditingValue textEditingLocaisDeEntrega) {
+                        if (loadedLocaisDeEntrega == null ||
+                            loadedLocaisDeEntrega!.isEmpty) {
+                          return const Iterable<String>.empty();
+                        }
+                        // Extrai somente os nomes dos médicos
+                        final nomesLocaisDeEntrega = loadedLocaisDeEntrega!
+                            .map(
+                                (locaisDeEntrega) => locaisDeEntrega.localDescricao)
+                            .toList();
+                          
+                        if (textEditingLocaisDeEntrega.text.isEmpty) {
+                          return nomesLocaisDeEntrega; // Retorna todos os nomes
+                        }
+                          
+                        // Filtra os nomes com base no texto digitado
+                        return nomesLocaisDeEntrega.where((String nome) {
+                          return nome.toLowerCase().contains(
+                              textEditingLocaisDeEntrega.text.toLowerCase());
+                        });
+                      },
+                      onSelected: (String selection) {
+                        final localDeEntregaSelecionado = loadedLocaisDeEntrega!
+                            .firstWhere(
+                                (local) => local.localDescricao == selection);
+                          
+                        setState(() {
+                          codigoLocalDeEntregaSelecionado =
+                              localDeEntregaSelecionado.codigo;
+                          _localController.text = selection;
+                        });
+                          
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content:
+                                  Text('Local da Visita Selecionado: $selection')),
+                        );
+                      },
+                      fieldViewBuilder: (BuildContext context,
+                          TextEditingController fieldTextEditingController,
+                          FocusNode focusNode,
+                          VoidCallback onFieldSubmitted) {
+                        return TextFormField(
+                          decoration: const InputDecoration(
+                              labelText: "Local da Visita",
+                              hintText: "Selecione um Local para a visita.",
+                              border: OutlineInputBorder()),
+                          controller: fieldTextEditingController,
+                          focusNode: focusNode,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: sizeText,
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Campo Obrigatório";
+                            }
+                            return null;
+                          },
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('Código do Local: $codigoLocalDeEntregaSelecionado'),
+                      ],
+                    ),
+                    const SizedBox(height: 30),
+                    TextFormField(
                       decoration: const InputDecoration(
-                          labelText: "Local da Visita",
-                          hintText: "Selecione um Local para a visita.",
-                          border: OutlineInputBorder()),
-                      controller: fieldTextEditingController,
-                      focusNode: focusNode,
+                        labelText: "Objetivo",
+                        hintText: "Objetivo da Visita",
+                        border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 20.0),
+                      ),
+                      maxLength: 254,
+                      maxLines: 5,
+                      controller: _objetivoController,
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: sizeText,
@@ -266,113 +301,83 @@ class _IncluirAgendaCrmState extends State<IncluirAgendaCrm> {
                         }
                         return null;
                       },
-                    );
-                  },
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text('Código do Local: $codigoLocalDeEntregaSelecionado'),
-                  ],
-                ),
-                const SizedBox(height: 30),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: "Objetivo",
-                    hintText: "Objetivo da Visita",
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 20.0),
-                  ),
-                  maxLength: 254,
-                  maxLines: 5,
-                  controller: _objetivoController,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: sizeText,
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Campo Obrigatório";
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 30),
-                Row(
-                  children: [
-                    Expanded(
-                      child: DateTimeFormField(
-                        decoration: const InputDecoration(labelText: 'Data'),
-                        mode: DateTimeFieldPickerMode.date,
-                        pickerPlatform: DateTimeFieldPickerPlatform.material,
-                        materialDatePickerOptions:
-                            const MaterialDatePickerOptions(
-                                locale: Locale("pt", "BR")),
-                        dateFormat: DateFormat("dd MMM yyyy", 'pt_BR'),
-                        onChanged: (DateTime? novaData) {
-                          setState(() {
-                            dataSelecionada = novaData;
-                          });
-                        },
-                        validator: (value) {
-                          if (value == null) {
-                            return "Campo Obrigatório";
-                          }
-                          return null;
-                        },
-                      ),
                     ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: DateTimeFormField(
-                        decoration: const InputDecoration(labelText: 'Hora'),
-                        mode: DateTimeFieldPickerMode.time,
-                        pickerPlatform: DateTimeFieldPickerPlatform.material,
-                        materialTimePickerOptions: MaterialTimePickerOptions(
-                            builder: (BuildContext context, Widget? child) {
-                              return MediaQuery(
-                                data: MediaQuery.of(context)
-                                    .copyWith(alwaysUse24HourFormat: true),
-                                child: child!,
-                              );
+                    const SizedBox(height: 30),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: DateTimeFormField(
+                            decoration: const InputDecoration(labelText: 'Data'),
+                            mode: DateTimeFieldPickerMode.date,
+                            pickerPlatform: DateTimeFieldPickerPlatform.material,
+                            materialDatePickerOptions:
+                                const MaterialDatePickerOptions(
+                                    locale: Locale("pt", "BR")),
+                            dateFormat: DateFormat("dd MMM yyyy", 'pt_BR'),
+                            onChanged: (DateTime? novaData) {
+                              setState(() {
+                                dataSelecionada = novaData;
+                              });
                             },
-                            initialEntryMode: TimePickerEntryMode.inputOnly),
-                        dateFormat: DateFormat('HH:mm', 'pt_BR'),
-                        onChanged: (DateTime? novaHora) {
-                          setState(() {
-                            horaSelecionada = TimeOfDay.fromDateTime(novaHora!);
-                          });
-                        },
-                        validator: (value) {
-                          if (value == null) {
-                            return "Campo Obrigatório";
-                          }
-                          return null;
-                        },
-                      ),
+                            validator: (value) {
+                              if (value == null) {
+                                return "Campo Obrigatório";
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: DateTimeFormField(
+                            decoration: const InputDecoration(labelText: 'Hora'),
+                            mode: DateTimeFieldPickerMode.time,
+                            pickerPlatform: DateTimeFieldPickerPlatform.material,
+                            materialTimePickerOptions: MaterialTimePickerOptions(
+                                builder: (BuildContext context, Widget? child) {
+                                  return MediaQuery(
+                                    data: MediaQuery.of(context)
+                                        .copyWith(alwaysUse24HourFormat: true),
+                                    child: child!,
+                                  );
+                                },
+                                initialEntryMode: TimePickerEntryMode.inputOnly),
+                            dateFormat: DateFormat('HH:mm', 'pt_BR'),
+                            onChanged: (DateTime? novaHora) {
+                              setState(() {
+                                horaSelecionada = TimeOfDay.fromDateTime(novaHora!);
+                              });
+                            },
+                            validator: (value) {
+                              if (value == null) {
+                                return "Campo Obrigatório";
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ],
                     ),
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: FilledButton(
+                        style: const ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(
+                            Color.fromARGB(255, 0, 48, 87),
+                          ),
+                        ),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            _incluirVisitas(context);
+                          }
+                        },
+                        child: const Text("Salvar"),
+                      ),
+                    )
                   ],
                 ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: FilledButton(
-                    style: const ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(
-                        Color.fromARGB(255, 0, 48, 87),
-                      ),
-                    ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _incluirVisitas(context);
-                      }
-                    },
-                    child: const Text("Salvar"),
-                  ),
-                )
-              ],
+              ),
             ),
           ),
         ),

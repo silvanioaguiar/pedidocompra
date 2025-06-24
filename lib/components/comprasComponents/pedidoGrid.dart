@@ -21,7 +21,7 @@ class PedidoGrid extends StatelessWidget {
       sizeAspectRatio = 1.6;
     } else {
       sizeCrossAxisCount = 1;
-      sizeAspectRatio = 2.6 / 2.0;
+      sizeAspectRatio = 2.6 / 2.3;
     }
 
     return GridView.builder(

@@ -25,10 +25,9 @@ class _IncluirContatoCrmState extends State<IncluirContatoCrm> {
 
   late String codigoContatoSelecionado = "";
   List<Contatos>? loadedContatos;
- 
 
   Future<void> _incluirContato(context) async {
-    final dadosContato = {      
+    final dadosContato = {
       'nome': _nomeController.text,
       'email': _emailController.text,
       'ddd': _dddController.text,
@@ -53,13 +52,13 @@ class _IncluirContatoCrmState extends State<IncluirContatoCrm> {
     DateTimeFieldPickerPlatform dateTimePickerPlatform;
 
     if (size.width >= 600) {
-      widthScreen = 400;
-      heightScreen = 300;
+      widthScreen = size.width * 0.5;
+      heightScreen = size.height * 0.8;
       sizeText = 18;
       sizeCrossAxisCount = 4;
       sizeAspectRatio = 1.2;
     } else {
-      widthScreen = size.width * 0.8;
+      widthScreen = size.width * 0.9;
       heightScreen = size.height * 0.6;
       sizeText = 14;
       sizeCrossAxisCount = 2;
@@ -88,132 +87,144 @@ class _IncluirContatoCrmState extends State<IncluirContatoCrm> {
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              children: [
-                TextFormField(
-                  decoration: const InputDecoration(
-                      labelText: "Nome",
-                      hintText: "Nome do Contato",
-                      border: OutlineInputBorder()),
-                  controller: _nomeController,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: sizeText,
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Campo Obrigatório";
-                    }
-                    return null;
-                  },
-                ),              
-                const SizedBox(height: 20),
-                TextFormField(
-                  decoration: const InputDecoration(
-                      labelText: "Email",
-                      hintText: "Digite um e-mail",
-                      border: OutlineInputBorder()),
-                  controller: _emailController,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: sizeText,
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Campo Obrigatório";
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 10),
-                Row(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: SizedBox(
+                width: widthScreen,
+                child: Column(
                   children: [
-                    SizedBox(
-                      width: 100,
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                            labelText: "DDD",
-                            //hintText: "Digite o bairro",
-                            border: OutlineInputBorder()),
-                        controller: _dddController,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: sizeText,
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Campo Obrigatório";
-                          }
-                          return null;
-                        },
+                    TextFormField(
+                      decoration: const InputDecoration(
+                          labelText: "Nome",
+                          hintText: "Nome do Contato",
+                          border: OutlineInputBorder()),
+                      controller: _nomeController,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: sizeText,
                       ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Campo Obrigatório";
+                        }
+                        return null;
+                      },
                     ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                            labelText: "Celular",
-                            //hintText: "Digite o bairro",
-                            border: OutlineInputBorder()),
-                        controller: _celularController,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: sizeText,
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Campo Obrigatório";
-                          }
-                          return null;
-                        },
-                        keyboardType: const TextInputType.numberWithOptions(),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(9),
-                        ],
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                          labelText: "Email",
+                          hintText: "Digite um e-mail",
+                          border: OutlineInputBorder()),
+                      controller: _emailController,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: sizeText,
                       ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Campo Obrigatório";
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 100,
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                                labelText: "DDD",
+                                //hintText: "Digite o bairro",
+                                border: OutlineInputBorder()),
+                            controller: _dddController,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: sizeText,
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Campo Obrigatório";
+                              }
+                              return null;
+                            },
+                            keyboardType:
+                                const TextInputType.numberWithOptions(),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(2),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                                labelText: "Celular",
+                                //hintText: "Digite o bairro",
+                                border: OutlineInputBorder()),
+                            controller: _celularController,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: sizeText,
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Campo Obrigatório";
+                              }
+                              return null;
+                            },
+                            keyboardType:
+                                const TextInputType.numberWithOptions(),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(9),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: FilledButton(
+                            style: const ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll(
+                                Color.fromARGB(255, 0, 48, 87),
+                              ),
+                            ),
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                _incluirContato(context);
+                              }
+                            },
+                            child: const Text("Salvar"),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: FilledButton(
+                            style: const ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll(
+                                Color.fromARGB(255, 138, 9, 9),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("Cancelar"),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: FilledButton(
-                        style: const ButtonStyle(
-                          backgroundColor: WidgetStatePropertyAll(
-                            Color.fromARGB(255, 0, 48, 87),
-                          ),
-                        ),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _incluirContato(context);
-                          }
-                        },
-                        child: const Text("Salvar"),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: FilledButton(
-                        style: const ButtonStyle(
-                          backgroundColor: WidgetStatePropertyAll(
-                            Color.fromARGB(255, 138, 9, 9),
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("Cancelar"),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+              ),
             ),
           ),
         ),

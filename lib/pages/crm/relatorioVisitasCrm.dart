@@ -123,134 +123,138 @@ class _RelatorioVisitasCrmState extends State<RelatorioVisitasCrm> {
         child: SingleChildScrollView(
           child: Form(
             key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                //mainAxisSize: MainAxisSize.min,
-                children: [
-                  DropdownButtonFormField<String>(
-                    decoration: const InputDecoration(
-                      labelText: "Tipo de Relatório",
-                      border: OutlineInputBorder(),
-                    ),
-                    value: _selectedTipoRelatorio,
-                    items: tipoRelatorio.map((String tipoRelatorio) {
-                      return DropdownMenuItem<String>(
-                        value: tipoRelatorio,
-                        child: Text(tipoRelatorio),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedTipoRelatorio = newValue;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Campo Obrigatório";
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: SizedBox(
+                  width: widthScreen,
+                  child: Column(                    
                     children: [
-                      Expanded(
-                        child: DateTimeFormField(
-                          decoration:
-                              const InputDecoration(labelText: 'Data Início'),
-                          mode: DateTimeFieldPickerMode.date,
-                          pickerPlatform: DateTimeFieldPickerPlatform.material,
-                          materialDatePickerOptions:
-                              const MaterialDatePickerOptions(
-                                  locale: Locale("pt", "BR")),
-                          dateFormat: DateFormat("dd MMM yyyy", 'pt_BR'),
-                          onChanged: (DateTime? novaData) {
-                            setState(() {
-                              dataInicioSelecionada = novaData;
-                            });
-                          },
-                          validator: (value) {
-                            if (value == null) {
-                              return "Campo Obrigatório";
-                            }
-                            return null;
-                          },
+                      DropdownButtonFormField<String>(
+                        decoration: const InputDecoration(
+                          labelText: "Tipo de Relatório",
+                          border: OutlineInputBorder(),
                         ),
+                        value: _selectedTipoRelatorio,
+                        items: tipoRelatorio.map((String tipoRelatorio) {
+                          return DropdownMenuItem<String>(
+                            value: tipoRelatorio,
+                            child: Text(tipoRelatorio),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _selectedTipoRelatorio = newValue;
+                          });
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Campo Obrigatório";
+                          }
+                          return null;
+                        },
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: DateTimeFormField(
-                          decoration:
-                              const InputDecoration(labelText: 'Data Fim'),
-                          mode: DateTimeFieldPickerMode.date,
-                          pickerPlatform: DateTimeFieldPickerPlatform.material,
-                          materialDatePickerOptions:
-                              const MaterialDatePickerOptions(
-                                  locale: Locale("pt", "BR")),
-                          dateFormat: DateFormat("dd MMM yyyy", 'pt_BR'),
-                          onChanged: (DateTime? novaData) {
-                            setState(() {
-                              dataFimSelecionada = novaData;
-                            });
-                          },
-                          validator: (value) {
-                            if (value == null) {
-                              return "Campo Obrigatório";
-                            }
-                            return null;
-                          },
-                        ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: DateTimeFormField(
+                              decoration:
+                                  const InputDecoration(labelText: 'Data Início'),
+                              mode: DateTimeFieldPickerMode.date,
+                              pickerPlatform: DateTimeFieldPickerPlatform.material,
+                              materialDatePickerOptions:
+                                  const MaterialDatePickerOptions(
+                                      locale: Locale("pt", "BR")),
+                              dateFormat: DateFormat("dd MMM yyyy", 'pt_BR'),
+                              onChanged: (DateTime? novaData) {
+                                setState(() {
+                                  dataInicioSelecionada = novaData;
+                                });
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return "Campo Obrigatório";
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: DateTimeFormField(
+                              decoration:
+                                  const InputDecoration(labelText: 'Data Fim'),
+                              mode: DateTimeFieldPickerMode.date,
+                              pickerPlatform: DateTimeFieldPickerPlatform.material,
+                              materialDatePickerOptions:
+                                  const MaterialDatePickerOptions(
+                                      locale: Locale("pt", "BR")),
+                              dateFormat: DateFormat("dd MMM yyyy", 'pt_BR'),
+                              onChanged: (DateTime? novaData) {
+                                setState(() {
+                                  dataFimSelecionada = novaData;
+                                });
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return "Campo Obrigatório";
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 30),
+                      const Text('Enviar por:'),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: SizedBox(
+                              width: 125,
+                              child: FilledButton(
+                                style: const ButtonStyle(
+                                  backgroundColor: WidgetStatePropertyAll(
+                                    Color.fromARGB(255, 0, 48, 87),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    _mostrarModal(context, "email");
+                                  }
+                                },
+                                child: const Text("Email"),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: SizedBox(
+                              width: 125,
+                              child: FilledButton(
+                                style: const ButtonStyle(
+                                  backgroundColor: WidgetStatePropertyAll(
+                                    Color.fromARGB(255, 138, 9, 9),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    _mostrarModal(context, "whatsapp");
+                                  }
+                                },
+                                child: const Text("Whatsapp"),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  const SizedBox(height: 30),
-                  const Text('Enviar por:'),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: SizedBox(
-                          width: 125,
-                          child: FilledButton(
-                            style: const ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(
-                                Color.fromARGB(255, 0, 48, 87),
-                              ),
-                            ),
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                _mostrarModal(context, "email");
-                              }
-                            },
-                            child: const Text("Email"),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: SizedBox(
-                          width: 125,
-                          child: FilledButton(
-                            style: const ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(
-                                Color.fromARGB(255, 138, 9, 9),
-                              ),
-                            ),
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                _mostrarModal(context, "whatsapp");
-                              }
-                            },
-                            child: const Text("Whatsapp"),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                ),
               ),
             ),
           ),

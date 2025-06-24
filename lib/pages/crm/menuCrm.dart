@@ -62,7 +62,7 @@ class _MenuCrmState extends State<MenuCrm> {
           height: double.infinity,
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/images/FUNDO_BIOSAT_APP_640.jpg'),
+              image: AssetImage('assets/images/fundos/FUNDO_BIOSAT_APP_640.jpg'),
               fit: BoxFit.cover,
             ),
           ),

@@ -80,7 +80,6 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
     _loadFormulario(widget.event.codFormulario);
     _loadHospitais();
     _loadConcorrentes();
-    
   }
 
   Future<void> _loadConcorrentes() async {
@@ -92,7 +91,8 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
   }
 
   Future<void> _loadHospitais() async {
-    final providerHospitais = Provider.of<HospitaisLista>(context, listen: false);
+    final providerHospitais =
+        Provider.of<HospitaisLista>(context, listen: false);
     hospitais = await providerHospitais.loadHospitais(providerHospitais);
     setState(() {
       filteredHospitais = hospitais;
@@ -151,7 +151,7 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
             TextEditingController(text: formulario[0].proximosPassos);
       }
 
-       // Atualiza assuntos abordados:
+      // Atualiza assuntos abordados:
       if (formulario[0].assuntosAbordados.isNotEmpty) {
         _assuntosAbordados =
             TextEditingController(text: formulario[0].assuntosAbordados);
@@ -313,6 +313,7 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
     double metadeLargura = larguraMaxima / 2;
     double? widthScreen = 0;
     double? heightScreen = 0;
+    double? widthScreenPageFull = 0;
     double? sizeText = 0;
     double sizeAspectRatio = 0;
     int sizeCrossAxisCount = 0;
@@ -321,12 +322,14 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
     if (size.width >= 600) {
       widthScreen = size.width * 0.4;
       heightScreen = size.width * 0.085;
+      widthScreenPageFull = size.width * 0.6;
       sizeText = 18;
       sizeCrossAxisCount = 4;
       sizeAspectRatio = 1.2;
     } else {
-      widthScreen = size.width * 0.9;
+      widthScreen = size.width * 0.99;
       heightScreen = size.height * 0.085;
+      widthScreenPageFull = size.width * 0.99;
       sizeText = 14;
       sizeCrossAxisCount = 2;
       sizeAspectRatio = 1.05;
@@ -345,846 +348,892 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
         ),
       ),
       //drawer: AppDrawer(),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: widthScreenPageFull,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Text(
-                  'CÓDIGO DA VISITA: ',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 160, 8, 8),
-                  ),
-                ),
-                Text(
-                  widget.event.codigo,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 1, 53, 95),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                const Text(
-                  'MÉDICO: ',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 160, 8, 8),
-                  ),
-                ),
-                Text(
-                  widget.event.nomeMedico,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 1, 53, 95),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                const Text(
-                  'CÓDIGO DO MÉDICO: ',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 160, 8, 8),
-                  ),
-                ),
-                Text(
-                  widget.event.codigoMedico,
-                  style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                const Text(
-                  'LOCAL: ',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 160, 8, 8),
-                  ),
-                ),
-                Text(
-                  widget.event.local,
-                  style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                const Text(
-                  'CÓDIGO LOCAL: ',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 160, 8, 8),
-                  ),
-                ),
-                Text(
-                  widget.event.codigoLocalDeEntrega,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Container(
-              width: widthScreen,
-              height: heightScreen,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: DateTimeFormField(
-                      initialValue: formulario.isNotEmpty
-                          ? formulario[0].dataVisita
-                          : null,
-                      decoration:
-                          const InputDecoration(labelText: 'Data da Visita'),
-                      mode: DateTimeFieldPickerMode.date,
-                      pickerPlatform: DateTimeFieldPickerPlatform.material,
-                      materialDatePickerOptions:
-                          const MaterialDatePickerOptions(
-                              locale: Locale("pt", "BR")),
-                      dateFormat: DateFormat("dd MMM yyyy", 'pt_BR'),
-                      onChanged: (DateTime? novaData) {
-                        setState(() {
-                          dataSelecionada = novaData;
-                        });
-                      },
+                Row(
+                  children: [
+                    const Text(
+                      'CÓDIGO DA VISITA: ',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 160, 8, 8),
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: DateTimeFormField(
-                      initialValue: formulario.isNotEmpty
-                          ? DateFormat('HH:mm').parse(formulario[0].horaVisita)
-                          : null,
-                      decoration: const InputDecoration(labelText: 'Hora'),
-                      mode: DateTimeFieldPickerMode.time,
-                      pickerPlatform: DateTimeFieldPickerPlatform.material,
-                      materialTimePickerOptions: MaterialTimePickerOptions(
-                          builder: (BuildContext context, Widget? child) {
-                            return MediaQuery(
-                              data: MediaQuery.of(context)
-                                  .copyWith(alwaysUse24HourFormat: true),
-                              child: child!,
-                            );
+                    Text(
+                      widget.event.codigo,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 1, 53, 95),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'MÉDICO: ',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 160, 8, 8),
+                      ),
+                    ),
+                    Flexible(
+                      child: Text(
+                        widget.event.nomeMedico,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 1, 53, 95),
+                        ),
+                        softWrap: true,
+                      ),
+                    ),
+                  ],
+                ),
+                // Row(
+                //   children: [
+                //     const Text(
+                //       'CÓDIGO DO MÉDICO: ',
+                //       style: TextStyle(
+                //         fontSize: 14,
+                //         fontWeight: FontWeight.bold,
+                //         color: Color.fromARGB(255, 160, 8, 8),
+                //       ),
+                //     ),
+                //     Text(
+                //       widget.event.codigoMedico,
+                //       style: const TextStyle(
+                //           fontSize: 14, fontWeight: FontWeight.bold),
+                //     ),
+                //   ],
+                // ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'LOCAL: ',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 160, 8, 8),
+                      ),
+                    ),
+                    Flexible(
+                      child: Text(
+                        widget.event.local,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        softWrap: true,
+                      ),
+                    ),
+                  ],
+                ),
+                // Row(
+                //   children: [
+                //     const Text(
+                //       'CÓDIGO LOCAL: ',
+                //       style: TextStyle(
+                //         fontSize: 14,
+                //         fontWeight: FontWeight.bold,
+                //         color: Color.fromARGB(255, 160, 8, 8),
+                //       ),
+                //     ),
+                //     Text(
+                //       widget.event.codigoLocalDeEntrega,
+                //       style: const TextStyle(
+                //         fontSize: 14,
+                //         fontWeight: FontWeight.bold,
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                const SizedBox(height: 10),
+                Container(
+                  width: widthScreen,
+                  height: heightScreen,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: DateTimeFormField(
+                          initialValue: formulario.isNotEmpty
+                              ? formulario[0].dataVisita
+                              : null,
+                          decoration: const InputDecoration(
+                              labelText: 'Data da Visita'),
+                          mode: DateTimeFieldPickerMode.date,
+                          pickerPlatform: DateTimeFieldPickerPlatform.material,
+                          materialDatePickerOptions:
+                              const MaterialDatePickerOptions(
+                                  locale: Locale("pt", "BR")),
+                          dateFormat: DateFormat("dd MMM yyyy", 'pt_BR'),
+                          onChanged: (DateTime? novaData) {
+                            setState(() {
+                              dataSelecionada = novaData;
+                            });
                           },
-                          initialEntryMode: TimePickerEntryMode.inputOnly),
-                      dateFormat: DateFormat('HH:mm', 'pt_BR'),
-                      onChanged: (DateTime? novaHora) {
-                        setState(() {
-                          horaSelecionada = TimeOfDay.fromDateTime(novaHora!);
-                        });
-                      },
-                    ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: DateTimeFormField(
+                          initialValue: formulario.isNotEmpty
+                              ? DateFormat('HH:mm')
+                                  .parse(formulario[0].horaVisita)
+                              : null,
+                          decoration: const InputDecoration(labelText: 'Hora'),
+                          mode: DateTimeFieldPickerMode.time,
+                          pickerPlatform: DateTimeFieldPickerPlatform.material,
+                          materialTimePickerOptions: MaterialTimePickerOptions(
+                              builder: (BuildContext context, Widget? child) {
+                                return MediaQuery(
+                                  data: MediaQuery.of(context)
+                                      .copyWith(alwaysUse24HourFormat: true),
+                                  child: child!,
+                                );
+                              },
+                              initialEntryMode: TimePickerEntryMode.inputOnly),
+                          dateFormat: DateFormat('HH:mm', 'pt_BR'),
+                          onChanged: (DateTime? novaHora) {
+                            setState(() {
+                              horaSelecionada =
+                                  TimeOfDay.fromDateTime(novaHora!);
+                            });
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: PageView(
+                    controller: _pageController,
+                    scrollDirection: Axis.horizontal,
+                    scrollBehavior: AppScrollBehavior(),
+                    physics: const ClampingScrollPhysics(),
+                    children: <Widget>[
+                      SingleChildScrollView(
+                        child: Container(
+                          height: alturaMaxima,
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                            colors: gradientCoresForm,
+                          )),
+                          //color: const Color.fromARGB(255, 213, 232, 248),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 5, 120, 5),
+                                      child: Image.asset(
+                                        'assets/images/logos/Logo_Abduch_02.png',
+                                        scale: 1.7,
+                                      )),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  const Icon(
+                                    FontAwesomeIcons.handPointLeft,
+                                    size: 50,
+                                    color: Color.fromARGB(255, 0, 52, 95),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Container(
+                                      alignment: Alignment.topRight,
+                                      child: Text("Arraste para o Lado",
+                                          style: arraste)),
+                                ],
+                              ),
+                              const SizedBox(height: 20),
+                              const Text(
+                                'Como foi a visita?',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 0, 52, 95),
+                                    fontSize: 21,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 10),
+                              Padding(
+                                padding:
+                                    EdgeInsets.only(left: metadeLargura * 0.4),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    _buildRadioOption('Excelente'),
+                                    _buildRadioOption('Boa'),
+                                    _buildRadioOption('Regular'),
+                                    _buildRadioOption('Ruim'),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SingleChildScrollView(
+                        child: Container(
+                          height: alturaMaxima,
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                            colors: gradientCoresForm,
+                          )),
+                          //color: const Color.fromARGB(255, 213, 232, 248),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 5, 120, 5),
+                                      child: Image.asset(
+                                        'assets/images/logos/Logo_Abduch_02.png',
+                                        scale: 1.7,
+                                      )),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  const Icon(
+                                    FontAwesomeIcons.handPointLeft,
+                                    size: 50,
+                                    color: Color.fromARGB(255, 0, 52, 95),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Container(
+                                      alignment: Alignment.topRight,
+                                      child: Text("Arraste para o Lado",
+                                          style: arraste)),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              const Text(
+                                'Quais hospitais que o médico opera ?',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 0, 52, 95),
+                                    fontSize: 21,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 10),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextField(
+                                  controller: searchController,
+                                  onChanged: filterHospitais,
+                                  decoration: InputDecoration(
+                                    labelText: 'Pesquisar',
+                                    hintText: 'Digite para filtrar opções',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide(
+                                          color: Theme.of(context).primaryColor,
+                                          width: 3.0),
+                                    ),
+                                    focusedBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.black,
+                                          width: 3.0), // Quando está focado
+                                    ),
+                                    prefixIcon: Icon(Icons.search),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 100,
+                                child: ListView.builder(
+                                  itemCount: filteredHospitais.length,
+                                  itemBuilder: (context, index) {
+                                    return Container(
+                                      color: const Color.fromARGB(
+                                          255, 55, 157, 240),
+                                      child: ListTile(
+                                        title: Text(filteredHospitais[index]
+                                            .nomeHospital),
+                                        onTap: () {
+                                          // Ação ao clicar em uma opção
+                                          addToField(filteredHospitais[index]
+                                              .nomeHospital);
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  TextButton(
+                                      style: TextButton.styleFrom(
+                                          backgroundColor: const Color.fromARGB(
+                                              255, 184, 14, 2),
+                                          foregroundColor: Colors.white,
+                                          padding: const EdgeInsets.all(5.0)),
+                                      onPressed: () {
+                                        setState(() {
+                                          selectedHospitais = [];
+                                          selectedItemsController.text = '';
+                                        });
+                                      },
+                                      child: const Text(
+                                        "Limpar Itens",
+                                      )),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: TextField(
+                                  controller: selectedItemsController,
+                                  readOnly: true, // Campo apenas de leitura
+                                  decoration: InputDecoration(
+                                    labelText: 'Itens Selecionados',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide(
+                                          color: Theme.of(context).primaryColor,
+                                          width: 3.0),
+                                    ),
+                                    focusedBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.black,
+                                          width: 3.0), // Quando está focado
+                                    ),
+                                    contentPadding: const EdgeInsets.fromLTRB(
+                                        10.0, 1.0, 10.0, 2.0),
+                                  ),
+                                  maxLines: 5,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SingleChildScrollView(
+                        child: Container(
+                          height: alturaMaxima,
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                            colors: gradientCoresForm,
+                          )),
+                          //color: const Color.fromARGB(255, 213, 232, 248),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 5, 120, 5),
+                                    child: Image.asset(
+                                      'assets/images/logos/Logo_Abduch_02.png',
+                                      scale: 1.7,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  const Icon(
+                                    FontAwesomeIcons.handPointLeft,
+                                    size: 50,
+                                    color: Color.fromARGB(255, 0, 52, 95),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Container(
+                                      alignment: Alignment.topRight,
+                                      child: Text("Arraste para o Lado",
+                                          style: arraste)),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              const Text(
+                                'Já é cliente do Grupo Abduch ?',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 0, 52, 95),
+                                    fontSize: 21,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 10),
+                              Padding(
+                                padding:
+                                    EdgeInsets.only(left: metadeLargura * 0.4),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    _buildRadioOptionCliente('Sim'),
+                                    _buildRadioOptionCliente('Não'),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SingleChildScrollView(
+                        child: Container(
+                          height: alturaMaxima,
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                            colors: gradientCoresForm,
+                          )),
+                          //color: const Color.fromARGB(255, 213, 232, 248),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 5, 120, 5),
+                                    child: Image.asset(
+                                      'assets/images/logos/Logo_Abduch_02.png',
+                                      scale: 1.7,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  const Icon(
+                                    FontAwesomeIcons.handPointLeft,
+                                    size: 50,
+                                    color: Color.fromARGB(255, 0, 52, 95),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Container(
+                                      alignment: Alignment.topRight,
+                                      child: Text("Arraste para o Lado",
+                                          style: arraste)),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              const Text(
+                                'Empresas concorrentes:',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 0, 52, 95),
+                                    fontSize: 21,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 10),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextField(
+                                  controller: searchControllerConcorrentes,
+                                  onChanged: filterConcorrentes,
+                                  decoration: InputDecoration(
+                                    labelText: 'Pesquisar',
+                                    hintText: 'Digite para filtrar opções',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide(
+                                          color: Theme.of(context).primaryColor,
+                                          width: 3.0),
+                                    ),
+                                    focusedBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.black,
+                                          width: 3.0), // Quando está focado
+                                    ),
+                                    prefixIcon: Icon(Icons.search),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 100,
+                                child: ListView.builder(
+                                  //itemCount: filteredConcorrentes.length,
+                                  itemCount: filteredConcorrentes.length,
+                                  itemBuilder: (context, index) {
+                                    return Container(
+                                      color: const Color.fromARGB(
+                                          255, 55, 157, 240),
+                                      child: ListTile(
+                                        title: Text(filteredConcorrentes[index]
+                                            .nomeFantasia),
+                                        onTap: () {
+                                          // Ação ao clicar em uma opção
+                                          addToConcorrente(
+                                              filteredConcorrentes[index]
+                                                  .nomeFantasia);
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  TextButton(
+                                      style: TextButton.styleFrom(
+                                          backgroundColor: const Color.fromARGB(
+                                              255, 184, 14, 2),
+                                          foregroundColor: Colors.white,
+                                          padding: const EdgeInsets.all(5.0)),
+                                      onPressed: () {
+                                        setState(() {
+                                          selectedConcorrentes = [];
+                                          selectedItemsControllerConcorrentes
+                                              .text = '';
+                                        });
+                                      },
+                                      child: const Text(
+                                        "Limpar Itens",
+                                      )),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: TextField(
+                                  controller:
+                                      selectedItemsControllerConcorrentes,
+                                  readOnly: true, // Campo apenas de leitura
+                                  decoration: InputDecoration(
+                                    labelText: 'Itens Selecionados',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide(
+                                          color: Theme.of(context).primaryColor,
+                                          width: 3.0),
+                                    ),
+                                    focusedBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.black,
+                                          width: 3.0), // Quando está focado
+                                    ),
+                                    contentPadding: const EdgeInsets.fromLTRB(
+                                        10.0, 1.0, 10.0, 2.0),
+                                  ),
+                                  maxLines: 5,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SingleChildScrollView(
+                        child: Container(
+                          height: alturaMaxima,
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                            colors: gradientCoresForm,
+                          )),
+                          //color: const Color.fromARGB(255, 213, 232, 248),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 5, 120, 5),
+                                    child: Image.asset(
+                                      'assets/images/logos/Logo_Abduch_02.png',
+                                      scale: 1.7,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  const Icon(
+                                    FontAwesomeIcons.handPointLeft,
+                                    size: 50,
+                                    color: Color.fromARGB(255, 0, 52, 95),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Container(
+                                      alignment: Alignment.topRight,
+                                      child: Text("Arraste para o Lado",
+                                          style: arraste)),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Qual o foco do médico dentro da especialidade ?',
+                                      style: TextStyle(
+                                          color: Color.fromARGB(255, 0, 52, 95),
+                                          fontSize: 21,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Padding(
+                                padding:
+                                    EdgeInsets.only(left: metadeLargura * 0.4),
+                                child: Column(
+                                  children: [
+                                    _buildRadioOptionEspecialidade("Urologia"),
+                                    _buildRadioOptionEspecialidade(
+                                        "Urologia / Oncologia"),
+                                    _buildRadioOptionEspecialidade(
+                                        "Urologia / Ginecologia"),
+                                    _buildRadioOptionEspecialidade(
+                                        "Ginecologia"),
+                                    _buildRadioOptionEspecialidade(
+                                        "Andrologia"),
+                                    _buildRadioOptionEspecialidade(
+                                        "Histeroscopia"),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SingleChildScrollView(
+                        child: Container(
+                          height: alturaMaxima,
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                            colors: gradientCoresForm,
+                          )),
+                          //color: const Color.fromARGB(255, 213, 232, 248),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 5, 120, 5),
+                                    child: Image.asset(
+                                      'assets/images/logos/Logo_Abduch_02.png',
+                                      scale: 1.7,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  const Icon(
+                                    FontAwesomeIcons.handPointLeft,
+                                    size: 50,
+                                    color: Color.fromARGB(255, 0, 52, 95),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Container(
+                                      alignment: Alignment.topRight,
+                                      child: Text("Arraste para o Lado",
+                                          style: arraste)),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              const Text(
+                                'Assuntos Abordados:',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 0, 52, 95),
+                                    fontSize: 21,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 10),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextFormField(
+                                  decoration: const InputDecoration(
+                                      //labelText: "Digite Aqui",
+                                      hintText: "Digite aqui",
+                                      border: OutlineInputBorder(),
+                                      contentPadding: EdgeInsets.fromLTRB(
+                                          10.0, 20.0, 10.0, 20.0)),
+                                  maxLength: 254,
+                                  maxLines: 5,
+                                  controller: _assuntosAbordados,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: sizeText,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SingleChildScrollView(
+                        child: Container(
+                          height: alturaMaxima,
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                            colors: gradientCoresForm,
+                          )),
+                          //color: const Color.fromARGB(255, 213, 232, 248),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 5, 120, 5),
+                                    child: Image.asset(
+                                      'assets/images/logos/Logo_Abduch_02.png',
+                                      scale: 1.7,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  const Icon(
+                                    FontAwesomeIcons.handPointLeft,
+                                    size: 50,
+                                    color: Color.fromARGB(255, 0, 52, 95),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Container(
+                                      alignment: Alignment.topRight,
+                                      child: Text("Arraste para o Lado",
+                                          style: arraste)),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              const Text(
+                                'Próximos Passos:',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 0, 52, 95),
+                                    fontSize: 21,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 10),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextFormField(
+                                  decoration: const InputDecoration(
+                                      //labelText: "Digite Aqui",
+                                      hintText: "Digite aqui",
+                                      border: OutlineInputBorder(),
+                                      contentPadding: EdgeInsets.fromLTRB(
+                                          10.0, 20.0, 10.0, 20.0)),
+                                  maxLength: 254,
+                                  maxLines: 5,
+                                  controller: _proximosPassos,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: sizeText,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SingleChildScrollView(
+                        child: Container(
+                          height: alturaMaxima,
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                            colors: gradientCoresForm,
+                          )),
+                          //color: const Color.fromARGB(255, 213, 232, 248),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 5, 120, 5),
+                                    child: Image.asset(
+                                      'assets/images/logos/Logo_Abduch_02.png',
+                                      scale: 1.7,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 100),
+                              // const Text(
+                              //   'Obrigado !',
+                              //   style: TextStyle(
+                              //       color: Color.fromARGB(255, 0, 52, 95),
+                              //       fontSize: 45,
+                              //       fontWeight: FontWeight.bold),
+                              // ),
+                              Image.asset(
+                                'assets/images/palavras/Obrigado_02.png',
+                                scale: 1.7,
+                              ),
+                              const SizedBox(height: 10),
+                              // FilledButton(
+                              //   style: const ButtonStyle(
+                              //       backgroundColor: WidgetStatePropertyAll(
+                              //         Color.fromARGB(255, 0, 48, 87),
+                              //       ),
+                              //       minimumSize:
+                              //           WidgetStatePropertyAll(Size(200, 50))),
+                              //   onPressed: () {
+                              //     editarFormulario(context);
+                              //   },
+                              //   child: const Text(
+                              //     "Salvar",
+                              //     style: TextStyle(fontSize: 20),
+                              //   ),
+                              // ),
+                              GestureDetector(
+                                onTap: () {
+                                  editarFormulario(context);
+                                },
+                                child: SizedBox(
+                                  child: Image.asset(
+                                    'assets/images/botoes/botao_Salvar_02.png',
+                                    scale: 1.5,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
             ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                scrollDirection: Axis.horizontal,
-                scrollBehavior: AppScrollBehavior(),
-                physics: const ClampingScrollPhysics(),
-                children: <Widget>[
-                  SingleChildScrollView(
-                    child: Container(
-                      height: alturaMaxima,
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                        colors: gradientCoresForm,
-                      )),
-                      //color: const Color.fromARGB(255, 213, 232, 248),
-                      child: Column(
-                        children: [
-                          const Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 5, 120, 5),
-                                child: Image(
-                                  image: AssetImage(
-                                      'assets/images/grupo_abduch.png'),
-                                  height: 30,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const Icon(
-                                FontAwesomeIcons.handPointLeft,
-                                size: 50,
-                                color: Color.fromARGB(255, 0, 52, 95),
-                              ),
-                              SizedBox(width: 5),
-                              Container(
-                                  alignment: Alignment.topRight,
-                                  child: Text("Arraste para o Lado",
-                                      style: arraste)),
-                            ],
-                          ),
-                          const SizedBox(height: 20),
-                          const Text(
-                            'Como foi a visita?',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 0, 52, 95),
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 10),
-                          Padding(
-                            padding:
-                                EdgeInsets.only(left: metadeLargura * 0.85),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                _buildRadioOption('Excelente'),
-                                _buildRadioOption('Boa'),
-                                _buildRadioOption('Regular'),
-                                _buildRadioOption('Ruim'),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SingleChildScrollView(
-                    child: Container(
-                      height: alturaMaxima,
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                        colors: gradientCoresForm,
-                      )),
-                      //color: const Color.fromARGB(255, 213, 232, 248),
-                      child: Column(
-                        children: [
-                          const Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 5, 120, 5),
-                                child: Image(
-                                  image: AssetImage(
-                                      'assets/images/grupo_abduch.png'),
-                                  height: 30,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const Icon(
-                                FontAwesomeIcons.handPointLeft,
-                                size: 50,
-                                color: Color.fromARGB(255, 0, 52, 95),
-                              ),
-                              SizedBox(width: 5),
-                              Container(
-                                  alignment: Alignment.topRight,
-                                  child: Text("Arraste para o Lado",
-                                      style: arraste)),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            'Quais hospitais que o médico opera ?',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 0, 52, 95),
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 10),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextField(
-                              controller: searchController,
-                              onChanged: filterHospitais,
-                              decoration: InputDecoration(
-                                labelText: 'Pesquisar',
-                                hintText: 'Digite para filtrar opções',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context).primaryColor,
-                                      width: 3.0),
-                                ),
-                                focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.black,
-                                      width: 3.0), // Quando está focado
-                                ),
-                                prefixIcon: Icon(Icons.search),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 100,
-                            child: ListView.builder(
-                              itemCount: filteredHospitais.length,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  color:
-                                      const Color.fromARGB(255, 55, 157, 240),
-                                  child: ListTile(
-                                    title: Text(
-                                        filteredHospitais[index].nomeHospital),
-                                    onTap: () {
-                                      // Ação ao clicar em uma opção
-                                      addToField(filteredHospitais[index]
-                                          .nomeHospital);
-                                    },
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              TextButton(
-                                  style: TextButton.styleFrom(
-                                      backgroundColor:
-                                          const Color.fromARGB(255, 184, 14, 2),
-                                      foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.all(5.0)),
-                                  onPressed: () {
-                                    setState(() {
-                                      selectedHospitais = [];
-                                      selectedItemsController.text = '';
-                                    });
-                                  },
-                                  child: const Text(
-                                    "Limpar Itens",
-                                  )),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: TextField(
-                              controller: selectedItemsController,
-                              readOnly: true, // Campo apenas de leitura
-                              decoration: InputDecoration(
-                                labelText: 'Itens Selecionados',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context).primaryColor,
-                                      width: 3.0),
-                                ),
-                                focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.black,
-                                      width: 3.0), // Quando está focado
-                                ),
-                                contentPadding:
-                                    EdgeInsets.fromLTRB(10.0, 1.0, 10.0, 2.0),
-                              ),
-                              maxLines: 5,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SingleChildScrollView(
-                    child: Container(
-                      height: alturaMaxima,
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                        colors: gradientCoresForm,
-                      )),
-                      //color: const Color.fromARGB(255, 213, 232, 248),
-                      child: Column(
-                        children: [
-                          const Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 5, 120, 5),
-                                child: Image(
-                                  image: AssetImage(
-                                      'assets/images/grupo_abduch.png'),
-                                  height: 30,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const Icon(
-                                FontAwesomeIcons.handPointLeft,
-                                size: 50,
-                                color: Color.fromARGB(255, 0, 52, 95),
-                              ),
-                              SizedBox(width: 5),
-                              Container(
-                                  alignment: Alignment.topRight,
-                                  child: Text("Arraste para o Lado",
-                                      style: arraste)),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            'Já é cliente do Grupo Abduch ?',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 0, 52, 95),
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 10),
-                          Padding(
-                            padding: EdgeInsets.only(left: metadeLargura * 0.8),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                _buildRadioOptionCliente('Sim'),
-                                _buildRadioOptionCliente('Não'),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SingleChildScrollView(
-                    child: Container(
-                      height: alturaMaxima,
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                        colors: gradientCoresForm,
-                      )),
-                      //color: const Color.fromARGB(255, 213, 232, 248),
-                      child: Column(
-                        children: [
-                          const Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 5, 120, 5),
-                                child: Image(
-                                  image: AssetImage(
-                                      'assets/images/grupo_abduch.png'),
-                                  height: 30,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const Icon(
-                                FontAwesomeIcons.handPointLeft,
-                                size: 50,
-                                color: Color.fromARGB(255, 0, 52, 95),
-                              ),
-                              SizedBox(width: 5),
-                              Container(
-                                  alignment: Alignment.topRight,
-                                  child: Text("Arraste para o Lado",
-                                      style: arraste)),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            'Empresas concorrentes:',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 0, 52, 95),
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 10),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextField(
-                              controller: searchControllerConcorrentes,
-                              onChanged: filterConcorrentes,
-                              decoration: InputDecoration(
-                                labelText: 'Pesquisar',
-                                hintText: 'Digite para filtrar opções',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context).primaryColor,
-                                      width: 3.0),
-                                ),
-                                focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.black,
-                                      width: 3.0), // Quando está focado
-                                ),
-                                prefixIcon: Icon(Icons.search),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 100,
-                            child: ListView.builder(
-                              //itemCount: filteredConcorrentes.length,
-                              itemCount: filteredConcorrentes.length,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  color:
-                                      const Color.fromARGB(255, 55, 157, 240),
-                                  child: ListTile(
-                                    title: Text(filteredConcorrentes[index]
-                                        .nomeFantasia),
-                                    onTap: () {
-                                      // Ação ao clicar em uma opção
-                                      addToConcorrente(
-                                          filteredConcorrentes[index]
-                                              .nomeFantasia);
-                                    },
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              TextButton(
-                                  style: TextButton.styleFrom(
-                                      backgroundColor:
-                                          const Color.fromARGB(255, 184, 14, 2),
-                                      foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.all(5.0)),
-                                  onPressed: () {
-                                    setState(() {
-                                      selectedConcorrentes = [];
-                                      selectedItemsControllerConcorrentes.text =
-                                          '';
-                                    });
-                                  },
-                                  child: const Text(
-                                    "Limpar Itens",
-                                  )),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: TextField(
-                              controller: selectedItemsControllerConcorrentes,
-                              readOnly: true, // Campo apenas de leitura
-                              decoration: InputDecoration(
-                                labelText: 'Itens Selecionados',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context).primaryColor,
-                                      width: 3.0),
-                                ),
-                                focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.black,
-                                      width: 3.0), // Quando está focado
-                                ),
-                                contentPadding:
-                                    EdgeInsets.fromLTRB(10.0, 1.0, 10.0, 2.0),
-                              ),
-                              maxLines: 5,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SingleChildScrollView(
-                    child: Container(
-                      height: alturaMaxima,
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                        colors: gradientCoresForm,
-                      )),
-                      //color: const Color.fromARGB(255, 213, 232, 248),
-                      child: Column(
-                        children: [
-                          const Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 5, 120, 5),
-                                child: Image(
-                                  image: AssetImage(
-                                      'assets/images/grupo_abduch.png'),
-                                  height: 30,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const Icon(
-                                FontAwesomeIcons.handPointLeft,
-                                size: 50,
-                                color: Color.fromARGB(255, 0, 52, 95),
-                              ),
-                              SizedBox(width: 5),
-                              Container(
-                                  alignment: Alignment.topRight,
-                                  child: Text("Arraste para o Lado",
-                                      style: arraste)),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            'Qual o foco do médico dentro da especialidade ?',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 0, 52, 95),
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 10),
-                          Padding(
-                            padding: EdgeInsets.only(left: metadeLargura * 0.6),
-                            child: Column(
-                              children: [
-                                _buildRadioOptionEspecialidade("Urologia"),
-                                _buildRadioOptionEspecialidade(
-                                    "Urologia / Oncologia"),
-                                _buildRadioOptionEspecialidade(
-                                    "Urologia / Ginecologia"),
-                                _buildRadioOptionEspecialidade("Ginecologia"),
-                                _buildRadioOptionEspecialidade("Andrologia"),
-                                _buildRadioOptionEspecialidade("Histeroscopia"),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SingleChildScrollView(
-                    child: Container(
-                      height: alturaMaxima,
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                        colors: gradientCoresForm,
-                      )),
-                      //color: const Color.fromARGB(255, 213, 232, 248),
-                      child: Column(
-                        children: [
-                          const Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 5, 120, 5),
-                                child: Image(
-                                  image: AssetImage(
-                                      'assets/images/grupo_abduch.png'),
-                                  height: 30,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const Icon(
-                                FontAwesomeIcons.handPointLeft,
-                                size: 50,
-                                color: Color.fromARGB(255, 0, 52, 95),
-                              ),
-                              SizedBox(width: 5),
-                              Container(
-                                  alignment: Alignment.topRight,
-                                  child: Text("Arraste para o Lado",
-                                      style: arraste)),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            'Assuntos Abordados:',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 0, 52, 95),
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 10),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextFormField(
-                              decoration: const InputDecoration(
-                                  //labelText: "Digite Aqui",
-                                  hintText: "Digite aqui",
-                                  border: OutlineInputBorder(),
-                                  contentPadding: EdgeInsets.fromLTRB(
-                                      10.0, 20.0, 10.0, 20.0)),
-                              maxLength: 254,
-                              maxLines: 5,
-                              controller: _assuntosAbordados,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: sizeText,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SingleChildScrollView(
-                    child: Container(
-                      height: alturaMaxima,
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                        colors: gradientCoresForm,
-                      )),
-                      //color: const Color.fromARGB(255, 213, 232, 248),
-                      child: Column(
-                        children: [
-                          const Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 5, 120, 5),
-                                child: Image(
-                                  image: AssetImage(
-                                      'assets/images/grupo_abduch.png'),
-                                  height: 30,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const Icon(
-                                FontAwesomeIcons.handPointLeft,
-                                size: 50,
-                                color: Color.fromARGB(255, 0, 52, 95),
-                              ),
-                              SizedBox(width: 5),
-                              Container(
-                                  alignment: Alignment.topRight,
-                                  child: Text("Arraste para o Lado",
-                                      style: arraste)),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            'Próximos Passos:',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 0, 52, 95),
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 10),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextFormField(
-                              decoration: const InputDecoration(
-                                  //labelText: "Digite Aqui",
-                                  hintText: "Digite aqui",
-                                  border: OutlineInputBorder(),
-                                  contentPadding: EdgeInsets.fromLTRB(
-                                      10.0, 20.0, 10.0, 20.0)),
-                              maxLength: 254,
-                              maxLines: 5,
-                              controller: _proximosPassos,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: sizeText,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SingleChildScrollView(
-                    child: Container(
-                      height: alturaMaxima,
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                        colors: gradientCoresForm,
-                      )),
-                      //color: const Color.fromARGB(255, 213, 232, 248),
-                      child: Column(
-                        children: [
-                          const Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 5, 120, 5),
-                                child: Image(
-                                  image: AssetImage(
-                                      'assets/images/grupo_abduch.png'),
-                                  height: 30,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 100),
-                          const Text(
-                            'Obrigado !',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 0, 52, 95),
-                                fontSize: 45,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 10),
-                          FilledButton(
-                            style: const ButtonStyle(
-                                backgroundColor: WidgetStatePropertyAll(
-                                  Color.fromARGB(255, 0, 48, 87),
-                                ),
-                                minimumSize:
-                                    WidgetStatePropertyAll(Size(200, 50))),
-                            onPressed: () {
-                              editarFormulario(context);
-                            },
-                            child: const Text(
-                              "Salvar",
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
+          ),
         ),
       ),
     );
@@ -1205,7 +1254,7 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
         Text(
           label,
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Theme.of(context).primaryColor,
           ),
@@ -1229,7 +1278,7 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
         Text(
           label,
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Theme.of(context).primaryColor,
           ),
@@ -1253,7 +1302,7 @@ class _EditarFormularioVisitaCrmState extends State<EditarFormularioVisitaCrm> {
         Text(
           label,
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Theme.of(context).primaryColor,
           ),

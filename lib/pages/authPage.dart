@@ -50,7 +50,7 @@ class _AuthPageState extends State<AuthPage> {
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image:
-                      AssetImage('assets/images/FUNDO_BIOSAT_APP_640.jpg'),
+                      AssetImage('assets/images/fundos/FUNDO_BIOSAT_APP_640.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -64,7 +64,7 @@ class _AuthPageState extends State<AuthPage> {
                       SizedBox(
                         width: 250,
                         height: 100,
-                        child: Image.asset('assets/images/logo_Biosat.png'),
+                        child: Image.asset('assets/images/logos/Logo_Biosat_PaginaInicial_02.png'),
                       ),
                       AuthForm(
                         onSubmit: _handleSubmit,

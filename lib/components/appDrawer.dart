@@ -26,7 +26,7 @@ class AppDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.business_rounded,color: Colors.white,),
             title: const Text(
-              'Empresas - Compras',
+              'Compras',
               style: TextStyle(color: Colors.white),
             ),
             onTap: () {
@@ -48,19 +48,19 @@ class AppDrawer extends StatelessWidget {
               );
             },
           ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.attach_money,color: Colors.white,),
-            title: const Text(
-              'Faturamento',
-              style: TextStyle(color: Colors.white),
-            ),
-            onTap: () {
-              Navigator.of(context).pushReplacementNamed(
-                AppRoutes.faturamentoEmpresas,
-              );
-            },
-          ),
+          // const Divider(),
+          // ListTile(
+          //   leading: const Icon(Icons.attach_money,color: Colors.white,),
+          //   title: const Text(
+          //     'Faturamento',
+          //     style: TextStyle(color: Colors.white),
+          //   ),
+          //   onTap: () {
+          //     Navigator.of(context).pushReplacementNamed(
+          //       AppRoutes.faturamentoEmpresas,
+          //     );
+          //   },
+          // ),
           const Divider(),
            ListTile(
             leading: const Icon(Icons.handshake,color: Colors.white,),

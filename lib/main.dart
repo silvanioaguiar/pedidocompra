@@ -7,6 +7,7 @@ import 'package:pedidocompra/pages/crm/incluirContatoCrm.dart';
 import 'package:pedidocompra/pages/crm/incluirMedico.dart';
 import 'package:pedidocompra/pages/crm/incluirProspectCrm.dart';
 import 'package:pedidocompra/pages/crm/relatorioVisitasCrm.dart';
+import 'package:pedidocompra/providers/acessoApp.dart';
 import 'package:pedidocompra/providers/crm/ContatosLista.dart';
 import 'package:pedidocompra/providers/crm/HospitaisLista.dart';
 import 'package:pedidocompra/providers/crm/concorrentesLista.dart';
@@ -279,6 +280,16 @@ class MyApp extends StatelessWidget {
             return ProspectsLista(
               auth.token ?? '',
               previous?.prospects ?? [],
+              //auth.senha ?? '',
+            );
+          },
+        ),
+         ChangeNotifierProxyProvider<Auth, AcessoApp>(
+          create: (_) => AcessoApp('', []),
+          update: (ctx, auth, previous) {
+            return AcessoApp(
+              auth.token ?? '',
+              previous?.acessos ?? [],
               //auth.senha ?? '',
             );
           },

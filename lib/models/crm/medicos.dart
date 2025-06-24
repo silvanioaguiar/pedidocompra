@@ -8,6 +8,7 @@ class Medicos with ChangeNotifier {
   String? especialidade;
   String? localDeVisita;
   String? enderecoVisita;
+  String? numeroEnderecoVisita;
   String? bairro;
   String? cep;
   String? municipio;
@@ -28,6 +29,7 @@ class Medicos with ChangeNotifier {
     this.especialidade,
     this.localDeVisita,
     this.enderecoVisita,
+    this.numeroEnderecoVisita,
     this.bairro,
     this.cep,
     this.municipio,
