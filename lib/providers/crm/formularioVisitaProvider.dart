@@ -3,14 +3,17 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart ' as http;
+import 'package:pedidocompra/main.dart';
 import 'package:pedidocompra/models/crm/formularioVisita.dart';
 import 'package:pedidocompra/models/crm/visitas.dart';
-import 'package:pedidocompra/providers/crm/visitasLista.dart';
 import 'package:pedidocompra/services/navigator_service.dart';
 import 'package:provider/provider.dart';
 
 class FormularioVisitaProvider with ChangeNotifier {
   final String _token;
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
   List<FormularioVisita> _formulario = [];
   List<dynamic> data = [];
@@ -25,6 +28,8 @@ class FormularioVisitaProvider with ChangeNotifier {
   FormularioVisitaProvider(this._token, this._formulario);
 
   Future<dynamic> incluirFormulario(context, dadosFormulario) async {
+    _isLoading = true;
+
     final uri = Uri.parse(
         'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/IncluirFormulario');
     final headers = {
@@ -52,7 +57,11 @@ class FormularioVisitaProvider with ChangeNotifier {
       'proximosPassos': dadosFormulario['proximosPassos'],
     });
 
+   
+
     final response = await http.put(uri, headers: headers, body: body);
+
+    
 
     if (response.statusCode == 500) {
       showDialog(
@@ -110,15 +119,16 @@ class FormularioVisitaProvider with ChangeNotifier {
         ),
       );
     }
+    _isLoading = false;
     notifyListeners();
   }
 
   Future<dynamic> getFormulario(context, codigoFormulario) async {
+    _isLoading = true;
 
     List<FormularioVisita> formulario = [];
     _formulario.clear();
     formulario.clear();
-
 
     final uri = Uri.parse(
         'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/Formulario/$codigoFormulario');
@@ -130,40 +140,48 @@ class FormularioVisitaProvider with ChangeNotifier {
       'Authorization': 'Bearer $_token',
     };
 
-    final response = await http.get(uri, headers: headers);    
+   
+
+    final response = await http.get(uri, headers: headers);
+
+   
 
     data2 = jsonDecode(response.body);
     utf8.decode(response.bodyBytes);
     data2.asMap();
     for (var data2 in data2) {
-      int timestamp = int.parse(data2[ 'principal' ][ 'dataVisita' ].replaceAll(RegExp(r'\D'), ''));
+      int timestamp = int.parse(
+          data2['principal']['dataVisita'].replaceAll(RegExp(r'\D'), ''));
       formulario.add(
         FormularioVisita(
-         avaliacao: data2[ 'principal' ][ 'avaliacao' ],
-         clienteDoGrupo: data2[ 'principal' ][ 'clienteDoGrupo' ],
-         codigoFormulario: data2[ 'principal' ][ 'codigoFormulario' ],
-         codigoLocal: data2[ 'principal' ][ 'codigoLocal' ],
-         codigoMedico: data2[ 'principal' ][ 'codigoMedico' ],
-         codigoVisita: data2[ 'principal' ][ 'codigoVisita' ],
-         dataVisita: DateTime.fromMillisecondsSinceEpoch(timestamp),
-         especialidade: data2[ 'principal' ][ 'especialidade' ],
-         horaVisita: data2[ 'principal' ][ 'horaVisita' ],
-         listaConcorrentes: data2[ 'principal' ][ 'listaConcorrentes' ],
-         listaHospitais: data2[ 'principal' ][ 'listaHospitais' ],
-         nomeLocal: data2[ 'principal' ][ 'nomeLocal' ],
-         nomeMedico: data2[ 'principal' ][ 'nomeMedico' ],
-         assuntosAbordados: data2[ 'principal' ][ 'assuntosAbordados' ],
-         proximosPassos: data2[ 'principal' ][ 'proximosPassos' ],
+          avaliacao: data2['principal']['avaliacao'],
+          clienteDoGrupo: data2['principal']['clienteDoGrupo'],
+          codigoFormulario: data2['principal']['codigoFormulario'],
+          codigoLocal: data2['principal']['codigoLocal'],
+          codigoMedico: data2['principal']['codigoMedico'],
+          codigoVisita: data2['principal']['codigoVisita'],
+          dataVisita: DateTime.fromMillisecondsSinceEpoch(timestamp),
+          especialidade: data2['principal']['especialidade'],
+          horaVisita: data2['principal']['horaVisita'],
+          listaConcorrentes: data2['principal']['listaConcorrentes'],
+          listaHospitais: data2['principal']['listaHospitais'],
+          nomeLocal: data2['principal']['nomeLocal'],
+          nomeMedico: data2['principal']['nomeMedico'],
+          assuntosAbordados: data2['principal']['assuntosAbordados'],
+          proximosPassos: data2['principal']['proximosPassos'],
         ),
       );
     }
 
     _formulario = formulario.toList();
+    _isLoading = false;
     notifyListeners();
     return formulario;
   }
 
   Future<dynamic> editarFormulario(context, dadosFormulario) async {
+    _isLoading = true;
+
     final uri = Uri.parse(
         'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/EditarFormulario');
     final headers = {
@@ -192,7 +210,10 @@ class FormularioVisitaProvider with ChangeNotifier {
       'proximosPassos': dadosFormulario['proximosPassos'],
     });
 
+   
+
     final response = await http.post(uri, headers: headers, body: body);
+
 
     if (response.statusCode == 500) {
       showDialog(
@@ -250,10 +271,13 @@ class FormularioVisitaProvider with ChangeNotifier {
         ),
       );
     }
+    _isLoading = false;
     notifyListeners();
   }
 
   Future<dynamic> excluirFormulario(context, codigoFormulario) async {
+    _isLoading = true;
+
     final uri = Uri.parse(
         'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/ExcluirFormulario/$codigoFormulario');
     final headers = {
@@ -264,24 +288,11 @@ class FormularioVisitaProvider with ChangeNotifier {
       'Authorization': 'Bearer $_token',
     };
 
-    // final body = jsonEncode({
-    //   'codigoFormulario': dadosFormulario['codigoFormulario'],
-    //   'codigoVisita': dadosFormulario['codigoVisita'],
-    //   'codigoMedico': dadosFormulario['codigoMedico'],
-    //   'nomeMedico': dadosFormulario['nomeMedico'],
-    //   'codigoLocal': dadosFormulario['codigoLocal'],
-    //   'nomeLocal': dadosFormulario['nomeLocal'],
-    //   'dataVisita': dadosFormulario['dataVisita'],
-    //   'horaVisita': dadosFormulario['horaVisita'],
-    //   'avaliacao': dadosFormulario['avaliacao'],
-    //   'listaHospitais': dadosFormulario['listaHospitais'],
-    //   'clienteDoGrupo': dadosFormulario['clienteDoGrupo'],
-    //   'listaConcorrentes': dadosFormulario['listaConcorrentes'],
-    //   'especialidade': dadosFormulario['especialidade'],
-    //   'proximosPassos': dadosFormulario['proximosPassos'],
-    // });
+   
 
     final response = await http.post(uri, headers: headers);
+
+   
 
     if (response.statusCode == 500) {
       showDialog(
@@ -340,11 +351,14 @@ class FormularioVisitaProvider with ChangeNotifier {
         ),
       );
     }
+
+    _isLoading = false;
     notifyListeners();
   }
 
+  Future<dynamic> enviarEmailFormulario(context, dadosFormulario, email) async {
+    _isLoading = true;
 
-   Future<dynamic> enviarEmailFormulario(context, dadosFormulario, email) async {
     final uri = Uri.parse(
         'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/EnviarFormulario');
     final headers = {
@@ -358,10 +372,13 @@ class FormularioVisitaProvider with ChangeNotifier {
     final body = jsonEncode({
       'codigoFormulario': dadosFormulario['codigo'],
       'email': email,
-     
     });
 
+    
+
     final response = await http.post(uri, headers: headers, body: body);
+
+   
 
     if (response.statusCode == 500) {
       showDialog(
@@ -419,6 +436,8 @@ class FormularioVisitaProvider with ChangeNotifier {
         ),
       );
     }
+
+    _isLoading = false;
     notifyListeners();
   }
 }

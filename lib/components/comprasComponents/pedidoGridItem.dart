@@ -210,7 +210,7 @@ class PedidoGridItem extends StatelessWidget {
                       //const SizedBox(height: 15),
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
-                        child: Row(
+                        child: Row(                          
                           children: [
                             const SizedBox(width: 30),
                             GestureDetector(

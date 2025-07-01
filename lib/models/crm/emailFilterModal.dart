@@ -70,6 +70,7 @@ class _EmailFilterModalState extends State<EmailFilterModal> {
       selectedEmailsController.text,
       widget.dadosRelatorio['dataInicio'],
       widget.dadosRelatorio['dataFim'],
+      widget.dadosRelatorio['codigoFormulario']
     ];
     await Provider.of<VisitasLista>(
       context,

@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart ' as http;
+import 'package:pedidocompra/main.dart';
 import 'package:pedidocompra/models/crm/medicos.dart';
 import 'package:pedidocompra/models/crm/representantes.dart';
 import 'package:pedidocompra/services/navigator_service.dart';
@@ -10,6 +11,9 @@ import 'package:provider/provider.dart';
 
 class RepresentantesLista with ChangeNotifier {
   final String _token;
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
   List<Representantes> _representantes = [];
   List<dynamic> data = [];
@@ -28,12 +32,15 @@ class RepresentantesLista with ChangeNotifier {
   // Carregar Visitas
 
   Future<dynamic> loadRepresentantes(context) async {
+    bool _isLoading = true;
     List<Representantes> representantes = [];
     _representantes.clear();
     representantes.clear();
     //String empresaFilial = '';
     Map<String, dynamic> data0 = {};
     data = [];
+
+   
 
     final response = await http.get(
         Uri.parse(
@@ -45,6 +52,8 @@ class RepresentantesLista with ChangeNotifier {
           'tenantId': '02,01', // fixado como Biosat Matriz
           'Authorization': 'Bearer $_token',
         });
+
+   
 
     if (response.statusCode == 500) {
       data0 = jsonDecode(response.body);
@@ -58,7 +67,7 @@ class RepresentantesLista with ChangeNotifier {
               'ATENÇÃO!',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            content: const Text(             
+            content: const Text(
               'Nenhum representante encontrado.',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
@@ -91,6 +100,7 @@ class RepresentantesLista with ChangeNotifier {
       }
     }
 
+    _isLoading = false;
     notifyListeners();
     return representantes;
   }

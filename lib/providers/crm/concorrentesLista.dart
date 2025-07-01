@@ -9,6 +9,8 @@ import 'package:pedidocompra/services/navigator_service.dart';
 
 class ConcorrentesLista with ChangeNotifier {
   final String _token;
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
   List<Concorrentes> _concorrentes = [];
   List<dynamic> data = [];
@@ -27,6 +29,8 @@ class ConcorrentesLista with ChangeNotifier {
   // Carregar Concorrentes
 
   Future<dynamic> loadConcorrentes(context) async {
+    _isLoading = true;
+
     String jsonString = '';
     List<Concorrentes> concorrentes = [];
     _concorrentes.clear();
@@ -34,6 +38,8 @@ class ConcorrentesLista with ChangeNotifier {
     //String empresaFilial = '';
     Map<String, dynamic> data0 = {};
     data = [];
+
+   
 
     final response = await http.get(
         Uri.parse(
@@ -45,6 +51,8 @@ class ConcorrentesLista with ChangeNotifier {
           'tenantId': '02,01', // fixado como Biosat Matriz
           'Authorization': 'Bearer $_token',
         });
+
+ 
 
     if (response.statusCode == 500) {
       data0 = jsonDecode(response.body);
@@ -104,11 +112,14 @@ class ConcorrentesLista with ChangeNotifier {
     }
     _concorrentes = concorrentes;
 
+    _isLoading = false;
     notifyListeners();
     return _concorrentes;
   }
 
   Future<dynamic> editarConcorrente(context, dadosConcorrente) async {
+    _isLoading = true;
+
     final uri = Uri.parse(
         'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/EditarConcorrente');
     final headers = {
@@ -133,8 +144,10 @@ class ConcorrentesLista with ChangeNotifier {
       'contato': dadosConcorrente['contato'],
       'homePage': dadosConcorrente['homePage'],
     });
+   
 
     final response = await http.post(uri, headers: headers, body: body);
+    
 
     if (response.statusCode == 500) {
       showDialog(
@@ -192,11 +205,15 @@ class ConcorrentesLista with ChangeNotifier {
         ),
       );
     }
+
+    _isLoading = false;
     notifyListeners();
     await loadConcorrentes(context);
   }
 
   Future<dynamic> bloquearConcorrente(context, codigoConcorrente) async {
+    _isLoading = true;
+
     final uri = Uri.parse(
         'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/BloquearConcorrente');
     final headers = {
@@ -214,6 +231,7 @@ class ConcorrentesLista with ChangeNotifier {
 
     final response = await http.post(uri, headers: headers, body: body);
 
+    
     if (response.statusCode == 500) {
       showDialog(
         context: context,
@@ -269,11 +287,15 @@ class ConcorrentesLista with ChangeNotifier {
         ),
       );
     }
+
+    _isLoading = false;
     notifyListeners();
     await loadConcorrentes(context);
   }
 
   Future<dynamic> incluirConcorrente(context, dadosConcorrente) async {
+    _isLoading = true;
+
     final uri = Uri.parse(
         'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/IncluirConcorrente');
     final headers = {
@@ -297,8 +319,10 @@ class ConcorrentesLista with ChangeNotifier {
       'contato': dadosConcorrente['contato'],
       'homePage': dadosConcorrente['homePage'],
     });
+  
 
     final response = await http.put(uri, headers: headers, body: body);
+ 
 
     if (response.statusCode == 500) {
       showDialog(
@@ -356,6 +380,8 @@ class ConcorrentesLista with ChangeNotifier {
         ),
       );
     }
+
+    _isLoading = false;
     notifyListeners();
     await loadConcorrentes(context);
   }

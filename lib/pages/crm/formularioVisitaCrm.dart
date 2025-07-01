@@ -670,7 +670,7 @@ class _FormularioVisitaCrmState extends State<FormularioVisitaCrm> {
                               const SizedBox(height: 10),
                               Padding(
                                 padding:
-                                    EdgeInsets.only(left: metadeLargura * 0.8),
+                                    EdgeInsets.only(left: metadeLargura * 0.5),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [

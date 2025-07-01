@@ -3,12 +3,15 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart ' as http;
+import 'package:pedidocompra/main.dart';
 import 'package:pedidocompra/models/crm/propects.dart';
 import 'package:pedidocompra/services/navigator_service.dart';
 
-
 class ProspectsLista with ChangeNotifier {
   final String _token;
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
   List<Prospects> _prospects = [];
   List<dynamic> data = [];
@@ -26,6 +29,8 @@ class ProspectsLista with ChangeNotifier {
 
   // Carregar Prospects
   Future<dynamic> loadProspects(context) async {
+    _isLoading = true;
+
     String jsonString = '';
     List<Prospects> prospects = [];
     _prospects.clear();
@@ -34,6 +39,7 @@ class ProspectsLista with ChangeNotifier {
     Map<String, dynamic> data0 = {};
     data = [];
 
+    
     final response = await http.get(
         Uri.parse(
             'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/ListaProspects'),
@@ -44,6 +50,7 @@ class ProspectsLista with ChangeNotifier {
           'tenantId': '02,01', // fixado como Biosat Matriz
           'Authorization': 'Bearer $_token',
         });
+
 
     if (response.statusCode == 500) {
       data0 = jsonDecode(response.body);
@@ -57,7 +64,7 @@ class ProspectsLista with ChangeNotifier {
               'ATENÇÃO!',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            content: const Text(              
+            content: const Text(
               'Nenhum prospect cadastrado.',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
@@ -102,11 +109,14 @@ class ProspectsLista with ChangeNotifier {
     }
     _prospects = prospects;
 
+    _isLoading = false;
     notifyListeners();
     return _prospects;
   }
 
   Future<dynamic> editarProspects(context, dadosProspect) async {
+    _isLoading = true;
+
     final uri = Uri.parse(
         'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/EditarProspect');
     final headers = {
@@ -131,9 +141,11 @@ class ProspectsLista with ChangeNotifier {
       'contato': dadosProspect['contato'],
       'tipo': dadosProspect['tipo'],
     });
+    
 
     final response = await http.post(uri, headers: headers, body: body);
 
+    
     if (response.statusCode == 500) {
       showDialog(
         context: context,
@@ -142,7 +154,7 @@ class ProspectsLista with ChangeNotifier {
             'ATENÇÃO!',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
-          content: const Text(            
+          content: const Text(
             'Não foi possivel editar o prospect. Contate o administrador do sistema',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
@@ -168,7 +180,7 @@ class ProspectsLista with ChangeNotifier {
             'ATENÇÃO!',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
-          content: const Text(            
+          content: const Text(
             'Prospect atualizado com sucesso',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
@@ -188,11 +200,15 @@ class ProspectsLista with ChangeNotifier {
         ),
       );
     }
+
+    _isLoading = false;
     notifyListeners();
     await loadProspects(context);
   }
 
   Future<dynamic> bloquearProspect(context, codigoProspect) async {
+    _isLoading = true;
+
     final uri = Uri.parse(
         'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/BloquearProspect');
     final headers = {
@@ -205,10 +221,11 @@ class ProspectsLista with ChangeNotifier {
 
     final body = jsonEncode({
       'codigo': codigoProspect,
-      
     });
 
+   
     final response = await http.post(uri, headers: headers, body: body);
+    
 
     if (response.statusCode == 500) {
       showDialog(
@@ -218,7 +235,7 @@ class ProspectsLista with ChangeNotifier {
             'ATENÇÃO!',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
-          content: const Text(            
+          content: const Text(
             'Não foi possivel bloquear o prospect. Contate o administrador do sistema',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
@@ -244,14 +261,14 @@ class ProspectsLista with ChangeNotifier {
             'ATENÇÃO!',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
-          content: const Text(            
+          content: const Text(
             'Prospect bloqueado com sucesso',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Fecha o dialog                
+                Navigator.of(context).pop(); // Fecha o dialog
               },
               child: const Text("Fechar",
                   style: TextStyle(
@@ -263,11 +280,15 @@ class ProspectsLista with ChangeNotifier {
         ),
       );
     }
+
+    _isLoading = false;
     notifyListeners();
     await loadProspects(context);
   }
 
   Future<dynamic> incluirProspect(context, dadosProspect) async {
+    _isLoading = true;
+
     final uri = Uri.parse(
         'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/IncluirProspect');
     final headers = {
@@ -278,7 +299,7 @@ class ProspectsLista with ChangeNotifier {
       'Authorization': 'Bearer $_token',
     };
 
-    final body = jsonEncode({       
+    final body = jsonEncode({
       'razaoSocial': dadosProspect['razaoSocial'],
       'nomeFantasia': dadosProspect['nomeFantasia'],
       'endereco': dadosProspect['endereco'],
@@ -291,8 +312,10 @@ class ProspectsLista with ChangeNotifier {
       'contato': dadosProspect['contato'],
       'tipo': dadosProspect['tipo'],
     });
+    
 
     final response = await http.put(uri, headers: headers, body: body);
+   
 
     if (response.statusCode == 500) {
       showDialog(
@@ -302,7 +325,7 @@ class ProspectsLista with ChangeNotifier {
             'ATENÇÃO!',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
-          content: const Text(            
+          content: const Text(
             'Não foi possivel incluir o prospect. Contate o administrador do sistema',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
@@ -328,7 +351,7 @@ class ProspectsLista with ChangeNotifier {
             'ATENÇÃO!',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
-          content: const Text(            
+          content: const Text(
             'Prospect incluído com sucesso',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
@@ -348,6 +371,8 @@ class ProspectsLista with ChangeNotifier {
         ),
       );
     }
+
+    _isLoading = false;
     notifyListeners();
     await loadProspects(context);
   }

@@ -259,6 +259,13 @@ class _AgendaCrmState extends State<AgendaCrm> {
           ),
           child: Consumer<VisitasLista>(
             builder: (context, visitasLista, _) {
+                if (visitasLista.isLoading) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: azulRoyalTopo,
+                ),
+              );
+            }
               return SingleChildScrollView(
                 child: Column(
                   children: [

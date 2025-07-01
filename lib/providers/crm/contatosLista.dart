@@ -10,6 +10,9 @@ import 'package:pedidocompra/services/navigator_service.dart';
 class ContatosLista with ChangeNotifier {
   final String _token;
 
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
   List<Contatos> _contatos = [];
   List<dynamic> data = [];
   Map<String, dynamic> data0 = {};
@@ -27,6 +30,8 @@ class ContatosLista with ChangeNotifier {
   // Carregar Contatos
 
   Future<dynamic> loadContatos(context) async {
+    _isLoading = true;
+    
     String jsonString = '';
     List<Contatos> contatos = [];
     _contatos.clear();
@@ -35,6 +40,7 @@ class ContatosLista with ChangeNotifier {
     Map<String, dynamic> data0 = {};
     data = [];
 
+   
     final response = await http.get(
         Uri.parse(
             'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/ListaContatos'),
@@ -45,6 +51,7 @@ class ContatosLista with ChangeNotifier {
           'tenantId': '02,01', // fixado como Biosat Matriz
           'Authorization': 'Bearer $_token',
         });
+    
 
     if (response.statusCode == 500) {
       data0 = jsonDecode(response.body);
@@ -97,11 +104,14 @@ class ContatosLista with ChangeNotifier {
     }
     _contatos = contatos;
 
+    _isLoading = false;
     notifyListeners();
     return _contatos;
   }
 
   Future<dynamic> editarContato(context, dadosContato) async {
+    _isLoading = true;
+
     final uri = Uri.parse(
         'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/EditarContato');
     final headers = {
@@ -119,9 +129,11 @@ class ContatosLista with ChangeNotifier {
       'ddd': dadosContato['ddd'],
       'celular': dadosContato['celular'],    
     });
+    
 
     final response = await http.post(uri, headers: headers, body: body);
 
+  
     if (response.statusCode == 500) {
       showDialog(
         context: context,
@@ -177,11 +189,15 @@ class ContatosLista with ChangeNotifier {
         ),
       );
     }
+
+    _isLoading = false;
     notifyListeners();
     await loadContatos(context);
   }
 
   Future<dynamic> bloquearContato(context, codigoContato) async {
+    _isLoading = true;
+
     final uri = Uri.parse(
         'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/BloquearContato');
     final headers = {
@@ -195,7 +211,7 @@ class ContatosLista with ChangeNotifier {
     final body = jsonEncode({
       'codigo': codigoContato,
       
-    });
+    });   
 
     final response = await http.post(uri, headers: headers, body: body);
 
@@ -253,11 +269,15 @@ class ContatosLista with ChangeNotifier {
         ),
       );
     }
+
+    _isLoading = false;
     notifyListeners();
     await loadContatos(context);
   }
 
   Future<dynamic> incluirContato(context, dadosContato) async {
+    _isLoading = true;
+
     final uri = Uri.parse(
         'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/IncluirContato');
     final headers = {
@@ -275,6 +295,7 @@ class ContatosLista with ChangeNotifier {
       'celular': dadosContato['celular'],    
     });
 
+    
     final response = await http.put(uri, headers: headers, body: body);
 
     if (response.statusCode == 500) {
@@ -331,6 +352,8 @@ class ContatosLista with ChangeNotifier {
         ),
       );
     }
+
+    _isLoading = false;
     notifyListeners();
     await loadContatos(context);
   }

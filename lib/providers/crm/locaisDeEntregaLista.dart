@@ -3,12 +3,15 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart ' as http;
+import 'package:pedidocompra/main.dart';
 import 'package:pedidocompra/models/crm/locaisDeEntrega.dart';
 import 'package:pedidocompra/services/navigator_service.dart';
 
-
 class LocaisDeEntregaLista with ChangeNotifier {
   final String _token;
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
   List<LocaisDeEntrega> _locaisDeEntrega = [];
   List<dynamic> data = [];
@@ -27,13 +30,15 @@ class LocaisDeEntregaLista with ChangeNotifier {
   // Carregar Visitas
 
   Future<dynamic> loadLocaisDeEntrega(context) async {
+    _isLoading = true;
+
     String jsonString = '';
     List<LocaisDeEntrega> locaisDeEntrega = [];
     _locaisDeEntrega.clear();
     locaisDeEntrega.clear();
     //String empresaFilial = '';
     Map<String, dynamic> data0 = {};
-    data = [];
+    data = [];    
 
     final response = await http.get(
         Uri.parse(
@@ -45,6 +50,7 @@ class LocaisDeEntregaLista with ChangeNotifier {
           'tenantId': '02,01', // fixado como Biosat Matriz
           'Authorization': 'Bearer $_token',
         });
+   
 
     if (response.statusCode == 500) {
       data0 = jsonDecode(response.body);
@@ -58,7 +64,7 @@ class LocaisDeEntregaLista with ChangeNotifier {
               'ATENÇÃO!',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            content: const Text(              
+            content: const Text(
               'Nenhum local de entrega encontrado',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
@@ -92,6 +98,7 @@ class LocaisDeEntregaLista with ChangeNotifier {
       }
     }
 
+    _isLoading = false;
     notifyListeners();
     return locaisDeEntrega;
   }

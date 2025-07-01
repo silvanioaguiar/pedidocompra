@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:pedidocompra/data/store.dart';
 import 'package:pedidocompra/exceptions/auth_exception.dart';
+import 'package:pedidocompra/main.dart';
 import 'package:pedidocompra/models/auth.dart';
 import 'package:provider/provider.dart';
 import '../models/authFormData.dart';
@@ -141,13 +142,15 @@ class _AuthFormState extends State<AuthForm> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 60,
                   child: Text(
-                    'Entre com seu login de usuário e senha do sistema Protheus',
+                    'LOGIN',
                     style: TextStyle(
-                      fontSize: sizeText,
+                      fontSize: 26,
                       fontWeight: FontWeight.bold,
+                      color: azulRoyalTopo,
+                      //fontFamily: 'sans-serif'
                     ),
                   ),
                 ),

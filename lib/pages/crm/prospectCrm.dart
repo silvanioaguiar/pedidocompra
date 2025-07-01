@@ -16,6 +16,8 @@ class ProspectCrm extends StatefulWidget {
 
 class _ProspectCrmState extends State<ProspectCrm> {
   List<Prospects> prospects = [];
+  List<Prospects> registrosFiltrados = [];
+  TextEditingController controllerPesquisa = TextEditingController();
 
   @override
   void initState() {
@@ -33,6 +35,15 @@ class _ProspectCrmState extends State<ProspectCrm> {
     await provider.loadProspects(provider);
   }
 
+  void _filtrarRegistros(ProspectsLista prospectsLista) {
+    final query = controllerPesquisa.text.toLowerCase();
+    setState(() {
+      registrosFiltrados = prospectsLista.prospects.where((prospect) {
+        return prospect.nomeFantasia.toLowerCase().contains(query);
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -45,13 +56,13 @@ class _ProspectCrmState extends State<ProspectCrm> {
 
     if (size.width >= 600) {
       widthScreen = size.width * 0.5;
-      heightScreen = size.height * 0.8;
+      heightScreen = size.height * 0.75;
       sizeText = 18;
       sizeCrossAxisCount = 4;
       sizeAspectRatio = 1.2;
     } else {
       widthScreen = size.width * 0.9;
-      heightScreen = size.height * 0.8;
+      heightScreen = size.height * 0.65;
       sizeText = 14;
       sizeCrossAxisCount = 2;
       sizeAspectRatio = 1.05;
@@ -76,24 +87,51 @@ class _ProspectCrmState extends State<ProspectCrm> {
         height: double.infinity,
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/fundos/FUNDO_BIOSAT_APP_02_640.jpg'),
+            image:
+                AssetImage('assets/images/fundos/FUNDO_BIOSAT_APP_02_640.jpg'),
             fit: BoxFit.cover,
           ),
         ),
         child: Consumer<ProspectsLista>(
-          builder: (context, prospectsLista, _) {
+         builder: (context, prospectsLista, _) {
+            if (prospectsLista.isLoading) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: azulRoyalTopo,
+                ),
+              );
+            }
+            // Aplica a filtragem quando o texto mudar
+            controllerPesquisa.addListener(() {
+              _filtrarRegistros(prospectsLista);
+            });
+
+            final listaExibida = controllerPesquisa.text.isEmpty
+                ? prospectsLista.prospects
+                : registrosFiltrados;
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: SingleChildScrollView(
                 child: Column(
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: controllerPesquisa,
+                        decoration: const InputDecoration(
+                          labelText: 'Pesquisar',
+                          prefixIcon: Icon(Icons.search),
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
                     Container(
                       width: widthScreen,
                       height: heightScreen,
                       child: ListView.builder(
-                        itemCount: prospectsLista.prospects.length,
+                        itemCount: listaExibida.length,
                         itemBuilder: (context, index) {
-                          final prospect = prospectsLista.prospects[index];
+                          final prospect = listaExibida[index];
                           return Container(
                             margin: const EdgeInsets.symmetric(
                               horizontal: 12.0,

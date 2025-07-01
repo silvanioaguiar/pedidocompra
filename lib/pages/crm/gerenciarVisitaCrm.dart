@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pedidocompra/components/crm/utils.dart';
 import 'package:pedidocompra/main.dart';
 import 'package:pedidocompra/models/crm/concorrentes.dart';
+import 'package:pedidocompra/models/crm/emailFilterModal.dart';
 import 'package:pedidocompra/models/crm/hospitais.dart';
 import 'package:pedidocompra/models/crm/visitas.dart';
 import 'package:pedidocompra/pages/crm/editarAgendaCrm.dart';
@@ -46,6 +47,7 @@ class _GerenciarVisitaCrmState extends State<GerenciarVisitaCrm> {
   late String codigoLocalDeEntregaSelecionado = "";
   final format = DateFormat("dd MMM yyyy HH:mm", "pt_BR");
   final _formKey = GlobalKey<FormState>();
+  var _cancelarController = TextEditingController();
 
   String? _representanteSelecionado;
 
@@ -352,7 +354,8 @@ class _GerenciarVisitaCrmState extends State<GerenciarVisitaCrm> {
           height: double.infinity,
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/images/fundos/FUNDO_BIOSAT_APP_02_640.jpg'),
+              image: AssetImage(
+                  'assets/images/fundos/FUNDO_BIOSAT_APP_02_640.jpg'),
               fit: BoxFit.cover,
             ),
           ),
@@ -393,7 +396,6 @@ class _GerenciarVisitaCrmState extends State<GerenciarVisitaCrm> {
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: Color.fromARGB(255, 1, 53, 95),
-                            
                             ),
                             softWrap: true,
                           ),
@@ -413,7 +415,7 @@ class _GerenciarVisitaCrmState extends State<GerenciarVisitaCrm> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: [                        
+                      children: [
                         Text('LOCAL: ', style: styleNames),
                         Flexible(
                           child: Text(
@@ -439,72 +441,76 @@ class _GerenciarVisitaCrmState extends State<GerenciarVisitaCrm> {
                     // ),
                     const SizedBox(height: 20),
                     Container(
-                        decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                            color: Color.fromARGB(255, 185, 219, 247)),
-                        child: Column(
-                          children: [
-                            const Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
+                      decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                          color: Color.fromARGB(255, 185, 219, 247)),
+                      child: Column(
+                        children: [
+                          const Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Data e Hora",
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Data e Hora",
-                                  style: TextStyle(
-                                      fontSize: 18, fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            ),
-                            const SizedBox(height: 15),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 50),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'PREVISTA: ',
-                                    style: styleNames,
-                                  ),
-                                  Text(
+                                  'PREVISTA: ',
+                                  style: styleNames,
+                                ),
+                                Text(
                                     DateFormat('dd/MM/yyyy')
                                         .format(widget.event.dataPrevista),
-                                    style: styleButton,
-                                  ),
-                                  Text(
-                                    " - ${widget.event.horaPrevista}",
-                                    style: styleButton,
-                                  ),
-                                ],
-                              ),
+                                    style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold)),
+                                Text(" - ${widget.event.horaPrevista}",
+                                    style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold)),
+                              ],
                             ),
-                            const SizedBox(height: 5),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 50),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
+                          ),
+                          const SizedBox(height: 5),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(50, 0, 0, 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'REALIZADA: ',
+                                  style: styleNames,
+                                ),
+                                if (widget.event.dataRealizada != null)
                                   Text(
-                                    'REALIZADA: ',
-                                    style: styleNames,
-                                  ),
-                                  if (widget.event.dataRealizada != null)
-                                    Text(
                                       DateFormat('dd/MM/yyyy')
                                           .format(widget.event.dataRealizada!),
-                                      style: styleButton,
-                                    ),
-                                  if (widget.event.horaRealizada!.trim().isNotEmpty)
-                                    Text(
-                                      " - ${widget.event.horaRealizada}",
-                                      style: styleButton,
-                                    ),
-                                ],
-                              ),
+                                      style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold)),
+                                if (widget.event.horaRealizada!
+                                    .trim()
+                                    .isNotEmpty)
+                                  Text(" - ${widget.event.horaRealizada}",
+                                      style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold)),
+                              ],
                             ),
-                          ],
-                        )),
+                          ),
+                        ],
+                      ),
+                    ),
                     const SizedBox(height: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -534,9 +540,10 @@ class _GerenciarVisitaCrmState extends State<GerenciarVisitaCrm> {
                                         const Text(
                                           'Pendente',
                                           style: TextStyle(
-                                            color:
-                                                Color.fromARGB(255, 133, 15, 15),
+                                            color: Color.fromARGB(
+                                                255, 133, 15, 15),
                                             fontSize: 16,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         const SizedBox(
@@ -555,9 +562,10 @@ class _GerenciarVisitaCrmState extends State<GerenciarVisitaCrm> {
                                         const Text(
                                           'Concluída',
                                           style: TextStyle(
-                                            color:
-                                                Color.fromARGB(255, 44, 112, 46),
+                                            color: Color.fromARGB(
+                                                255, 44, 112, 46),
                                             fontSize: 16,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         const SizedBox(
@@ -574,16 +582,24 @@ class _GerenciarVisitaCrmState extends State<GerenciarVisitaCrm> {
                                       children: [
                                         Text('Status: ', style: styleButton),
                                         const Text('Remarcada',
-                                            style:
-                                                TextStyle(color: Colors.orange))
+                                            style: TextStyle(
+                                              color: Colors.orange,
+                                              fontWeight: FontWeight.bold,
+                                            ))
                                       ],
                                     )
                                   else if (widget.event.status == '4')
                                     Row(
                                       children: [
                                         Text('Status: ', style: styleButton),
-                                        const Text('Cancelada',
-                                            style: TextStyle(color: Color.fromARGB(255, 133, 15, 15))),
+                                        const Text(
+                                          'Cancelada',
+                                          style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 133, 15, 15),
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ],
                                     ),
                                 ],
@@ -611,7 +627,7 @@ class _GerenciarVisitaCrmState extends State<GerenciarVisitaCrm> {
                                       Icons.edit,
                                       color: Color.fromARGB(255, 255, 153, 0),
                                     ),
-        
+
                                     //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
                                   ),
                                   const SizedBox(
@@ -623,6 +639,231 @@ class _GerenciarVisitaCrmState extends State<GerenciarVisitaCrm> {
                                       style: styleButton,
                                     ),
                                     onPressed: () {
+                                      if (widget.event.status == "2") {
+                                        showDialog(
+                                          context: context,
+                                          builder: (ctx) => AlertDialog(
+                                            title: const Text(
+                                              'ATENÇÃO!',
+                                              style: TextStyle(
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            content: const Text(
+                                              'Visita já realizada. Função Remarcar indisponível.',
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  NavigatorService.instance
+                                                      .pop();
+                                                },
+                                                child: const Text("Fechar",
+                                                    style: TextStyle(
+                                                        fontSize: 24,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Color.fromARGB(
+                                                            255, 5, 0, 0))),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      } else {
+                                        showModalBottomSheet<void>(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return SizedBox(
+                                                height: 400,
+                                                child: Center(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            15.0),
+                                                    child: Column(
+                                                      children: [
+                                                        const Text(
+                                                          "Remarcar Visita",
+                                                          style: TextStyle(
+                                                              fontSize: 20,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: const Color
+                                                                  .fromARGB(255,
+                                                                  0, 47, 85)),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 20,
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Expanded(
+                                                              child:
+                                                                  DateTimeFormField(
+                                                                initialValue: widget
+                                                                    .event
+                                                                    .dataPrevista,
+                                                                decoration:
+                                                                    const InputDecoration(
+                                                                        labelText:
+                                                                            'Data da Visita'),
+                                                                mode:
+                                                                    DateTimeFieldPickerMode
+                                                                        .date,
+                                                                pickerPlatform:
+                                                                    DateTimeFieldPickerPlatform
+                                                                        .material,
+                                                                materialDatePickerOptions:
+                                                                    const MaterialDatePickerOptions(
+                                                                        locale: Locale(
+                                                                            "pt",
+                                                                            "BR")),
+                                                                dateFormat:
+                                                                    DateFormat(
+                                                                        "dd MMM yyyy",
+                                                                        'pt_BR'),
+                                                                onChanged:
+                                                                    (DateTime?
+                                                                        novaData) {
+                                                                  setState(() {
+                                                                    dataSelecionada =
+                                                                        novaData;
+                                                                  });
+                                                                },
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                                width: 10),
+                                                            Expanded(
+                                                              child:
+                                                                  DateTimeFormField(
+                                                                //initialValue: widget.event.horaPrevista,
+                                                                decoration:
+                                                                    const InputDecoration(
+                                                                        labelText:
+                                                                            'Hora'),
+                                                                mode:
+                                                                    DateTimeFieldPickerMode
+                                                                        .time,
+                                                                pickerPlatform:
+                                                                    DateTimeFieldPickerPlatform
+                                                                        .material,
+                                                                materialTimePickerOptions:
+                                                                    MaterialTimePickerOptions(
+                                                                        builder: (BuildContext
+                                                                                context,
+                                                                            Widget?
+                                                                                child) {
+                                                                          return MediaQuery(
+                                                                            data:
+                                                                                MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+                                                                            child:
+                                                                                child!,
+                                                                          );
+                                                                        },
+                                                                        initialEntryMode:
+                                                                            TimePickerEntryMode.inputOnly),
+                                                                dateFormat:
+                                                                    DateFormat(
+                                                                        'HH:mm',
+                                                                        'pt_BR'),
+                                                                onChanged:
+                                                                    (DateTime?
+                                                                        novaHora) {
+                                                                  setState(() {
+                                                                    horaSelecionada =
+                                                                        TimeOfDay.fromDateTime(
+                                                                            novaHora!);
+                                                                  });
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 50,
+                                                        ),
+                                                        Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            ElevatedButton(
+                                                              style: ElevatedButton.styleFrom(
+                                                                  backgroundColor:
+                                                                      const Color
+                                                                          .fromARGB(
+                                                                          255,
+                                                                          199,
+                                                                          28,
+                                                                          16),
+                                                                  foregroundColor:
+                                                                      Colors
+                                                                          .white),
+                                                              child: const Text(
+                                                                  'Salvar'),
+                                                              onPressed: () =>
+                                                                  _editarVisitas(
+                                                                      context),
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 30,
+                                                            ),
+                                                            ElevatedButton(
+                                                              style: ElevatedButton.styleFrom(
+                                                                  backgroundColor:
+                                                                      const Color
+                                                                          .fromARGB(
+                                                                          255,
+                                                                          0,
+                                                                          66,
+                                                                          119),
+                                                                  foregroundColor:
+                                                                      Colors
+                                                                          .white),
+                                                              child: const Text(
+                                                                  'Fechar'),
+                                                              onPressed: () =>
+                                                                  Navigator.pop(
+                                                                      context),
+                                                            ),
+                                                          ],
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            });
+                                      }
+                                    },
+                                    icon: const Icon(
+                                      Icons.calendar_month_rounded,
+                                      color: Color.fromARGB(255, 0, 17, 255),
+                                    ),
+
+                                    //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 20),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  TextButton.icon(
+                                    label: Text(
+                                      "Cancelar",
+                                      style: styleButton,
+                                    ),
+                                    onPressed: () {
                                       showModalBottomSheet<void>(
                                           context: context,
                                           builder: (BuildContext context) {
@@ -630,108 +871,50 @@ class _GerenciarVisitaCrmState extends State<GerenciarVisitaCrm> {
                                               height: 400,
                                               child: Center(
                                                 child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(15.0),
+                                                  padding: const EdgeInsets.all(
+                                                      15.0),
                                                   child: Column(
                                                     children: [
                                                       const Text(
-                                                        "Remarcar Visita",
+                                                        "Cancelar Visita",
                                                         style: TextStyle(
                                                             fontSize: 20,
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                             color: const Color
-                                                                .fromARGB(
-                                                                255, 0, 47, 85)),
+                                                                .fromARGB(255,
+                                                                0, 47, 85)),
                                                       ),
                                                       const SizedBox(
                                                         height: 20,
                                                       ),
-                                                      Row(
+                                                      Column(
                                                         children: [
-                                                          Expanded(
-                                                            child:
-                                                                DateTimeFormField(
-                                                              initialValue: widget
-                                                                  .event
-                                                                  .dataPrevista,
-                                                              decoration:
-                                                                  const InputDecoration(
-                                                                      labelText:
-                                                                          'Data da Visita'),
-                                                              mode:
-                                                                  DateTimeFieldPickerMode
-                                                                      .date,
-                                                              pickerPlatform:
-                                                                  DateTimeFieldPickerPlatform
-                                                                      .material,
-                                                              materialDatePickerOptions:
-                                                                  const MaterialDatePickerOptions(
-                                                                      locale: Locale(
-                                                                          "pt",
-                                                                          "BR")),
-                                                              dateFormat:
-                                                                  DateFormat(
-                                                                      "dd MMM yyyy",
-                                                                      'pt_BR'),
-                                                              onChanged:
-                                                                  (DateTime?
-                                                                      novaData) {
-                                                                setState(() {
-                                                                  dataSelecionada =
-                                                                      novaData;
-                                                                });
-                                                              },
+                                                          TextFormField(
+                                                            decoration:
+                                                                const InputDecoration(
+                                                              labelText:
+                                                                  'Motivo do Cancelamento',
+                                                              border:
+                                                                  OutlineInputBorder(),
                                                             ),
-                                                          ),
-                                                          const SizedBox(
-                                                              width: 10),
-                                                          Expanded(
-                                                            child:
-                                                                DateTimeFormField(
-                                                              //initialValue: widget.event.horaPrevista,
-                                                              decoration:
-                                                                  const InputDecoration(
-                                                                      labelText:
-                                                                          'Hora'),
-                                                              mode:
-                                                                  DateTimeFieldPickerMode
-                                                                      .time,
-                                                              pickerPlatform:
-                                                                  DateTimeFieldPickerPlatform
-                                                                      .material,
-                                                              materialTimePickerOptions:
-                                                                  MaterialTimePickerOptions(
-                                                                      builder: (BuildContext
-                                                                              context,
-                                                                          Widget?
-                                                                              child) {
-                                                                        return MediaQuery(
-                                                                          data: MediaQuery.of(context).copyWith(
-                                                                              alwaysUse24HourFormat:
-                                                                                  true),
-                                                                          child:
-                                                                              child!,
-                                                                        );
-                                                                      },
-                                                                      initialEntryMode:
-                                                                          TimePickerEntryMode
-                                                                              .inputOnly),
-                                                              dateFormat:
-                                                                  DateFormat(
-                                                                      'HH:mm',
-                                                                      'pt_BR'),
-                                                              onChanged:
-                                                                  (DateTime?
-                                                                      novaHora) {
-                                                                setState(() {
-                                                                  horaSelecionada =
-                                                                      TimeOfDay
-                                                                          .fromDateTime(
-                                                                              novaHora!);
-                                                                });
-                                                              },
+                                                            controller:
+                                                                _cancelarController,
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize:
+                                                                  sizeText,
                                                             ),
+                                                            validator: (value) {
+                                                              if (value ==
+                                                                      null ||
+                                                                  value
+                                                                      .isEmpty) {
+                                                                return "Campo Obrigatório";
+                                                              }
+                                                              return null;
+                                                            },
                                                           ),
                                                         ],
                                                       ),
@@ -756,12 +939,77 @@ class _GerenciarVisitaCrmState extends State<GerenciarVisitaCrm> {
                                                                         28,
                                                                         16),
                                                                 foregroundColor:
-                                                                    Colors.white),
+                                                                    Colors
+                                                                        .white),
                                                             child: const Text(
                                                                 'Salvar'),
-                                                            onPressed: () =>
-                                                                _editarVisitas(
-                                                                    context),
+                                                            onPressed: () {
+                                                              showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder: (ctx) =>
+                                                                    AlertDialog(
+                                                                  title:
+                                                                      const Text(
+                                                                    'ATENÇÃO!',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            24,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ),
+                                                                  content:
+                                                                      const Text(
+                                                                    'Confirma o cancelamento da visita ?',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            18,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ),
+                                                                  actions: [
+                                                                    TextButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.of(context)
+                                                                            .pop(); // Fecha o dialog
+                                                                      },
+                                                                      child: const Text(
+                                                                          "Cancelar",
+                                                                          style: TextStyle(
+                                                                              fontSize: 22,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              color: Color.fromARGB(255, 5, 0, 0))),
+                                                                    ),
+                                                                    TextButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Provider.of<
+                                                                            VisitasLista>(
+                                                                          context,
+                                                                          listen:
+                                                                              false,
+                                                                        ).cancelarVisita(
+                                                                          context,
+                                                                          widget
+                                                                              .event
+                                                                              .codigo,
+                                                                          _cancelarController
+                                                                              .text,
+                                                                        );
+                                                                        _loadVisitaUnica();
+                                                                      },
+                                                                      child: const Text(
+                                                                          "Confirmar",
+                                                                          style: TextStyle(
+                                                                              fontSize: 22,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              color: Color.fromARGB(255, 5, 0, 0))),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              );
+                                                            },
                                                           ),
                                                           const SizedBox(
                                                             width: 30,
@@ -776,7 +1024,8 @@ class _GerenciarVisitaCrmState extends State<GerenciarVisitaCrm> {
                                                                         66,
                                                                         119),
                                                                 foregroundColor:
-                                                                    Colors.white),
+                                                                    Colors
+                                                                        .white),
                                                             child: const Text(
                                                                 'Fechar'),
                                                             onPressed: () =>
@@ -793,77 +1042,10 @@ class _GerenciarVisitaCrmState extends State<GerenciarVisitaCrm> {
                                           });
                                     },
                                     icon: const Icon(
-                                      Icons.calendar_month_rounded,
-                                      color: Color.fromARGB(255, 0, 17, 255),
-                                    ),
-        
-                                    //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 20),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  TextButton.icon(
-                                    label: Text(
-                                      "Excluir",
-                                      style: styleButton,
-                                    ),
-                                    onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (ctx) => AlertDialog(
-                                          title: const Text(
-                                            'ATENÇÃO!',
-                                            style: TextStyle(
-                                                fontSize: 24,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          content: const Text(
-                                            'Confirma a exclusão da visita ?',
-                                            style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.of(context)
-                                                    .pop(); // Fecha o dialog
-                                              },
-                                              child: const Text("Cancelar",
-                                                  style: TextStyle(
-                                                      fontSize: 22,
-                                                      fontWeight: FontWeight.bold,
-                                                      color: Color.fromARGB(
-                                                          255, 5, 0, 0))),
-                                            ),
-                                            TextButton(
-                                              onPressed: () {
-                                                Provider.of<VisitasLista>(
-                                                  context,
-                                                  listen: false,
-                                                ).excluirVisita(
-                                                    context, widget.event.codigo);
-                                              },
-                                              child: const Text("Confirmar",
-                                                  style: TextStyle(
-                                                      fontSize: 22,
-                                                      fontWeight: FontWeight.bold,
-                                                      color: Color.fromARGB(
-                                                          255, 5, 0, 0))),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                    icon: const Icon(
                                       Icons.cancel,
                                       color: Color.fromARGB(255, 255, 0, 0),
                                     ),
-        
+
                                     //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
                                   ),
                                 ],
@@ -901,9 +1083,11 @@ class _GerenciarVisitaCrmState extends State<GerenciarVisitaCrm> {
                                         Text(
                                           "Preenchido",
                                           style: TextStyle(
-                                              color:
-                                                  Color.fromARGB(255, 12, 82, 14),
-                                              fontSize: 16),
+                                            color:
+                                                Color.fromARGB(255, 12, 82, 14),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                         SizedBox(
                                           width: 5,
@@ -920,9 +1104,10 @@ class _GerenciarVisitaCrmState extends State<GerenciarVisitaCrm> {
                                         const Text(
                                           "Não Preenchido",
                                           style: TextStyle(
-                                            color:
-                                                Color.fromARGB(255, 133, 15, 15),
+                                            color: Color.fromARGB(
+                                                255, 133, 15, 15),
                                             fontSize: 16,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         const SizedBox(
@@ -975,7 +1160,8 @@ class _GerenciarVisitaCrmState extends State<GerenciarVisitaCrm> {
                                             actions: [
                                               TextButton(
                                                 onPressed: () {
-                                                  NavigatorService.instance.pop();
+                                                  NavigatorService.instance
+                                                      .pop();
                                                 },
                                                 child: const Text("Fechar",
                                                     style: TextStyle(
@@ -994,126 +1180,13 @@ class _GerenciarVisitaCrmState extends State<GerenciarVisitaCrm> {
                                       Icons.new_label_rounded,
                                       color: Color.fromARGB(255, 0, 17, 255),
                                     ),
-        
-                                    //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
                                   ),
-                                  // TextButton.icon(
-                                  //   label: Text(
-                                  //     "Visualizar",
-                                  //     style: styleButton,
-                                  //   ),
-                                  //   onPressed: () {
-                                  //     sharePdf();
-                                  //     //sendPdfViaEmail("silvaniojr.sj@gmail.com");
-                                  //     //sendPdfViaWhatsApp("5511988435119");
-                                  //   },
-                                  //   icon: const Icon(
-                                  //     Icons.remove_red_eye_outlined,
-                                  //     color: Color.fromARGB(255, 0, 75, 56),
-                                  //   ),
-        
-                                  //   //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
-                                  // ),
                                   TextButton.icon(
                                     label: Text(
                                       "Editar",
                                       style: styleButton,
                                     ),
                                     onPressed: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(builder: (ctx) {
-                                          return EditarFormularioVisitaCrm(
-                                            event: widget.event,
-                                          );
-                                        }),
-                                      ).then((_) {
-                                        _loadVisitaUnica();
-                                      });
-                                    },
-                                    icon: const Icon(
-                                      Icons.edit,
-                                      color: Color.fromARGB(255, 255, 153, 0),
-                                    ),
-        
-                                    //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 20),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  TextButton.icon(
-                                    label: Text(
-                                      "Excluir",
-                                      style: styleButton,
-                                    ),
-                                    onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (ctx) => AlertDialog(
-                                          title: const Text(
-                                            'ATENÇÃO!',
-                                            style: TextStyle(
-                                                fontSize: 24,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          content: const Text(
-                                            'Confirma a exclusão do formulário de visita ?',
-                                            style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.of(context)
-                                                    .pop(); // Fecha o dialog
-                                              },
-                                              child: const Text("Cancelar",
-                                                  style: TextStyle(
-                                                      fontSize: 22,
-                                                      fontWeight: FontWeight.bold,
-                                                      color: Color.fromARGB(
-                                                          255, 5, 0, 0))),
-                                            ),
-                                            TextButton(
-                                              onPressed: () async {
-                                                await Provider.of<
-                                                    FormularioVisitaProvider>(
-                                                  context,
-                                                  listen: false,
-                                                ).excluirFormulario(context,
-                                                    widget.event.codFormulario);
-                                                _loadVisitaUnica();
-                                              },
-                                              child: const Text("Confirmar",
-                                                  style: TextStyle(
-                                                      fontSize: 22,
-                                                      fontWeight: FontWeight.bold,
-                                                      color: Color.fromARGB(
-                                                          255, 5, 0, 0))),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                    icon: const Icon(
-                                      Icons.cancel_rounded,
-                                      color: Color.fromARGB(255, 226, 0, 0),
-                                    ),
-        
-                                    //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
-                                  ),
-                                  TextButton.icon(
-                                    label: Text(
-                                      "Enviar e-mail",
-                                      style: styleButton,
-                                    ),
-                                    onPressed: () {
-                                      //Enviar pdf via e-mail ou whatsapp
-        
                                       if (widget.event.codFormulario ==
                                           "      ") {
                                         showDialog(
@@ -1135,7 +1208,180 @@ class _GerenciarVisitaCrmState extends State<GerenciarVisitaCrm> {
                                             actions: [
                                               TextButton(
                                                 onPressed: () {
-                                                  NavigatorService.instance.pop();
+                                                  NavigatorService.instance
+                                                      .pop();
+                                                },
+                                                child: const Text("Fechar",
+                                                    style: TextStyle(
+                                                        fontSize: 24,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Color.fromARGB(
+                                                            255, 5, 0, 0))),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      } else {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(builder: (ctx) {
+                                            return EditarFormularioVisitaCrm(
+                                              event: widget.event,
+                                            );
+                                          }),
+                                        ).then((_) {
+                                          _loadVisitaUnica();
+                                        });
+                                      }
+                                    },
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      color: Color.fromARGB(255, 255, 153, 0),
+                                    ),
+
+                                    //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 20),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  TextButton.icon(
+                                    label: Text(
+                                      "Excluir",
+                                      style: styleButton,
+                                    ),
+                                    onPressed: () {
+                                      if (widget.event.codFormulario ==
+                                          "      ") {
+                                        showDialog(
+                                          context: context,
+                                          builder: (ctx) => AlertDialog(
+                                            title: const Text(
+                                              'ATENÇÃO!',
+                                              style: TextStyle(
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            content: const Text(
+                                              //'Ocorreu um arro ao tentar aprovar o pedido.Por favor entrar em contato com o suporte do sistema',
+                                              'Função indisponivel ! O formulário ainda não foi preeenchido.',
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  NavigatorService.instance
+                                                      .pop();
+                                                },
+                                                child: const Text("Fechar",
+                                                    style: TextStyle(
+                                                        fontSize: 24,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Color.fromARGB(
+                                                            255, 5, 0, 0))),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      } else {
+                                        showDialog(
+                                          context: context,
+                                          builder: (ctx) => AlertDialog(
+                                            title: const Text(
+                                              'ATENÇÃO!',
+                                              style: TextStyle(
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            content: const Text(
+                                              'Confirma a exclusão do formulário de visita ?',
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pop(); // Fecha o dialog
+                                                },
+                                                child: const Text("Cancelar",
+                                                    style: TextStyle(
+                                                        fontSize: 22,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Color.fromARGB(
+                                                            255, 5, 0, 0))),
+                                              ),
+                                              TextButton(
+                                                onPressed: () async {
+                                                  await Provider.of<
+                                                      FormularioVisitaProvider>(
+                                                    context,
+                                                    listen: false,
+                                                  ).excluirFormulario(
+                                                      context,
+                                                      widget
+                                                          .event.codFormulario);
+                                                  _loadVisitaUnica();
+                                                },
+                                                child: const Text("Confirmar",
+                                                    style: TextStyle(
+                                                        fontSize: 22,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Color.fromARGB(
+                                                            255, 5, 0, 0))),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    icon: const Icon(
+                                      Icons.cancel_rounded,
+                                      color: Color.fromARGB(255, 226, 0, 0),
+                                    ),
+
+                                    //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
+                                  ),
+                                  TextButton.icon(
+                                    label: Text(
+                                      "Enviar e-mail",
+                                      style: styleButton,
+                                    ),
+                                    onPressed: () {
+                                      //Enviar pdf via e-mail ou whatsapp
+
+                                      if (widget.event.codFormulario ==
+                                          "      ") {
+                                        showDialog(
+                                          context: context,
+                                          builder: (ctx) => AlertDialog(
+                                            title: const Text(
+                                              'ATENÇÃO!',
+                                              style: TextStyle(
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            content: const Text(
+                                              //'Ocorreu um arro ao tentar aprovar o pedido.Por favor entrar em contato com o suporte do sistema',
+                                              'Função indisponivel ! O formulário ainda não foi preeenchido.',
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  NavigatorService.instance
+                                                      .pop();
                                                 },
                                                 child: const Text("Fechar",
                                                     style: TextStyle(
@@ -1150,225 +1396,27 @@ class _GerenciarVisitaCrmState extends State<GerenciarVisitaCrm> {
                                         );
                                       } else {
                                         showModalBottomSheet<void>(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return SizedBox(
-                                                height: 400,
-                                                child: Center(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.all(
-                                                        15.0),
-                                                    child: Column(
-                                                      children: [
-                                                        const Text(
-                                                          "Enviar E-mail",
-                                                          style: TextStyle(
-                                                              fontSize: 20,
-                                                              fontWeight:
-                                                                  FontWeight.bold,
-                                                              color: const Color
-                                                                  .fromARGB(255,
-                                                                  0, 47, 85)),
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 20,
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                            Expanded(
-                                                              child: Form(
-                                                                key: _formKey,
-                                                                child:
-                                                                    TextFormField(
-                                                                  decoration: const InputDecoration(
-                                                                      labelText:
-                                                                          "Inserir e-mail",
-                                                                      hintText:
-                                                                          "Digite o e-mail",
-                                                                      border:
-                                                                          OutlineInputBorder()),
-                                                                  controller:
-                                                                      emailController,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize:
-                                                                        sizeText,
-                                                                  ),
-                                                                  validator:
-                                                                      (value) {
-                                                                    if (value ==
-                                                                            null ||
-                                                                        value
-                                                                            .isEmpty) {
-                                                                      return "Campo Obrigatório";
-                                                                    }
-        
-                                                                    if (!value.contains(
-                                                                            "@") ||
-                                                                        !value.contains(
-                                                                            ".com")) {
-                                                                      return "E-mail inválido";
-                                                                    }
-        
-                                                                    return null;
-                                                                  },
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                                width: 10),
-                                                            ElevatedButton(
-                                                                style: ElevatedButton.styleFrom(
-                                                                    backgroundColor:
-                                                                        const Color
-                                                                            .fromARGB(
-                                                                            255,
-                                                                            199,
-                                                                            28,
-                                                                            16),
-                                                                    foregroundColor:
-                                                                        Colors
-                                                                            .white),
-                                                                child: const Text(
-                                                                    'Inserir'),
-                                                                onPressed: () {
-                                                                  if (_formKey
-                                                                      .currentState!
-                                                                      .validate()) {
-                                                                    addToEmailsList(
-                                                                        emailController
-                                                                            .text);
-                                                                  }
-                                                                }),
-                                                          ],
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 10),
-                                                        Expanded(
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(5.0),
-                                                            child: TextField(
-                                                              controller:
-                                                                  selectedEmailsController,
-                                                              readOnly:
-                                                                  true, // Campo apenas de leitura
-                                                              decoration:
-                                                                  InputDecoration(
-                                                                labelText:
-                                                                    'E-mails Selecionados',
-                                                                border:
-                                                                    OutlineInputBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10),
-                                                                ),
-                                                                enabledBorder:
-                                                                    OutlineInputBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10),
-                                                                  borderSide: BorderSide(
-                                                                      color: Theme.of(
-                                                                              context)
-                                                                          .primaryColor,
-                                                                      width: 3.0),
-                                                                ),
-                                                                focusedBorder:
-                                                                    const OutlineInputBorder(
-                                                                  borderSide: BorderSide(
-                                                                      color: Colors
-                                                                          .black,
-                                                                      width:
-                                                                          3.0), // Quando está focado
-                                                                ),
-                                                                contentPadding:
-                                                                    const EdgeInsets
-                                                                        .fromLTRB(
-                                                                        10.0,
-                                                                        3.0,
-                                                                        10.0,
-                                                                        15.0),
-                                                              ),
-                                                              maxLines: 5,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 50,
-                                                        ),
-                                                        Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            ElevatedButton(
-                                                              style: ElevatedButton.styleFrom(
-                                                                  backgroundColor:
-                                                                      const Color
-                                                                          .fromARGB(
-                                                                          255,
-                                                                          199,
-                                                                          28,
-                                                                          16),
-                                                                  foregroundColor:
-                                                                      Colors
-                                                                          .white),
-                                                              child: const Text(
-                                                                  'Enviar'),
-                                                              onPressed: () =>
-                                                                  _enviarFormularioEmail(
-                                                                      context,
-                                                                      selectedEmailsController
-                                                                          .text),
-                                                            ),
-                                                            const SizedBox(
-                                                              width: 30,
-                                                            ),
-                                                            ElevatedButton(
-                                                              style: ElevatedButton.styleFrom(
-                                                                  backgroundColor:
-                                                                      const Color
-                                                                          .fromARGB(
-                                                                          255,
-                                                                          0,
-                                                                          66,
-                                                                          119),
-                                                                  foregroundColor:
-                                                                      Colors
-                                                                          .white),
-                                                              child: const Text(
-                                                                  'Fechar'),
-                                                              onPressed: () =>
-                                                                  Navigator.pop(
-                                                                      context),
-                                                            ),
-                                                          ],
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
-                                            });
+                                          context: context,
+                                          isScrollControlled: true,
+                                          builder: (context) {
+                                            final Map<String, dynamic>
+                                                dadosRelatorio = {
+                                              "tipoRelatorio":
+                                                  'FormularioDeVisita',
+                                              "codigoFormulario":
+                                                  widget.event.codFormulario,
+                                            };
+                                            return EmailFilterModal(
+                                                dadosRelatorio: dadosRelatorio);
+                                          },
+                                        );
                                       }
-        
-                                      // _enviarFormularioEmail(
-                                      //     context, "silvaniojr.sj@gmail.com");
                                     },
                                     icon: const Icon(
                                       Icons.send_outlined,
                                       color: Color.fromARGB(255, 0, 2, 122),
                                     ),
-        
+
                                     //style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.orange))
                                   ),
                                 ],

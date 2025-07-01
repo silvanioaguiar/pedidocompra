@@ -3,11 +3,16 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart ' as http;
+import 'package:pedidocompra/main.dart';
 import 'package:pedidocompra/models/crm/visitas.dart';
 import 'package:pedidocompra/services/navigator_service.dart';
 
 class VisitasLista with ChangeNotifier {
   final String _token;
+  var body;
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
   List<Visitas> _visitas = [];
   List<dynamic> data = [];
@@ -27,6 +32,7 @@ class VisitasLista with ChangeNotifier {
   // Carregar Visitas
 
   Future<dynamic> loadVisitas(context) async {
+    _isLoading = true;
     List<Visitas> visitas = [];
     _visitas.clear();
     visitas.clear();
@@ -143,11 +149,14 @@ class VisitasLista with ChangeNotifier {
 
     _visitas = visitas.reversed.toList();
 
+    _isLoading = false;
     notifyListeners();
     return visitas;
   }
 
   Future<dynamic> loadVisitaUnica(context, codigoVisita) async {
+    _isLoading = true;
+
     List<Visitas> visitas = [];
     _visitas.clear();
     visitas.clear();
@@ -262,11 +271,14 @@ class VisitasLista with ChangeNotifier {
       }
     }
 
+    _isLoading = false;
     notifyListeners();
     return visitas;
   }
 
   Future<dynamic> editarVisitas(context, dadosVisita) async {
+    _isLoading = true;
+
     final uri = Uri.parse(
         'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/Editar');
     final headers = {
@@ -286,7 +298,7 @@ class VisitasLista with ChangeNotifier {
       'dataVisita': dadosVisita['dataPrevista'],
       'horaVisita': dadosVisita['horaPrevista'],
       'statusVisita': dadosVisita['status'],
-      'cancelarMotivo':dadosVisita['cancelarMotivo'],
+      'cancelarMotivo': dadosVisita['cancelarMotivo'],
     });
 
     final response = await http.post(uri, headers: headers, body: body);
@@ -347,12 +359,16 @@ class VisitasLista with ChangeNotifier {
         ),
       );
     }
+
+    _isLoading = false;
     notifyListeners();
     await loadVisitas(context);
     await loadVisitaUnica(context, dadosVisita['codigo']);
   }
 
   Future<dynamic> incluirVisitas(context, dadosVisita) async {
+    _isLoading = true;
+
     final uri = Uri.parse(
         'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/Incluir');
     final headers = {
@@ -373,7 +389,21 @@ class VisitasLista with ChangeNotifier {
       'horaVisita': dadosVisita['horaPrevista'],
     });
 
+    // Mostra o loading
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(
+        child: CircularProgressIndicator(
+          color: azulRoyalTopo,
+        ),
+      ),
+    );
+
     final response = await http.put(uri, headers: headers, body: body);
+
+    // Fim do Loading
+    Navigator.of(context, rootNavigator: true).pop();
 
     if (response.statusCode == 500) {
       showDialog(
@@ -384,7 +414,6 @@ class VisitasLista with ChangeNotifier {
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           content: const Text(
-            //'Ocorreu um arro ao tentar aprovar o pedido.Por favor entrar em contato com o suporte do sistema',
             'Não foi possivel incluir a visita. Contate o administrador do sistema',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
@@ -431,13 +460,17 @@ class VisitasLista with ChangeNotifier {
         ),
       );
     }
+    _isLoading = false;
     notifyListeners();
     await loadVisitas(context);
   }
 
-  Future<dynamic> excluirVisita(context, codigoVisita) async {
+  Future<dynamic> cancelarVisita(
+      context, codigoVisita, motivoCancelamento) async {
+    _isLoading = true;
+
     final uri = Uri.parse(
-        'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/ExcluirVisita/$codigoVisita');
+        'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/CancelarVisita');
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -446,24 +479,12 @@ class VisitasLista with ChangeNotifier {
       'Authorization': 'Bearer $_token',
     };
 
-    // final body = jsonEncode({
-    //   'codigoFormulario': dadosFormulario['codigoFormulario'],
-    //   'codigoVisita': dadosFormulario['codigoVisita'],
-    //   'codigoMedico': dadosFormulario['codigoMedico'],
-    //   'nomeMedico': dadosFormulario['nomeMedico'],
-    //   'codigoLocal': dadosFormulario['codigoLocal'],
-    //   'nomeLocal': dadosFormulario['nomeLocal'],
-    //   'dataVisita': dadosFormulario['dataVisita'],
-    //   'horaVisita': dadosFormulario['horaVisita'],
-    //   'avaliacao': dadosFormulario['avaliacao'],
-    //   'listaHospitais': dadosFormulario['listaHospitais'],
-    //   'clienteDoGrupo': dadosFormulario['clienteDoGrupo'],
-    //   'listaConcorrentes': dadosFormulario['listaConcorrentes'],
-    //   'especialidade': dadosFormulario['especialidade'],
-    //   'proximosPassos': dadosFormulario['proximosPassos'],
-    // });
+    final body = jsonEncode({
+      'codigoVisita': codigoVisita,
+      'motivoCancelamento': motivoCancelamento,
+    });
 
-    final response = await http.post(uri, headers: headers);
+    final response = await http.post(uri, headers: headers, body: body);
 
     if (response.statusCode == 500) {
       showDialog(
@@ -475,7 +496,7 @@ class VisitasLista with ChangeNotifier {
           ),
           content: const Text(
             //'Ocorreu um arro ao tentar aprovar o pedido.Por favor entrar em contato com o suporte do sistema',
-            'Não foi possível excluir a visita. Contate o administrador do sistema',
+            'Não foi possível cancelar a visita. Contate o administrador do sistema',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           actions: [
@@ -503,7 +524,7 @@ class VisitasLista with ChangeNotifier {
           ),
           content: const Text(
             //'Ocorreu um arro ao tentar aprovar o pedido.Por favor entrar em contato com o suporte do sistema',
-            'Visita excluída com sucesso',
+            'Visita cancelada com sucesso',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           actions: [
@@ -523,11 +544,22 @@ class VisitasLista with ChangeNotifier {
         ),
       );
     }
+
+    _isLoading = false;
     notifyListeners();
     await loadVisitas(context);
   }
 
   Future<dynamic> enviarEmailRelatorio(context, dadosRelatorio) async {
+    // Mostra o loading
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(
+        child: CircularProgressIndicator(color: azulRoyalTopo,),
+      ),
+    );
+
     final uri = Uri.parse(
         'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/EnviarRelatorioVisitas');
     final headers = {
@@ -539,14 +571,25 @@ class VisitasLista with ChangeNotifier {
     };
     List listaRelatorio = dadosRelatorio.toList();
 
-    final body = jsonEncode({
-      'tipoRelatorio': listaRelatorio[0],
-      'email': listaRelatorio[1],
-      'dataInicio': (listaRelatorio[2] as DateTime).toIso8601String(),
-      'dataFim': (listaRelatorio[3] as DateTime).toIso8601String(),
-    });
+    if (listaRelatorio[0] == "FormularioDeVisita") {
+      body = jsonEncode({
+        'tipoRelatorio': listaRelatorio[0],
+        'email': listaRelatorio[1],
+        'codigoFormulario': listaRelatorio[4],
+      });
+    } else {
+      body = jsonEncode({
+        'tipoRelatorio': listaRelatorio[0],
+        'email': listaRelatorio[1],
+        'dataInicio': (listaRelatorio[2] as DateTime).toIso8601String(),
+        'dataFim': (listaRelatorio[3] as DateTime).toIso8601String(),
+      });
+    }
 
     final response = await http.post(uri, headers: headers, body: body);
+
+    // Fecha o loading
+    Navigator.of(context, rootNavigator: true).pop();
 
     if (response.statusCode == 500) {
       showDialog(
@@ -602,10 +645,21 @@ class VisitasLista with ChangeNotifier {
         ),
       );
     }
+
+    _isLoading = false;
     notifyListeners();
   }
 
   Future<dynamic> enviarWhatsappRelatorio(context, dadosRelatorio) async {
+    // Mostra o loading
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(
+        child: CircularProgressIndicator(color: azulRoyalTopo,),
+      ),
+    );
+
     final uri = Uri.parse(
         'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/EnviarWhatsappRelatorioVisitas');
     final headers = {
@@ -621,10 +675,13 @@ class VisitasLista with ChangeNotifier {
       'tipoRelatorio': listaRelatorio[0],
       'celular': listaRelatorio[1],
       'dataInicio': (listaRelatorio[2] as DateTime).toIso8601String(),
-      'dataFim': (listaRelatorio[3] as DateTime).toIso8601String(),      
+      'dataFim': (listaRelatorio[3] as DateTime).toIso8601String(),
     });
 
     final response = await http.post(uri, headers: headers, body: body);
+
+    // Fecha o loading
+    Navigator.of(context, rootNavigator: true).pop();
 
     if (response.statusCode == 500) {
       showDialog(
@@ -680,6 +737,8 @@ class VisitasLista with ChangeNotifier {
         ),
       );
     }
+
+    _isLoading = false;
     notifyListeners();
   }
 }

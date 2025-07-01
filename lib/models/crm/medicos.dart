@@ -9,6 +9,7 @@ class Medicos with ChangeNotifier {
   String? localDeVisita;
   String? enderecoVisita;
   String? numeroEnderecoVisita;
+  String? complementoEnderecoVisita;
   String? bairro;
   String? cep;
   String? municipio;
@@ -30,6 +31,7 @@ class Medicos with ChangeNotifier {
     this.localDeVisita,
     this.enderecoVisita,
     this.numeroEnderecoVisita,
+    this.complementoEnderecoVisita,
     this.bairro,
     this.cep,
     this.municipio,

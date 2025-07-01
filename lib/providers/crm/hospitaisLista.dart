@@ -9,6 +9,10 @@ import 'package:pedidocompra/services/navigator_service.dart';
 class HospitaisLista with ChangeNotifier {
   final String _token;
 
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+
   List<Hospitais> _hospitais = [];
   List<dynamic> data = [];
   Map<String, dynamic> data0 = {};
@@ -26,12 +30,16 @@ class HospitaisLista with ChangeNotifier {
   // Carregar Visitas
 
   Future<dynamic> loadHospitais(context) async {
+    _isLoading = true;
+
     List<Hospitais> hospitais = [];
     _hospitais.clear();
     hospitais.clear();
     Map<String, dynamic> data0 = {};
     data = [];
     var decodedBody;
+
+    
 
     final response = await http.get(
         Uri.parse(
@@ -43,6 +51,8 @@ class HospitaisLista with ChangeNotifier {
           'tenantId': '02,01', // fixado como Biosat Matriz
           'Authorization': 'Bearer $_token',
         });
+
+   
 
     if (response.statusCode == 500) {
       data0 = jsonDecode(response.body);
@@ -89,6 +99,7 @@ class HospitaisLista with ChangeNotifier {
       }
     }
 
+    _isLoading = false;
     notifyListeners();
     return hospitais;
   }

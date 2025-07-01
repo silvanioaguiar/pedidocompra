@@ -25,6 +25,7 @@ class _EditarMedicoCrmState extends State<EditarMedicoCrm> {
   late TextEditingController _especialidadeController;
   late TextEditingController _enderecoController;
   late TextEditingController _numeroEnderecoController;
+  late TextEditingController _complementoEnderecoController;
   late TextEditingController _municipioController;
   late TextEditingController _estadoController;
   late TextEditingController _bairroController;
@@ -55,6 +56,8 @@ class _EditarMedicoCrmState extends State<EditarMedicoCrm> {
         TextEditingController(text: widget.medico.enderecoVisita);
     _numeroEnderecoController =
         TextEditingController(text: widget.medico.numeroEnderecoVisita);
+    _complementoEnderecoController =
+        TextEditingController(text: widget.medico.complementoEnderecoVisita);
     _municipioController = TextEditingController(text: widget.medico.municipio);
     _estadoController = TextEditingController(text: widget.medico.estado);
     _bairroController = TextEditingController(text: widget.medico.bairro);
@@ -85,6 +88,7 @@ class _EditarMedicoCrmState extends State<EditarMedicoCrm> {
     _nomeMedicoController.dispose();
     _especialidadeController.dispose();
     _enderecoController.dispose();
+    _complementoEnderecoController.dispose();
     _numeroEnderecoController.dispose();
     _municipioController.dispose();
     _estadoController.dispose();
@@ -107,6 +111,7 @@ class _EditarMedicoCrmState extends State<EditarMedicoCrm> {
       'especialidade': _especialidadeController.text,
       'endereco': _enderecoController.text,
       'numeroEndereco': _numeroEnderecoController.text,
+      'complementoEndereco': _complementoEnderecoController.text,
       'crm': _crmController.text,
       'municipio': _municipioController.text,
       'estado': _estadoController.text,
@@ -397,6 +402,24 @@ class _EditarMedicoCrmState extends State<EditarMedicoCrm> {
                           ),
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 10),
+                     TextFormField(
+                      decoration: const InputDecoration(
+                          labelText: "Complemento",
+                          hintText: "Digite o complemento",
+                          border: OutlineInputBorder()),
+                      controller: _complementoEnderecoController,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: sizeText,
+                      ),
+                      // validator: (value) {
+                      //   if (value == null || value.isEmpty) {
+                      //     return "Campo Obrigatório";
+                      //   }
+                      //   return null;
+                      // },
                     ),
                     const SizedBox(height: 10),
                     TextFormField(

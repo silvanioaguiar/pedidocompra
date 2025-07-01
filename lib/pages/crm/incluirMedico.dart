@@ -21,6 +21,7 @@ class _IncluirMedicoCrmState extends State<IncluirMedicoCrm> {
   final TextEditingController _especialidadeController =
       TextEditingController();
   final TextEditingController _enderecoController = TextEditingController();
+  final TextEditingController _complementoEnderecoController = TextEditingController();
   final TextEditingController _numeroEnderecoController =
       TextEditingController();
   final TextEditingController _municipioController = TextEditingController();
@@ -48,6 +49,7 @@ class _IncluirMedicoCrmState extends State<IncluirMedicoCrm> {
       'especialidade': _especialidadeController.text,
       'endereco': _enderecoController.text,
       'numeroEndereco': _numeroEnderecoController.text,
+      'complementoEndereco':_complementoEnderecoController.text,
       'crm': _crmController.text,
       'municipio': _municipioController.text,
       'estado': _estadoController.text,
@@ -342,6 +344,24 @@ class _IncluirMedicoCrmState extends State<IncluirMedicoCrm> {
                           ),
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                          labelText: "Complemento",
+                          hintText: "Complemento",
+                          border: OutlineInputBorder()),
+                      controller: _complementoEnderecoController,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: sizeText,
+                      ),
+                      // validator: (value) {
+                      //   if (value == null || value.isEmpty) {
+                      //     return "Campo Obrigatório";
+                      //   }
+                      //   return null;
+                      // },
                     ),
                     const SizedBox(height: 10),
                     TextFormField(

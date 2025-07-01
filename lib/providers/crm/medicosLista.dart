@@ -9,6 +9,9 @@ import 'package:provider/provider.dart';
 
 class MedicosLista with ChangeNotifier {
   final String _token;
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
 
   List<Medicos> _medicos = [];
   List<dynamic> data = [];
@@ -27,6 +30,7 @@ class MedicosLista with ChangeNotifier {
   // Carregar Medicos
 
   Future<dynamic> loadMedicos(context) async {
+    _isLoading = true;
     String jsonString = '';
     List<Medicos> medicos = [];
     _medicos.clear();
@@ -34,6 +38,8 @@ class MedicosLista with ChangeNotifier {
     //String empresaFilial = '';
     Map<String, dynamic> data0 = {};
     data = [];
+
+ 
 
     final response = await http.get(
         Uri.parse(
@@ -45,6 +51,8 @@ class MedicosLista with ChangeNotifier {
           'tenantId': '02,01', // fixado como Biosat Matriz
           'Authorization': 'Bearer $_token',
         });
+
+  
 
     if (response.statusCode == 500) {
       data0 = jsonDecode(response.body);
@@ -94,6 +102,7 @@ class MedicosLista with ChangeNotifier {
             localDeVisita: data['principal']['localDeVisita'],
             enderecoVisita: data['principal']['enderecoVisita'],
             numeroEnderecoVisita: data['principal']['numeroEnderecoVisita'],
+            complementoEnderecoVisita: data['principal']['complementoEnderecoVisita'] ?? "",
             especialidade: data['principal']['especialidade'],
             cep: data['principal']['cep'],
             estado: data['principal']['estado'],
@@ -110,12 +119,15 @@ class MedicosLista with ChangeNotifier {
 
     _medicos = medicos;
 
+    _isLoading = false;
     notifyListeners();
     return _medicos;
   }
 
 
   Future<dynamic> incluirMedico(context, dadosMedico) async {
+    _isLoading = true;
+
     final uri = Uri.parse(
         'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/IncluirMedico');
     final headers = {
@@ -131,6 +143,7 @@ class MedicosLista with ChangeNotifier {
       'especialidade': dadosMedico['especialidade'],
       'endereco': dadosMedico['endereco'],
       'numeroEndereco': dadosMedico['numeroEndereco'],
+      'complementoEndereco': dadosMedico['complementoEndereco'],
       'municipio': dadosMedico['municipio'],
       'estado': dadosMedico['estado'],
       'bairro': dadosMedico['bairro'],
@@ -144,7 +157,10 @@ class MedicosLista with ChangeNotifier {
       'nomeLocal': dadosMedico['nomeLocal'],
     });
 
+     
     final response = await http.put(uri, headers: headers, body: body);
+
+    
 
     if (response.statusCode == 500) {
       showDialog(
@@ -201,11 +217,15 @@ class MedicosLista with ChangeNotifier {
         ),
       );
     }
+
+    _isLoading = false;
     notifyListeners();
     await loadMedicos(context);
   }
 
   Future<dynamic> editarMedico(context, dadosMedico) async {
+    _isLoading = true;
+
     final uri = Uri.parse(
         'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/EditarMedico');
     final headers = {
@@ -222,6 +242,7 @@ class MedicosLista with ChangeNotifier {
       'especialidade': dadosMedico['especialidade'],
       'endereco': dadosMedico['endereco'],
       'numeroEndereco': dadosMedico['numeroEndereco'],
+      'complementoEndereco': dadosMedico['complementoEndereco'],
       'municipio': dadosMedico['municipio'],
       'estado': dadosMedico['estado'],
       'bairro': dadosMedico['bairro'],
@@ -234,6 +255,7 @@ class MedicosLista with ChangeNotifier {
       'tipoLocal': dadosMedico['tipoLocal'],
       'nomeLocal': dadosMedico['nomeLocal'],
     });
+   
 
     final response = await http.post(uri, headers: headers, body: body);
 
@@ -292,12 +314,16 @@ class MedicosLista with ChangeNotifier {
         ),
       );
     }
+
+    _isLoading = false;
     notifyListeners();
     await loadMedicos(context);
   }
 
 
   Future<dynamic> bloquearMedico(context, codigoMedico) async {
+    _isLoading = true;
+
     final uri = Uri.parse(
         'http://biosat.dyndns.org:8084/REST/api/biosat/v1/TodasAsVisitas/BloquearMedico');
     final headers = {
@@ -313,7 +339,9 @@ class MedicosLista with ChangeNotifier {
       
     });
 
+
     final response = await http.post(uri, headers: headers, body: body);
+
 
     if (response.statusCode == 500) {
       showDialog(
@@ -369,6 +397,8 @@ class MedicosLista with ChangeNotifier {
         ),
       );
     }
+
+    _isLoading = false;
     notifyListeners();
     await loadMedicos(context);
   }
